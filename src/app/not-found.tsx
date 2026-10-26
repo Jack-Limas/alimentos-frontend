@@ -1,3 +1,5 @@
+'use client';
+
 import NextError from 'next/error';
 
 // Fallback for requests outside the locale segment (the proxy normally adds the
