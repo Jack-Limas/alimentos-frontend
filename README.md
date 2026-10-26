@@ -8,8 +8,9 @@ repos.
 - Stack: Next.js 16 (App Router) · React 19 · TypeScript estricto · Tailwind CSS v4 ·
   TanStack Query · next-intl · next-themes.
 - Despliegue: Vercel.
-- Estado: esqueleto con diseño base, i18n (es/en), tema claro/oscuro y aislamiento de origen
-  cruzado. La autenticación y las pantallas de negocio llegan en fases posteriores.
+- Estado: diseño base, i18n (es/en), tema claro/oscuro, aislamiento de origen cruzado y
+  autenticación real (login, sesión entre pestañas y área privada con tablero provisional). Las
+  pantallas de negocio llegan en fases posteriores.
 
 ## Arquitectura
 
@@ -40,14 +41,15 @@ flowchart LR
 
 ## Rendering por ruta
 
-| Ruta                                  | Patrón    | Estado          | Notas                                                    |
-| ------------------------------------- | --------- | --------------- | -------------------------------------------------------- |
-| `/[locale]` (landing)                 | SSG       | Hecho           | `generateStaticParams` para `es` y `en`                  |
-| `/[locale]/login`                     | SSG       | Hecho (maqueta) | Sin lógica hasta la fase de autenticación                |
-| `/[locale]/system-check`              | SSG + CSR | Hecho           | Shell estático; los valores se leen en el navegador      |
-| `/[locale]/impact`                    | ISR       | Fase posterior  | `revalidate 3600`, consume `GET /public/impact`          |
-| Hoja de despacho                      | SSR       | Fase posterior  | Enlace firmado [EXTRA]                                   |
-| Área privada (dashboard, inventario…) | CSR       | Fase posterior  | TanStack Query contra el API con Bearer + cookie refresh |
+| Ruta                                  | Patrón    | Estado         | Notas                                                            |
+| ------------------------------------- | --------- | -------------- | ---------------------------------------------------------------- |
+| `/[locale]` (landing)                 | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                          |
+| `/[locale]/login`                     | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador |
+| `/[locale]/system-check`              | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador              |
+| `/[locale]/impact`                    | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                  |
+| Hoja de despacho                      | SSR       | Fase posterior | Enlace firmado [EXTRA]                                           |
+| `/[locale]/app` (tablero provisional) | CSR       | Hecho          | HTML estático = skeleton; guard en el cliente, `noindex`         |
+| Resto del área privada (inventario…)  | CSR       | Fase posterior | TanStack Query con `authFetch` (Bearer + refresh)                |
 
 ## Internacionalización
 
