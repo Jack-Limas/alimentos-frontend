@@ -8,13 +8,7 @@ import { privateHome } from '@/features/auth/safe-next';
 import type { AuthUser } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { Link } from '@/i18n/navigation';
-
-/** "Ana María López" → "AM". */
-export function initialsOf(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  const letters = words.slice(0, 2).map((word) => word[0] ?? '');
-  return letters.join('').toUpperCase() || '?';
-}
+import { initialsOf } from './initials';
 
 const itemClass =
   'flex h-10 w-full items-center rounded-lg px-3 text-left text-sm font-semibold transition-colors hover:bg-surface-muted disabled:opacity-60';
