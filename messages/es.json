@@ -11,7 +11,8 @@
   "Header": {
     "skipToContent": "Saltar al contenido",
     "homeLabel": "AlimentaIQ, ir al inicio",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "goToPanel": "Ir al panel"
   },
   "LanguageSwitcher": {
     "label": "Idioma",
@@ -121,6 +122,28 @@
       "goToPanel": "Ir al panel",
       "logout": "Cerrar sesión",
       "loggingOut": "Cerrando sesión…"
+    }
+  },
+  "Dashboard": {
+    "metaTitle": "Panel · AlimentaIQ",
+    "eyebrow": "Panel",
+    "greeting": "Hola, {name}",
+    "intro": "Este es tu panel provisional. Los módulos de inventario, pedidos y distribución llegarán en las próximas fases.",
+    "session": {
+      "title": "Tu sesión",
+      "email": "Correo",
+      "role": "Rol"
+    },
+    "admin": {
+      "title": "Administración",
+      "body": "Como administrador podrás gestionar usuarios, consultar el registro de auditoría y ajustar la configuración del centro."
+    },
+    "upcoming": {
+      "title": "Próximamente",
+      "inventory": "Inventario por lotes y vencimientos",
+      "orders": "Pedidos con prioridad",
+      "distribution": "Propuestas de distribución",
+      "alerts": "Alertas de desperdicio y faltantes"
     }
   },
   "SystemCheck": {

@@ -11,7 +11,8 @@
   "Header": {
     "skipToContent": "Skip to content",
     "homeLabel": "AlimentaIQ, go to home",
-    "login": "Log in"
+    "login": "Log in",
+    "goToPanel": "Go to dashboard"
   },
   "LanguageSwitcher": {
     "label": "Language",
@@ -121,6 +122,28 @@
       "goToPanel": "Go to dashboard",
       "logout": "Log out",
       "loggingOut": "Logging out…"
+    }
+  },
+  "Dashboard": {
+    "metaTitle": "Dashboard · AlimentaIQ",
+    "eyebrow": "Dashboard",
+    "greeting": "Hi, {name}",
+    "intro": "This is your provisional dashboard. The inventory, orders and distribution modules arrive in the next phases.",
+    "session": {
+      "title": "Your session",
+      "email": "Email",
+      "role": "Role"
+    },
+    "admin": {
+      "title": "Administration",
+      "body": "As an administrator you will manage users, review the audit log and adjust the center settings."
+    },
+    "upcoming": {
+      "title": "Coming soon",
+      "inventory": "Lot and expiry inventory",
+      "orders": "Prioritized orders",
+      "distribution": "Distribution proposals",
+      "alerts": "Waste and shortage alerts"
     }
   },
   "SystemCheck": {
