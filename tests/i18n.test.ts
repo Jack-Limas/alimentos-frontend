@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest';
+import en from '../messages/en.json';
+import es from '../messages/es.json';
+
+type Messages = Record<string, unknown>;
+
+/** Flattens nested messages into "Namespace.key" → value pairs. */
+function flatten(messages: Messages, prefix = ''): Map<string, unknown> {
+  const entries = new Map<string, unknown>();
+  for (const [key, value] of Object.entries(messages)) {
+    const path = prefix ? `${prefix}.${key}` : key;
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      for (const [nestedKey, nestedValue] of flatten(value as Messages, path)) {
+        entries.set(nestedKey, nestedValue);
+      }
+    } else {
+      entries.set(path, value);
+    }
+  }
+  return entries;
+}
+
+const catalogs = { es: flatten(es), en: flatten(en) };
+
+function missingKeys(from: Map<string, unknown>, to: Map<string, unknown>): string[] {
+  return [...from.keys()].filter((key) => !to.has(key)).sort();
+}
+
+describe('i18n messages', () => {
+  it('en.json has every key of es.json', () => {
+    expect(missingKeys(catalogs.es, catalogs.en), 'keys missing in en.json').toEqual([]);
+  });
+
+  it('es.json has every key of en.json', () => {
+    expect(missingKeys(catalogs.en, catalogs.es), 'keys missing in es.json').toEqual([]);
+  });
+
+  it.each(Object.entries(catalogs))(
+    '%s.json has no empty or non-string values',
+    (_locale, flat) => {
+      const invalid = [...flat.entries()]
+        .filter(([, value]) => typeof value !== 'string' || value.trim() === '')
+        .map(([key]) => key);
+
+      expect(invalid).toEqual([]);
+    },
+  );
+});
