@@ -87,5 +87,41 @@
     "submit": "Iniciar sesión",
     "previewNotice": "Vista previa: el inicio de sesión se habilita en la fase de autenticación.",
     "backHome": "Volver al inicio"
+  },
+  "SystemCheck": {
+    "metaTitle": "Diagnóstico del sistema · AlimentaIQ",
+    "eyebrow": "Diagnóstico",
+    "title": "Estado del sistema",
+    "subtitle": "Comprueba el aislamiento de origen cruzado del navegador y la conexión con el backend.",
+    "detecting": "Detectando…",
+    "isolation": {
+      "title": "Aislamiento de origen cruzado",
+      "description": "Necesario para usar SharedArrayBuffer y Atomics en el pool de workers.",
+      "crossOriginIsolated": "window.crossOriginIsolated",
+      "sharedArrayBuffer": "typeof SharedArrayBuffer",
+      "hardwareConcurrency": "navigator.hardwareConcurrency",
+      "ready": "Listo: COOP y COEP están activos.",
+      "notReady": "No aislado: revisa los headers COOP y COEP."
+    },
+    "backend": {
+      "title": "Backend",
+      "description": "Llamada desde el navegador a la comprobación de disponibilidad del API.",
+      "endpoint": "Endpoint",
+      "status": "Estado",
+      "httpStatus": "Código HTTP",
+      "database": "Base de datos",
+      "responseTime": "Tiempo de respuesta",
+      "milliseconds": "{value} ms",
+      "checking": "Comprobando…",
+      "ok": "Operativo",
+      "degraded": "Degradado",
+      "unreachable": "Sin conexión",
+      "dbUp": "Disponible",
+      "dbDown": "No disponible",
+      "notAvailable": "—",
+      "retry": "Volver a comprobar",
+      "unreachableHint": "No se pudo contactar al backend. Revisa NEXT_PUBLIC_API_URL y que CORS_ORIGINS incluya este origen.",
+      "configHint": "NEXT_PUBLIC_API_URL no está configurada correctamente."
+    }
   }
 }

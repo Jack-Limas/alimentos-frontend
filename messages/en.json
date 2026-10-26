@@ -87,5 +87,41 @@
     "submit": "Log in",
     "previewNotice": "Preview: signing in is enabled in the authentication phase.",
     "backHome": "Back to home"
+  },
+  "SystemCheck": {
+    "metaTitle": "System check · AlimentaIQ",
+    "eyebrow": "Diagnostics",
+    "title": "System status",
+    "subtitle": "Checks the browser's cross-origin isolation and the connection to the backend.",
+    "detecting": "Detecting…",
+    "isolation": {
+      "title": "Cross-origin isolation",
+      "description": "Required to use SharedArrayBuffer and Atomics in the worker pool.",
+      "crossOriginIsolated": "window.crossOriginIsolated",
+      "sharedArrayBuffer": "typeof SharedArrayBuffer",
+      "hardwareConcurrency": "navigator.hardwareConcurrency",
+      "ready": "Ready: COOP and COEP are active.",
+      "notReady": "Not isolated: check the COOP and COEP headers."
+    },
+    "backend": {
+      "title": "Backend",
+      "description": "Browser call to the API readiness check.",
+      "endpoint": "Endpoint",
+      "status": "Status",
+      "httpStatus": "HTTP status",
+      "database": "Database",
+      "responseTime": "Response time",
+      "milliseconds": "{value} ms",
+      "checking": "Checking…",
+      "ok": "Operational",
+      "degraded": "Degraded",
+      "unreachable": "Unreachable",
+      "dbUp": "Available",
+      "dbDown": "Unavailable",
+      "notAvailable": "—",
+      "retry": "Check again",
+      "unreachableHint": "Could not reach the backend. Check NEXT_PUBLIC_API_URL and that CORS_ORIGINS includes this origin.",
+      "configHint": "NEXT_PUBLIC_API_URL is not configured correctly."
+    }
   }
 }
