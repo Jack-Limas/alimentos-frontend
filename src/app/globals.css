@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+
+/* Dark mode is driven by next-themes adding the `dark` class to <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens: raw palette (light and dark use the same scales). */
+@theme {
+  /* Fresh green: primary action, healthy stock. */
+  --color-brand-50: #effaf2;
+  --color-brand-100: #d8f3df;
+  --color-brand-200: #b3e6c3;
+  --color-brand-300: #80d29f;
+  --color-brand-400: #4cb877;
+  --color-brand-500: #2a9d5c;
+  --color-brand-600: #1d7f49;
+  --color-brand-700: #19653c;
+  --color-brand-800: #175133;
+  --color-brand-900: #14432b;
+  --color-brand-950: #0a2518;
+
+  /* Amber: expiry warnings. */
+  --color-expiry-50: #fff8eb;
+  --color-expiry-100: #ffecc6;
+  --color-expiry-200: #ffd788;
+  --color-expiry-300: #ffbd4a;
+  --color-expiry-400: #ffa420;
+  --color-expiry-500: #f98307;
+  --color-expiry-600: #dd5f02;
+  --color-expiry-700: #b74006;
+  --color-expiry-800: #94310c;
+  --color-expiry-900: #7a290d;
+
+  /* Red: critical risk (waste, shortage, stock out). */
+  --color-critical-50: #fef2f2;
+  --color-critical-100: #fee2e2;
+  --color-critical-200: #fecaca;
+  --color-critical-300: #fca5a5;
+  --color-critical-400: #f47175;
+  --color-critical-500: #e5484d;
+  --color-critical-600: #d0343a;
+  --color-critical-700: #ad2830;
+  --color-critical-800: #8f2129;
+  --color-critical-900: #7a1d23;
+
+  /* Warm neutrals: surfaces and text. */
+  --color-sand-50: #faf8f5;
+  --color-sand-100: #f3efe8;
+  --color-sand-200: #e6dfd4;
+  --color-sand-300: #d3c8b8;
+  --color-sand-400: #a99c89;
+  --color-sand-500: #847764;
+  --color-sand-600: #685d4e;
+  --color-sand-700: #534a3f;
+  --color-sand-800: #3a342d;
+  --color-sand-900: #26221e;
+  --color-sand-950: #171513;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-serif, Georgia, serif;
+
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(38 34 30 / 0.06), 0 8px 24px -12px rgb(38 34 30 / 0.18);
+}
+
+/* Semantic tokens: what components use. They switch with the theme. */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: var(--color-sand-50);
+  --surface: #ffffff;
+  --surface-muted: var(--color-sand-100);
+  --foreground: var(--color-sand-950);
+  --muted: var(--color-sand-600);
+  --border: var(--color-sand-200);
+  --primary: var(--color-brand-600);
+  --primary-hover: var(--color-brand-700);
+  --primary-foreground: #ffffff;
+  --ring: var(--color-brand-500);
+  color-scheme: light;
+}
+
+.dark {
+  --background: var(--color-sand-950);
+  --surface: var(--color-sand-900);
+  --surface-muted: var(--color-sand-800);
+  --foreground: var(--color-sand-50);
+  --muted: var(--color-sand-300);
+  --border: var(--color-sand-800);
+  --primary: var(--color-brand-400);
+  --primary-hover: var(--color-brand-300);
+  --primary-foreground: var(--color-brand-950);
+  --ring: var(--color-brand-400);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
