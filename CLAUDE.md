@@ -1,0 +1,60 @@
+# CLAUDE.md — alimentos-frontend
+
+Conventions for anyone (human or AI assistant) working in this repository.
+
+## Project
+
+- Frontend of AlimentaIQ (Intelligent Food Distribution Center). It only talks to
+  `alimentos-backend`; no code is shared with `alimentos-backend` or `alimentos-ai`.
+- Stack: Next.js 16 (App Router, `src/proxy.ts`), React 19, strict TypeScript, Tailwind CSS v4,
+  TanStack Query, next-intl, next-themes. Deployed on Vercel.
+
+## Code
+
+- Code, identifiers, comments and commit messages in **English**. User-facing docs (README) in
+  Spanish.
+- **Zero hardcoded UI text**: every string goes through next-intl (`messages/es.json` and
+  `messages/en.json`, same keys in both, no empty values). Message keys are typed; tests check
+  parity.
+- **Light theme by default** (`defaultTheme: "light"`, `enableSystem: false`). Every component
+  must also look right in dark mode (`dark:` variant).
+- **Mobile-first**: base styles target phones; add `sm:`/`lg:` for larger screens.
+- Use the design tokens from `src/app/globals.css` (`brand`, `expiry`, `critical`, `sand`, and the
+  semantic `background`, `surface`, `foreground`, `muted`, `border`, `primary`). No ad hoc colors.
+- Data fetching goes through `src/lib/api` (`apiFetch`, `ApiError`) and TanStack Query. The
+  client never sends computed figures (scores, recommended quantities, alerts): the server
+  recomputes them.
+- Pages stay statically rendered when possible (`setRequestLocale` + `generateStaticParams`).
+- Browser-only values are read with `useClientValue` to avoid hydration mismatches.
+
+## Cross-origin isolation
+
+- COOP `same-origin` and COEP `require-corp` are always on (needed for SharedArrayBuffer). Never
+  remove them to "fix" something: find the incompatible resource instead.
+- Fonts via `next/font` only. External images (Cloudinary) must use `crossOrigin="anonymous"`.
+
+## Dependencies
+
+- Exact versions only (no `^` or `~`); `.npmrc` enforces `save-exact` and `engine-strict`. Use
+  npm and commit `package-lock.json`.
+- Do not add dependencies outside the current phase's plan.
+
+## Secrets
+
+- Never commit secrets: `.env*` (except `.env.example`), `cookies.txt`, `*.pem` are ignored.
+  Only `NEXT_PUBLIC_*` variables reach the browser; never put secrets in them.
+
+## Commits
+
+- Many small commits: one per logical piece (a file or a very small group of related files).
+- Conventional Commits: `feat`, `fix`, `chore`, `test`, `docs`, `ci`, `refactor`, with an optional
+  scope, e.g. `feat(landing): add hero section`.
+- Messages in English, imperative mood, specific.
+- Every commit must leave the repo coherent: lint, typecheck, tests and build pass.
+- Authorship is Jack-Limas only: no `Co-Authored-By` or tool attribution lines.
+
+## Checks before committing
+
+```bash
+npm run lint && npm run typecheck && npm test && npm run build
+```
