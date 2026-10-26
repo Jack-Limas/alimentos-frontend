@@ -195,3 +195,48 @@ describe('bootstrap', () => {
     expect(backend.count('/auth/me')).toBe(1);
   });
 });
+
+describe('login and logout', () => {
+  it('login authenticates and keeps the copy in sessionStorage, never in localStorage', async () => {
+    const localStorageSetItem = vi.fn();
+    vi.stubGlobal('localStorage', { setItem: localStorageSetItem });
+    const { client, storage } = createTab(createChannelHub());
+
+    const user = await client.login(credentials);
+
+    expect(user).toEqual(DEMO_USER);
+    expect(client.store.getState().status).toBe('authenticated');
+    expect(storage.getItem(SESSION_STORAGE_KEY)).toContain('access-1');
+    expect(localStorageSetItem).not.toHaveBeenCalled();
+  });
+
+  it('login rejects with the API error and leaves the session anonymous', async () => {
+    const { client } = createTab(createChannelHub());
+    client.store.clear();
+
+    await expect(
+      client.login({ email: DEMO_USER.email, password: 'wrong-password' }),
+    ).rejects.toMatchObject({ status: 401, code: 'INVALID_CREDENTIALS' });
+    expect(client.store.getState().status).toBe('anonymous');
+  });
+
+  it('logout clears the session and the copy, and calls the API', async () => {
+    const { client, storage } = createTab(createChannelHub());
+    await client.login(credentials);
+
+    await client.logout();
+
+    expect(client.store.getState().status).toBe('anonymous');
+    expect(storage.items.has(SESSION_STORAGE_KEY)).toBe(false);
+    expect(backend.count('/auth/logout')).toBe(1);
+  });
+
+  it('logout still ends the local session when the API is unreachable', async () => {
+    const { client } = createTab(createChannelHub());
+    await client.login(credentials);
+    backend.fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+
+    await expect(client.logout()).resolves.toBeUndefined();
+    expect(client.store.getState().status).toBe('anonymous');
+  });
+});
