@@ -76,5 +76,16 @@
       "body": "Ingresa con tu cuenta de administrador u operador.",
       "cta": "Iniciar sesión"
     }
+  },
+  "Login": {
+    "metaTitle": "Iniciar sesión · AlimentaIQ",
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Ingresa para gestionar inventario, pedidos y distribución.",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "nombre@organizacion.org",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "previewNotice": "Vista previa: el inicio de sesión se habilita en la fase de autenticación.",
+    "backHome": "Volver al inicio"
   }
 }

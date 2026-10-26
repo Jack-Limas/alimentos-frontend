@@ -76,5 +76,16 @@
       "body": "Sign in with your administrator or operator account.",
       "cta": "Log in"
     }
+  },
+  "Login": {
+    "metaTitle": "Log in · AlimentaIQ",
+    "title": "Welcome back",
+    "subtitle": "Sign in to manage inventory, orders and distribution.",
+    "email": "Email",
+    "emailPlaceholder": "name@organization.org",
+    "password": "Password",
+    "submit": "Log in",
+    "previewNotice": "Preview: signing in is enabled in the authentication phase.",
+    "backHome": "Back to home"
   }
 }
