@@ -120,8 +120,7 @@
       "open": "Open {name}'s menu",
       "signedInAs": "Signed in as",
       "goToPanel": "Go to dashboard",
-      "logout": "Log out",
-      "loggingOut": "Logging out…"
+      "logout": "Log out"
     }
   },
   "Dashboard": {

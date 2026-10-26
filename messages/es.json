@@ -120,8 +120,7 @@
       "open": "Abrir el menú de {name}",
       "signedInAs": "Sesión iniciada como",
       "goToPanel": "Ir al panel",
-      "logout": "Cerrar sesión",
-      "loggingOut": "Cerrando sesión…"
+      "logout": "Cerrar sesión"
     }
   },
   "Dashboard": {

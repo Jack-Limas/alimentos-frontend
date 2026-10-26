@@ -1,27 +1,21 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState } from 'react';
 import { RoleBadge } from '@/components/auth';
-import { privateHome } from '@/features/auth/safe-next';
 import type { AuthUser } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { Link } from '@/i18n/navigation';
 import { initialsOf } from './initials';
 
 const itemClass =
-  'flex h-10 w-full items-center rounded-lg px-3 text-left text-sm font-semibold transition-colors hover:bg-surface-muted disabled:opacity-60';
+  'flex h-10 w-full items-center rounded-lg px-3 text-left text-sm font-semibold transition-colors hover:bg-surface-muted';
 
 /** Account disclosure menu: name, translated role, link to the dashboard and logout. */
 export function UserMenu({ user }: { user: AuthUser }) {
   const t = useTranslations('Auth.userMenu');
   const { logout } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-  const locale = useLocale();
   const [open, setOpen] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
@@ -45,13 +39,11 @@ export function UserMenu({ user }: { user: AuthUser }) {
     };
   }, [open]);
 
-  async function handleLogout() {
-    setLoggingOut(true);
-    await logout();
-    setLoggingOut(false);
+  function handleLogout() {
     setOpen(false);
-    // Leaving the private area explicitly: go to the login without ?next=.
-    if (pathname.startsWith(privateHome(locale))) router.replace(`/${locale}/login`);
+    // The session ends at once in every tab (this menu unmounts); inside the
+    // private area, RequireAuth then sends the user to the login with ?next=.
+    void logout();
   }
 
   return (
@@ -96,11 +88,10 @@ export function UserMenu({ user }: { user: AuthUser }) {
           </Link>
           <button
             type="button"
-            onClick={() => void handleLogout()}
-            disabled={loggingOut}
+            onClick={handleLogout}
             className={`${itemClass} text-critical-700 dark:text-critical-300`}
           >
-            {loggingOut ? t('loggingOut') : t('logout')}
+            {t('logout')}
           </button>
         </div>
       </div>
