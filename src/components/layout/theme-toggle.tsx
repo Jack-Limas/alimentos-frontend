@@ -2,18 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
-import { useSyncExternalStore } from 'react';
-
-const subscribe = () => () => {};
-
-/** True only after hydration, so the icon never mismatches the server HTML. */
-function useHydrated(): boolean {
-  return useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-}
+import { useHydrated } from '@/hooks/use-client-value';
 
 export function ThemeToggle() {
   const t = useTranslations('ThemeToggle');
