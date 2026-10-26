@@ -6,6 +6,12 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   globalIgnores(['.next/**', 'out/**', 'build/**', 'coverage/**', 'next-env.d.ts']),
+  {
+    rules: {
+      // Pages Router only: this app uses the App Router and has no pages/ directory.
+      '@next/next/no-html-link-for-pages': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;
