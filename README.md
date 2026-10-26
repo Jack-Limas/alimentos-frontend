@@ -97,6 +97,38 @@ sequenceDiagram
 - Al cerrar sesión se borra la caché de TanStack Query para que el siguiente usuario no vea datos
   del anterior.
 
+### Varias pestañas
+
+El backend **rota** el refresh token en cada uso y, si recibe uno ya rotado, lo trata como robo y
+revoca toda la familia (todas las pestañas quedan fuera). Como la cookie es compartida por todas
+las pestañas, dos refresh simultáneos llevarían la misma cookie y dispararían esa detección. Por
+eso:
+
+1. **Dentro de la pestaña**: una sola promesa de refresh compartida (single flight).
+2. **Entre pestañas**: el refresh corre dentro de `navigator.locks.request("aiq-refresh")`. La
+   pestaña que renueva publica el token nuevo en el `BroadcastChannel` `"aiq-auth"`; la que
+   esperaba el lock ve que su token ya cambió y lo reutiliza sin llamar a refresh. Si el aviso
+   llegara tarde, la segunda pestaña refresca con la cookie ya rotada: una rotación de más, nunca
+   un reuso.
+3. **Login y logout se difunden**: iniciar sesión en una pestaña autentica a las demás; cerrar
+   sesión la cierra en todas y borra sus copias.
+4. Una pestaña nueva (sin copia en `sessionStorage`) recupera la sesión con la cookie.
+
+Una prueba (`tests/auth-cross-tab.test.ts`) demuestra que sin el lock la carrera sí revoca la
+sesión. En la fase 5 esto pasa a un `SharedWorker` que será dueño de la sesión de todas las
+pestañas.
+
+### Login
+
+- Validación en el cliente (correo y contraseña obligatorios, formato y longitudes del backend) y
+  errores traducidos por código: 401 credenciales incorrectas, 400 datos inválidos, error de red
+  y error inesperado. Nunca se muestra el `message` del servidor.
+- **429**: cuenta regresiva `m:ss` a partir del header `Retry-After` (expuesto por CORS); el botón
+  queda deshabilitado hasta que termina.
+- `?next=`: solo se acepta una ruta interna del área privada (`/es/app`, `/en/app/...`). Se
+  rechazan `//host`, URLs absolutas, `\`, caracteres de control y rutas que al normalizarse salen
+  del área privada (`/es/app/../login`), para evitar un _open redirect_.
+
 ## Internacionalización
 
 - Idiomas: `es` (por defecto) y `en`, siempre con prefijo (`/es/...`, `/en/...`).
