@@ -211,6 +211,16 @@ cp .env.example .env   # NEXT_PUBLIC_API_URL=http://localhost:4000 para el backe
 npm run dev            # http://localhost:3000
 ```
 
+Para probar el login en local, el backend debe correr en el puerto 4000 con
+`CORS_ORIGINS=http://localhost:3000` y los usuarios demo creados con su seed (`npx prisma db seed`
+en `alimentos-backend`). `localhost` cuenta como contexto seguro, así que la cookie `Secure` del
+refresh funciona sin HTTPS. Una variable `NEXT_PUBLIC_API_URL` definida en la terminal tiene
+prioridad sobre el `.env`:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:4000 npm run dev
+```
+
 ## Scripts
 
 | Script                 | Descripción                       |
