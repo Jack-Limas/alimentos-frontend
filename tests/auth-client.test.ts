@@ -33,6 +33,13 @@ async function loggedInTabWithExpiredToken() {
   return tab;
 }
 
+/** The same tab after a reload: a new client that inherits the sessionStorage copy. */
+function reload(tab: ReturnType<typeof createTab>) {
+  const reloaded = createTab(createChannelHub());
+  for (const [key, value] of tab.storage.items) reloaded.storage.setItem(key, value);
+  return reloaded;
+}
+
 describe('authFetch', () => {
   it('sends the access token as a Bearer header with credentials included', async () => {
     const { client } = createTab(createChannelHub());
@@ -105,5 +112,86 @@ describe('authFetch', () => {
 
     await expect(client.authFetch('/forbidden')).rejects.toMatchObject({ status: 403 });
     expect(backend.count('/auth/refresh')).toBe(0);
+  });
+});
+
+describe('bootstrap', () => {
+  it('uses the sessionStorage copy and GET /me without refreshing', async () => {
+    const tab = createTab(createChannelHub());
+    await tab.client.login(credentials);
+    const reloaded = reload(tab);
+
+    await reloaded.client.bootstrap();
+
+    expect(reloaded.client.store.getState()).toEqual({
+      status: 'authenticated',
+      user: DEMO_USER,
+      accessToken: 'access-1',
+    });
+    expect(backend.count('/auth/refresh')).toBe(0);
+  });
+
+  it('refreshes and retries /me when the copied token expired', async () => {
+    const reloaded = reload(await loggedInTabWithExpiredToken());
+
+    await reloaded.client.bootstrap();
+
+    expect(reloaded.client.store.getState()).toMatchObject({
+      status: 'authenticated',
+      accessToken: 'access-2',
+    });
+    expect(backend.count('/auth/refresh')).toBe(1);
+  });
+
+  it('restores a new tab without a copy from the refresh cookie', async () => {
+    await loggedInTabWithExpiredToken();
+    const newTab = createTab(createChannelHub());
+
+    await newTab.client.bootstrap();
+
+    expect(newTab.client.store.getState()).toMatchObject({
+      status: 'authenticated',
+      user: DEMO_USER,
+    });
+    expect(newTab.storage.items.has(SESSION_STORAGE_KEY)).toBe(true);
+  });
+
+  it('ends anonymous when there is neither a copy nor a valid cookie', async () => {
+    backend.state.cookie = null;
+    const { client, storage } = createTab(createChannelHub());
+
+    await client.bootstrap();
+
+    expect(client.store.getState().status).toBe('anonymous');
+    expect(storage.items.has(SESSION_STORAGE_KEY)).toBe(false);
+  });
+
+  it('ends anonymous and clears the copy when the copy and the cookie are both dead', async () => {
+    const reloaded = reload(await loggedInTabWithExpiredToken());
+    backend.state.validRefresh = null;
+
+    await reloaded.client.bootstrap();
+
+    expect(reloaded.client.store.getState().status).toBe('anonymous');
+    expect(reloaded.storage.items.has(SESSION_STORAGE_KEY)).toBe(false);
+  });
+
+  it('ends anonymous when the API is unreachable', async () => {
+    backend.state.failRefreshWithNetworkError = true;
+    const { client } = createTab(createChannelHub());
+
+    await client.bootstrap();
+
+    expect(client.store.getState().status).toBe('anonymous');
+  });
+
+  it('runs once even when called twice (React Strict Mode)', async () => {
+    const tab = createTab(createChannelHub());
+    await tab.client.login(credentials);
+    const reloaded = reload(tab);
+
+    await Promise.all([reloaded.client.bootstrap(), reloaded.client.bootstrap()]);
+
+    expect(backend.count('/auth/me')).toBe(1);
   });
 });
