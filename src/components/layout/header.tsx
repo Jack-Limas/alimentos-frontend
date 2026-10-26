@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import { HeaderSessionActions } from './header-session-actions';
 import { LanguageSwitcher } from './language-switcher';
 import { Logo } from './logo';
 import { ThemeToggle } from './theme-toggle';
@@ -22,12 +23,7 @@ export function Header() {
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher />
           <ThemeToggle />
-          <Link
-            href="/login"
-            className="hidden h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover sm:inline-flex"
-          >
-            {t('login')}
-          </Link>
+          <HeaderSessionActions />
         </div>
       </div>
     </header>
