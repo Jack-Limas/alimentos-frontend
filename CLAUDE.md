@@ -27,6 +27,19 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - Pages stay statically rendered when possible (`setRequestLocale` + `generateStaticParams`).
 - Browser-only values are read with `useClientValue` to avoid hydration mismatches.
 
+## Authentication
+
+- Private API calls go through `authFetch` (`useAuth()`), never a hand-made Bearer header: it
+  handles the single-flight refresh, the cross-tab lock and the one retry.
+- The access token lives in memory with a copy in `sessionStorage` (`aiq.session`). Never put
+  tokens in `localStorage`, JS cookies, URLs or logs. The refresh token is an HttpOnly cookie the
+  frontend never reads.
+- Do not call `/auth/refresh` directly: concurrent refreshes trigger the backend's reuse
+  detection and log every tab out.
+- `RequireAuth` and `RequireRole` are UX only; the API enforces access. There is no authenticated
+  SSR (the Next server never receives the API cookie), so private pages are client-rendered.
+- Login redirects only to a `?next=` validated by `getSafeNextPath`.
+
 ## Cross-origin isolation
 
 - COOP `same-origin` and COEP `require-corp` are always on (needed for SharedArrayBuffer). Never
