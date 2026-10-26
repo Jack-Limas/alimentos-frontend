@@ -1,8 +1,9 @@
 import { ApiError, apiFetch, type ApiRequestOptions } from '@/lib/api';
-import { postRefresh, withBearer } from './api';
-import type { AuthChannel } from './auth-channel';
+import { postLogin, postLogout, postRefresh, withBearer } from './api';
+import type { AuthChannel, AuthMessage } from './auth-channel';
 import type { LockRunner } from './refresh-lock';
 import type { SessionStore } from './session-store';
+import type { AuthUser, LoginCredentials } from './types';
 
 /** 401 codes that a fresh access token can fix. */
 const RENEWABLE_CODES = new Set(['TOKEN_EXPIRED', 'UNAUTHENTICATED']);
@@ -93,7 +94,44 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
     }
   }
 
-  return { store, authFetch, refreshAccessToken };
+  /** Throws ApiError (401, 429 with retryAfterSeconds, 400, network) for the form to show. */
+  async function login(credentials: LoginCredentials): Promise<AuthUser> {
+    const { accessToken, user } = await postLogin(credentials);
+    store.authenticate(accessToken, user);
+    channel.post({ type: 'session', accessToken, user });
+    return user;
+  }
+
+  /** Ends the session here and in every other tab, then revokes it on the server. */
+  async function logout(): Promise<void> {
+    store.clear();
+    channel.post({ type: 'logout' });
+    try {
+      await postLogout();
+    } catch {
+      // Best effort: the local session is already gone and the cookie expires on its own.
+    }
+  }
+
+  function handleMessage(message: AuthMessage): void {
+    if (message.type === 'logout') {
+      store.clear();
+      return;
+    }
+    if (message.user !== null) {
+      // Another tab logged in: the shared refresh cookie now belongs to this user.
+      store.authenticate(message.accessToken, message.user);
+    } else if (store.getState().status !== 'anonymous') {
+      store.updateAccessToken(message.accessToken);
+    }
+  }
+
+  /** Starts listening to the other tabs; returns the unsubscribe function. */
+  function connect(): () => void {
+    return channel.subscribe(handleMessage);
+  }
+
+  return { store, authFetch, refreshAccessToken, login, logout, connect };
 }
 
 export type AuthClient = ReturnType<typeof createAuthClient>;
