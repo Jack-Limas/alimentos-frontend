@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { isAuthMessage } from '@/features/auth/auth-channel';
 import { SESSION_STORAGE_KEY } from '@/features/auth/session-store';
 import {
   API_ORIGIN,
@@ -73,5 +74,84 @@ describe('refresh across tabs', () => {
     expect(second.client.store.getState().accessToken).toBe('access-2');
     expect(second.storage.getItem(SESSION_STORAGE_KEY)).toContain('access-2');
     expect(backend.count('/auth/refresh')).toBe(1);
+  });
+});
+
+describe('login and logout across tabs', () => {
+  it('a login in one tab authenticates the others', async () => {
+    const createChannel = createChannelHub();
+    const first = createTab(createChannel);
+    const second = createTab(createChannel);
+    second.client.store.clear();
+
+    await first.client.login(credentials);
+    await flush();
+
+    expect(second.client.store.getState()).toEqual({
+      status: 'authenticated',
+      user: DEMO_USER,
+      accessToken: 'access-1',
+    });
+  });
+
+  it('a logout in one tab ends the session in every tab and clears their copies', async () => {
+    const createChannel = createChannelHub();
+    const first = createTab(createChannel);
+    const second = createTab(createChannel);
+    await first.client.login(credentials);
+    await flush();
+
+    await first.client.logout();
+    await flush();
+
+    for (const tab of [first, second]) {
+      expect(tab.client.store.getState().status).toBe('anonymous');
+      expect(tab.storage.items.has(SESSION_STORAGE_KEY)).toBe(false);
+    }
+    expect(backend.count('/auth/logout')).toBe(1);
+  });
+
+  it('a token-only broadcast does not revive a tab that is logged out', async () => {
+    const createChannel = createChannelHub();
+    const sender = createChannel();
+    const tab = createTab(createChannel);
+    tab.client.store.clear();
+
+    sender.post({ type: 'session', accessToken: 'access-9', user: null });
+    await flush();
+
+    expect(tab.client.store.getState().status).toBe('anonymous');
+  });
+
+  it('stops listening after disconnect', async () => {
+    const createChannel = createChannelHub();
+    const first = createTab(createChannel);
+    const second = createTab(createChannel);
+    second.client.store.clear();
+    second.disconnect();
+
+    await first.client.login(credentials);
+    await flush();
+
+    expect(second.client.store.getState().status).toBe('anonymous');
+  });
+});
+
+describe('isAuthMessage', () => {
+  it('accepts the two message shapes', () => {
+    expect(isAuthMessage({ type: 'logout' })).toBe(true);
+    expect(isAuthMessage({ type: 'session', accessToken: 't', user: null })).toBe(true);
+    expect(isAuthMessage({ type: 'session', accessToken: 't', user: DEMO_USER })).toBe(true);
+  });
+
+  it.each([
+    null,
+    'logout',
+    { type: 'unknown' },
+    { type: 'session', accessToken: '', user: null },
+    { type: 'session', accessToken: 't' },
+    { type: 'session', accessToken: 't', user: { ...DEMO_USER, role: 'ROOT' } },
+  ])('rejects %j', (data) => {
+    expect(isAuthMessage(data)).toBe(false);
   });
 });
