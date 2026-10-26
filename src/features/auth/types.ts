@@ -28,3 +28,8 @@ export interface MeResponse {
 }
 
 export type SessionStatus = 'loading' | 'authenticated' | 'anonymous';
+
+/** True when the user exists and has one of the roles. */
+export function hasRole(user: AuthUser | null, roles: readonly Role[]): boolean {
+  return user !== null && roles.includes(user.role);
+}

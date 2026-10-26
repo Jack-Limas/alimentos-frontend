@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
 import { ForbiddenNotice, PrivateAreaSkeleton } from '@/components/auth';
 import { loginPathWithNext } from './safe-next';
-import type { Role } from './types';
+import { hasRole, type Role } from './types';
 import { useAuth } from './use-auth';
 
 /**
@@ -40,6 +40,6 @@ export function RequireRole({ roles, children, fallback }: RequireRoleProps) {
   const { user } = useAuth();
 
   if (user === null) return null;
-  if (!roles.includes(user.role)) return fallback ?? <ForbiddenNotice />;
+  if (!hasRole(user, roles)) return fallback ?? <ForbiddenNotice />;
   return children;
 }
