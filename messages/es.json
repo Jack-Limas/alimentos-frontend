@@ -85,8 +85,26 @@
     "emailPlaceholder": "nombre@organizacion.org",
     "password": "Contraseña",
     "submit": "Iniciar sesión",
+    "submitting": "Ingresando…",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "redirecting": "Sesión iniciada. Te llevamos a tu panel…",
     "previewNotice": "Vista previa: el inicio de sesión se habilita en la fase de autenticación.",
-    "backHome": "Volver al inicio"
+    "backHome": "Volver al inicio",
+    "validation": {
+      "emailRequired": "Escribe tu correo electrónico.",
+      "emailInvalid": "Escribe un correo válido, por ejemplo nombre@organizacion.org.",
+      "emailTooLong": "El correo es demasiado largo.",
+      "passwordRequired": "Escribe tu contraseña.",
+      "passwordTooLong": "La contraseña es demasiado larga."
+    },
+    "errors": {
+      "invalidCredentials": "Correo o contraseña incorrectos.",
+      "tooManyAttempts": "Demasiados intentos fallidos. Podrás intentarlo de nuevo en <countdown>{time}</countdown>.",
+      "invalidInput": "Revisa los datos ingresados e inténtalo de nuevo.",
+      "network": "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+      "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo en unos minutos."
+    }
   },
   "SystemCheck": {
     "metaTitle": "Diagnóstico del sistema · AlimentaIQ",

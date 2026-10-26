@@ -85,8 +85,26 @@
     "emailPlaceholder": "name@organization.org",
     "password": "Password",
     "submit": "Log in",
+    "submitting": "Logging in…",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "redirecting": "Logged in. Taking you to your dashboard…",
     "previewNotice": "Preview: signing in is enabled in the authentication phase.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "validation": {
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email, for example name@organization.org.",
+      "emailTooLong": "The email is too long.",
+      "passwordRequired": "Enter your password.",
+      "passwordTooLong": "The password is too long."
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect email or password.",
+      "tooManyAttempts": "Too many failed attempts. You can try again in <countdown>{time}</countdown>.",
+      "invalidInput": "Check the information you entered and try again.",
+      "network": "We could not reach the server. Check your connection and try again.",
+      "unexpected": "Something went wrong. Try again in a few minutes."
+    }
   },
   "SystemCheck": {
     "metaTitle": "System check · AlimentaIQ",
