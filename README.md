@@ -129,6 +129,33 @@ pestañas.
   rechazan `//host`, URLs absolutas, `\`, caracteres de control y rutas que al normalizarse salen
   del área privada (`/es/app/../login`), para evitar un _open redirect_.
 
+### Dónde está la seguridad de verdad
+
+- **La protección real está en el API**: cada endpoint privado valida el Bearer y el rol en el
+  servidor (`401`/`403`). El guard del cliente (`RequireAuth`) y `<RequireRole roles={[...]}>`
+  son **UX**: evitan mostrar pantallas que de todos modos fallarían, pero quitar el guard desde
+  las DevTools no da acceso a ningún dato.
+- **No hay SSR autenticado**: la cookie de refresh pertenece a `*.onrender.com` (con
+  `Path=/api/v1/auth`), así que el navegador nunca la envía al servidor de Next en `*.vercel.app`,
+  y el access token solo existe en memoria del navegador. El servidor de Next no puede saber quién
+  es el usuario; por eso el área privada es CSR: su HTML estático es un skeleton y la sesión se
+  resuelve en el navegador.
+
+### Estructura
+
+| Archivo                               | Responsabilidad                                                    |
+| ------------------------------------- | ------------------------------------------------------------------ |
+| `src/features/auth/api.ts`            | Llamadas a `/auth/login`, `/auth/refresh`, `/auth/logout`          |
+| `src/features/auth/session-store.ts`  | Estado de la sesión en memoria + copia en `sessionStorage`         |
+| `src/features/auth/auth-client.ts`    | `authFetch`, refresh coordinado, bootstrap, login y logout         |
+| `src/features/auth/auth-channel.ts`   | `BroadcastChannel` `aiq-auth` con mensajes validados               |
+| `src/features/auth/refresh-lock.ts`   | Lock `aiq-refresh` con la Web Locks API                            |
+| `src/features/auth/auth-provider.tsx` | Provider de React; arranca la sesión después del montaje           |
+| `src/features/auth/use-auth.ts`       | Hook `useAuth()` (estado, usuario, `login`, `logout`, `authFetch`) |
+| `src/features/auth/guards.tsx`        | `RequireAuth` y `RequireRole`                                      |
+| `src/features/auth/safe-next.ts`      | Validación de `?next=`                                             |
+| `src/features/auth/login-*.ts`        | Validación del formulario y mapeo de errores a claves i18n         |
+
 ## Internacionalización
 
 - Idiomas: `es` (por defecto) y `en`, siempre con prefijo (`/es/...`, `/en/...`).
@@ -213,8 +240,10 @@ npm run dev            # http://localhost:3000
   pública se incrusta en el bundle durante el build: si cambia, hay que volver a desplegar.
 - En el backend, `CORS_ORIGINS` debe incluir el dominio `*.vercel.app` del frontend.
 - Frontend (`*.vercel.app`) y API (`*.onrender.com`) son sitios distintos: la cookie de refresh
-  será `HttpOnly; Secure; SameSite=None` en el dominio del API, con `Authorization: Bearer` como
-  respaldo (fase de autenticación).
+  es `HttpOnly; Secure; SameSite=None` en el dominio del API y el access token viaja en
+  `Authorization: Bearer`. Los navegadores que bloquean cookies de terceros (Safari, o Chrome con
+  esa opción) no envían la cookie: el login funciona, pero la sesión no sobrevive a una pestaña
+  nueva ni al vencimiento del access token. Un dominio propio común (`app.` y `api.`) lo resuelve.
 
 ## CI
 
