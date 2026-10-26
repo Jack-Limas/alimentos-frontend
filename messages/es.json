@@ -106,6 +106,24 @@
       "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo en unos minutos."
     }
   },
+  "Auth": {
+    "roles": {
+      "ADMIN": "Administrador",
+      "OPERATOR": "Operador"
+    },
+    "loadingSession": "Cargando tu sesión…",
+    "forbidden": {
+      "title": "Sin permiso",
+      "description": "Tu rol no tiene acceso a esta sección. Si crees que es un error, habla con un administrador."
+    },
+    "userMenu": {
+      "open": "Abrir el menú de {name}",
+      "signedInAs": "Sesión iniciada como",
+      "goToPanel": "Ir al panel",
+      "logout": "Cerrar sesión",
+      "loggingOut": "Cerrando sesión…"
+    }
+  },
   "SystemCheck": {
     "metaTitle": "Diagnóstico del sistema · AlimentaIQ",
     "eyebrow": "Diagnóstico",

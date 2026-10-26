@@ -106,6 +106,24 @@
       "unexpected": "Something went wrong. Try again in a few minutes."
     }
   },
+  "Auth": {
+    "roles": {
+      "ADMIN": "Administrator",
+      "OPERATOR": "Operator"
+    },
+    "loadingSession": "Loading your session…",
+    "forbidden": {
+      "title": "No permission",
+      "description": "Your role does not have access to this section. If you think this is a mistake, contact an administrator."
+    },
+    "userMenu": {
+      "open": "Open {name}'s menu",
+      "signedInAs": "Signed in as",
+      "goToPanel": "Go to dashboard",
+      "logout": "Log out",
+      "loggingOut": "Logging out…"
+    }
+  },
   "SystemCheck": {
     "metaTitle": "System check · AlimentaIQ",
     "eyebrow": "Diagnostics",
