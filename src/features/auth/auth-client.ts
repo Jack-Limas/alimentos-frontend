@@ -1,9 +1,9 @@
 import { ApiError, apiFetch, type ApiRequestOptions } from '@/lib/api';
-import { postLogin, postLogout, postRefresh, withBearer } from './api';
+import { AUTH_PATHS, postLogin, postLogout, postRefresh, withBearer } from './api';
 import type { AuthChannel, AuthMessage } from './auth-channel';
 import type { LockRunner } from './refresh-lock';
 import type { SessionStore } from './session-store';
-import type { AuthUser, LoginCredentials } from './types';
+import type { AuthUser, LoginCredentials, MeResponse } from './types';
 
 /** 401 codes that a fresh access token can fix. */
 const RENEWABLE_CODES = new Set(['TOKEN_EXPIRED', 'UNAUTHENTICATED']);
@@ -40,6 +40,7 @@ export interface AuthClientDeps {
 export function createAuthClient({ store, channel, runExclusive }: AuthClientDeps) {
   // Single flight: every 401 in this tab while a refresh is running awaits the same promise.
   let refreshInFlight: Promise<string | null> | null = null;
+  let bootstrapping: Promise<void> | null = null;
 
   async function runRefresh(staleToken: string | null): Promise<string | null> {
     // Inside the lock: another tab (or an earlier refresh here) may have renewed already.
@@ -94,6 +95,38 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
     }
   }
 
+  async function restoreSession(): Promise<void> {
+    const persisted = store.readPersistedToken();
+    if (persisted !== null) {
+      // A reload of this tab: try the copied token first (authFetch refreshes on 401).
+      store.updateAccessToken(persisted);
+    } else {
+      // A new tab, or the copy was lost: the refresh cookie may still hold a session.
+      const renewed = await refreshAccessToken(null);
+      if (renewed === null) return;
+    }
+    const { data: user } = await authFetch<MeResponse>(AUTH_PATHS.me);
+    const accessToken = store.getState().accessToken;
+    if (accessToken === null) {
+      store.clear();
+      return;
+    }
+    store.authenticate(accessToken, user);
+  }
+
+  /**
+   * Resolves the initial status. Idempotent: React Strict Mode runs effects
+   * twice and both calls share one bootstrap. Any failure ends as anonymous
+   * with the stored copy cleared; a valid refresh cookie still restores the
+   * session on the next load.
+   */
+  function bootstrap(): Promise<void> {
+    bootstrapping ??= restoreSession().catch(() => {
+      store.clear();
+    });
+    return bootstrapping;
+  }
+
   /** Throws ApiError (401, 429 with retryAfterSeconds, 400, network) for the form to show. */
   async function login(credentials: LoginCredentials): Promise<AuthUser> {
     const { accessToken, user } = await postLogin(credentials);
@@ -131,7 +164,7 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
     return channel.subscribe(handleMessage);
   }
 
-  return { store, authFetch, refreshAccessToken, login, logout, connect };
+  return { store, authFetch, refreshAccessToken, bootstrap, login, logout, connect };
 }
 
 export type AuthClient = ReturnType<typeof createAuthClient>;
