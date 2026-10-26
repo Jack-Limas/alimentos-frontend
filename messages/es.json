@@ -1,0 +1,11 @@
+{
+  "Metadata": {
+    "title": "AlimentaIQ · Centro Inteligente de Distribución de Alimentos",
+    "description": "Inventario por lotes, vencimientos y distribución priorizada para que ningún alimento se pierda en el camino."
+  },
+  "NotFound": {
+    "title": "Página no encontrada",
+    "description": "La ruta que buscas no existe o fue movida.",
+    "backHome": "Volver al inicio"
+  }
+}

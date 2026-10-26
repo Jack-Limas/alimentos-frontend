@@ -1,0 +1,11 @@
+{
+  "Metadata": {
+    "title": "AlimentaIQ · Intelligent Food Distribution Center",
+    "description": "Lot-based inventory, expiry tracking and prioritized distribution so no food gets lost along the way."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has moved.",
+    "backHome": "Back to home"
+  }
+}
