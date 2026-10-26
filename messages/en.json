@@ -89,7 +89,6 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "redirecting": "Logged in. Taking you to your dashboard…",
-    "previewNotice": "Preview: signing in is enabled in the authentication phase.",
     "backHome": "Back to home",
     "validation": {
       "emailRequired": "Enter your email address.",

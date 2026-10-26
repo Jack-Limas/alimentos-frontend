@@ -89,7 +89,6 @@
     "showPassword": "Mostrar contraseña",
     "hidePassword": "Ocultar contraseña",
     "redirecting": "Sesión iniciada. Te llevamos a tu panel…",
-    "previewNotice": "Vista previa: el inicio de sesión se habilita en la fase de autenticación.",
     "backHome": "Volver al inicio",
     "validation": {
       "emailRequired": "Escribe tu correo electrónico.",
