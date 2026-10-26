@@ -51,6 +51,52 @@ flowchart LR
 | `/[locale]/app` (tablero provisional) | CSR       | Hecho          | HTML estático = skeleton; guard en el cliente, `noindex`         |
 | Resto del área privada (inventario…)  | CSR       | Fase posterior | TanStack Query con `authFetch` (Bearer + refresh)                |
 
+## Autenticación
+
+El backend emite un **access token** JWT de corta duración (15 min) en el body y un **refresh
+token** opaco en una cookie `HttpOnly; Secure; SameSite=None; Path=/api/v1/auth` del dominio del
+API. El frontend nunca lee la cookie: solo la envía con `credentials: "include"`.
+
+| Dato                    | Dónde vive                                                        | Por qué                                                           |
+| ----------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Access token            | Memoria de la pestaña + copia en `sessionStorage` (`aiq.session`) | La copia evita un refresh al recargar; muere al cerrar la pestaña |
+| Refresh token           | Cookie `HttpOnly` del API                                         | Inaccesible desde JS, así que un XSS no puede robarla             |
+| Usuario (`id`, nombre…) | Memoria (store de sesión)                                         | Se vuelve a pedir con `GET /auth/me` en cada carga                |
+| Nada                    | `localStorage`, cookies escritas desde JS, logs                   | Prohibido: persisten entre sesiones o quedan expuestos            |
+
+Estados de la sesión: `loading` → `authenticated` | `anonymous`.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant P as Pestaña
+  participant API as alimentos-backend
+  Note over P: Al cargar
+  alt hay copia en sessionStorage
+    P->>API: GET /auth/me (Bearer copia)
+    API-->>P: 200 usuario · o 401 → refresh y reintento
+  else pestaña nueva, sin copia
+    P->>API: POST /auth/refresh (cookie)
+    API-->>P: 200 accessToken + cookie rotada · o 401 → anonymous
+  end
+  Note over P: Petición privada con access token vencido
+  P->>API: GET /recurso (Bearer)
+  API-->>P: 401 TOKEN_EXPIRED
+  P->>API: POST /auth/refresh (un solo refresh compartido)
+  API-->>P: 200 accessToken nuevo
+  P->>API: GET /recurso (reintento único)
+  API-->>P: 200
+```
+
+- `authFetch` (en `src/features/auth/auth-client.ts`) agrega `Authorization: Bearer` y, ante un
+  401 `TOKEN_EXPIRED` o `UNAUTHENTICATED`, hace **un** refresh y reintenta **una** vez. Si el
+  refresh responde 401 la sesión pasa a `anonymous` y se borra la copia; un error de red no
+  cierra la sesión.
+- **Single flight**: si varias peticiones reciben 401 a la vez, comparten la misma promesa de
+  refresh (una sola llamada).
+- Al cerrar sesión se borra la caché de TanStack Query para que el siguiente usuario no vea datos
+  del anterior.
+
 ## Internacionalización
 
 - Idiomas: `es` (por defecto) y `en`, siempre con prefijo (`/es/...`, `/en/...`).
