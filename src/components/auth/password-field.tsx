@@ -1,9 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState, type InputHTMLAttributes } from 'react';
+import { useState, type ComponentPropsWithRef } from 'react';
 
-interface PasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+// React 19: `ref` is a regular prop and reaches the input through the spread.
+interface PasswordFieldProps extends Omit<ComponentPropsWithRef<'input'>, 'type'> {
   id: string;
   inputClassName: string;
 }
