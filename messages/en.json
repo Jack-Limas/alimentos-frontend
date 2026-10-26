@@ -25,5 +25,56 @@
   "Footer": {
     "tagline": "Intelligent Food Distribution Center",
     "project": "University project · {year}"
+  },
+  "Landing": {
+    "hero": {
+      "eyebrow": "Intelligent Food Distribution Center",
+      "title": "No food lost between the warehouse and the table.",
+      "subtitle": "AlimentaIQ organizes your inventory by lot and expiry date, prioritizes the orders that matter most and warns you before waste or shortages happen.",
+      "cta": "Log in",
+      "secondaryCta": "See how it works"
+    },
+    "preview": {
+      "label": "Warehouse dashboard preview",
+      "title": "Today in the warehouse",
+      "badge": "Live",
+      "milk": "Whole milk · Lot L-2041",
+      "milkStatus": "Expires in 3 days",
+      "apples": "Red apples · Lot L-1988",
+      "applesStatus": "Waste risk",
+      "rice": "White rice · Lot L-2107",
+      "riceStatus": "Healthy stock",
+      "order": "PED-000123 · Hospital",
+      "orderStatus": "Urgent priority · ships first"
+    },
+    "problem": {
+      "eyebrow": "The problem",
+      "title": "A warehouse without priorities loses food and trust.",
+      "expiredTitle": "Expired products",
+      "expiredBody": "Older lots stay at the back and are found only when they are no longer usable.",
+      "wasteTitle": "Silent waste",
+      "wasteBody": "Slow movers close to expiry end up in the bin instead of on a table.",
+      "shortagesTitle": "Shortages",
+      "shortagesBody": "Pending demand exceeds available stock and nobody notices in time.",
+      "lateTitle": "Late deliveries",
+      "lateBody": "Urgent orders compete on equal terms with orders that can wait."
+    },
+    "solution": {
+      "eyebrow": "Our approach",
+      "title": "Distribution decisions that are clear, explainable and on time.",
+      "fefoTitle": "First expired, first out",
+      "fefoBody": "Every outbound movement consumes lots in expiry order (FEFO), automatically.",
+      "priorityTitle": "Transparent priority",
+      "priorityBody": "Urgency, due date and expiry pressure combine into a score you can tune and understand.",
+      "alertsTitle": "Alerts before the problem",
+      "alertsBody": "Low stock, upcoming expiries, waste risk and shortage risk, computed on the fly.",
+      "aiTitle": "AI that explains, not decides",
+      "aiBody": "AI summarizes and suggests rescue plans; if it is unavailable, the rules keep working."
+    },
+    "closing": {
+      "title": "Your team now has a place to decide better.",
+      "body": "Sign in with your administrator or operator account.",
+      "cta": "Log in"
+    }
   }
 }

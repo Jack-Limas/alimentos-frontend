@@ -25,5 +25,56 @@
   "Footer": {
     "tagline": "Centro Inteligente de Distribución de Alimentos",
     "project": "Proyecto universitario · {year}"
+  },
+  "Landing": {
+    "hero": {
+      "eyebrow": "Centro Inteligente de Distribución de Alimentos",
+      "title": "Que ningún alimento se pierda entre la bodega y la mesa.",
+      "subtitle": "AlimentaIQ ordena tu inventario por lotes y fechas de vencimiento, prioriza los pedidos que más importan y te avisa antes de que el desperdicio o los faltantes ocurran.",
+      "cta": "Iniciar sesión",
+      "secondaryCta": "Ver cómo funciona"
+    },
+    "preview": {
+      "label": "Vista previa del panel de bodega",
+      "title": "Hoy en bodega",
+      "badge": "En vivo",
+      "milk": "Leche entera · Lote L-2041",
+      "milkStatus": "Vence en 3 días",
+      "apples": "Manzana roja · Lote L-1988",
+      "applesStatus": "Riesgo de desperdicio",
+      "rice": "Arroz blanco · Lote L-2107",
+      "riceStatus": "Stock saludable",
+      "order": "PED-000123 · Hospital",
+      "orderStatus": "Prioridad urgente · sale primero"
+    },
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "Una bodega sin prioridades pierde comida y confianza.",
+      "expiredTitle": "Productos vencidos",
+      "expiredBody": "Los lotes más antiguos quedan al fondo y se descubren cuando ya no sirven.",
+      "wasteTitle": "Desperdicio silencioso",
+      "wasteBody": "Lo que rota poco y vence pronto termina en la basura en lugar de en una mesa.",
+      "shortagesTitle": "Faltantes",
+      "shortagesBody": "La demanda pendiente supera el stock disponible y nadie lo ve a tiempo.",
+      "lateTitle": "Entregas tardías",
+      "lateBody": "Los pedidos urgentes compiten en igualdad con los que pueden esperar."
+    },
+    "solution": {
+      "eyebrow": "La propuesta",
+      "title": "Decisiones de distribución claras, explicables y a tiempo.",
+      "fefoTitle": "Primero lo que vence primero",
+      "fefoBody": "Cada salida consume los lotes en orden de vencimiento (FEFO), de forma automática.",
+      "priorityTitle": "Prioridad transparente",
+      "priorityBody": "Urgencia, fecha de entrega y presión de vencimiento se combinan en un puntaje que puedes ajustar y entender.",
+      "alertsTitle": "Alertas antes del problema",
+      "alertsBody": "Stock bajo, vencimientos cercanos, riesgo de desperdicio y de faltantes, calculados al momento.",
+      "aiTitle": "IA que explica, no que decide",
+      "aiBody": "La IA resume y propone planes de rescate; si no está disponible, las reglas siguen funcionando."
+    },
+    "closing": {
+      "title": "Tu equipo ya tiene un lugar para decidir mejor.",
+      "body": "Ingresa con tu cuenta de administrador u operador.",
+      "cta": "Iniciar sesión"
+    }
   }
 }
