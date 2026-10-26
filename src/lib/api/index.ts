@@ -1,6 +1,7 @@
 export {
   ApiError,
   NETWORK_ERROR_CODE,
+  parseRetryAfter,
   UNKNOWN_ERROR_CODE,
   type ApiErrorDetails,
 } from './api-error';
