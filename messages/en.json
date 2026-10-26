@@ -7,5 +7,23 @@
     "title": "Page not found",
     "description": "The page you are looking for does not exist or has moved.",
     "backHome": "Back to home"
+  },
+  "Header": {
+    "skipToContent": "Skip to content",
+    "homeLabel": "AlimentaIQ, go to home",
+    "login": "Log in"
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "ThemeToggle": {
+    "toDark": "Switch to dark theme",
+    "toLight": "Switch to light theme"
+  },
+  "Footer": {
+    "tagline": "Intelligent Food Distribution Center",
+    "project": "University project · {year}"
   }
 }

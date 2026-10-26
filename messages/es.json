@@ -7,5 +7,23 @@
     "title": "Página no encontrada",
     "description": "La ruta que buscas no existe o fue movida.",
     "backHome": "Volver al inicio"
+  },
+  "Header": {
+    "skipToContent": "Saltar al contenido",
+    "homeLabel": "AlimentaIQ, ir al inicio",
+    "login": "Iniciar sesión"
+  },
+  "LanguageSwitcher": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "English"
+  },
+  "ThemeToggle": {
+    "toDark": "Cambiar a tema oscuro",
+    "toLight": "Cambiar a tema claro"
+  },
+  "Footer": {
+    "tagline": "Centro Inteligente de Distribución de Alimentos",
+    "project": "Proyecto universitario · {year}"
   }
 }
