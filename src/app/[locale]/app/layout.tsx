@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { AppShell } from '@/components/app-shell';
 import { RequireAuth } from '@/features/auth/guards';
 
 // Private pages are useless to crawlers and only render a skeleton without a session.
@@ -13,5 +14,9 @@ export const metadata: Metadata = {
  * the user to the login. The API is what actually enforces access.
  */
 export default function PrivateLayout({ children }: { children: ReactNode }) {
-  return <RequireAuth>{children}</RequireAuth>;
+  return (
+    <RequireAuth>
+      <AppShell>{children}</AppShell>
+    </RequireAuth>
+  );
 }
