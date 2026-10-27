@@ -96,10 +96,13 @@ export type FieldErrors<K extends string> = Partial<Record<K, FieldErrorKey>>;
 export type FormResult<T, K extends string> =
   { ok: true; data: T } | { ok: false; errors: FieldErrors<K> };
 
+/** Raw form state: every input, select and radio gives a string. */
+export type FormValues<S extends z.ZodType> = { [K in keyof z.input<S>]: string };
+
 /** Runs a form schema and returns the first error key of every field. */
 export function validateForm<S extends z.ZodType<unknown, Record<string, string>>>(
   schema: S,
-  values: z.input<S>,
+  values: FormValues<S>,
 ): FormResult<z.output<S>, Extract<keyof z.input<S>, string>> {
   const result = schema.safeParse(values);
   if (result.success) return { ok: true, data: result.data };
