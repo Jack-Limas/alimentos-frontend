@@ -125,24 +125,43 @@
   },
   "Dashboard": {
     "metaTitle": "Dashboard · AlimentaIQ",
-    "eyebrow": "Dashboard",
+    "eyebrow": "Center dashboard",
     "greeting": "Hi, {name}",
-    "intro": "This is your provisional dashboard. The inventory, orders and distribution modules arrive in the next phases.",
-    "session": {
-      "title": "Your session",
-      "email": "Email",
-      "role": "Role"
+    "intro": "This is your warehouse today. Tap a card to see the products.",
+    "kpisLabel": "Inventory indicators",
+    "loadingKpis": "Loading indicators…",
+    "kpis": {
+      "totalProducts": {
+        "label": "Active products",
+        "hint": "See the whole catalog"
+      },
+      "lowStock": {
+        "label": "Low stock",
+        "hint": "Below the minimum"
+      },
+      "outOfStock": {
+        "label": "Out of stock",
+        "hint": "No stock available"
+      },
+      "expiringSoon": {
+        "label": "Expire within 7 days",
+        "hint": "Their nearest lot"
+      },
+      "wasteRiskHigh": {
+        "label": "Waste risk",
+        "hint": "Will not sell in time"
+      }
     },
-    "admin": {
-      "title": "Administration",
-      "body": "As an administrator you will manage users, review the audit log and adjust the center settings."
+    "openList": "Open the list",
+    "shortcuts": {
+      "title": "Shortcuts",
+      "products": "Find a product",
+      "movements": "Review movements",
+      "operatorHint": "Entries and exits are registered from each product page by an administrator."
     },
-    "upcoming": {
-      "title": "Coming soon",
-      "inventory": "Lot and expiry inventory",
-      "orders": "Prioritized orders",
-      "distribution": "Distribution proposals",
-      "alerts": "Waste and shortage alerts"
+    "tip": {
+      "title": "How to read the freshness bar",
+      "body": "Each lot has ten cells that go out as its expiry date gets closer: green, amber and red. An expired lot looks grey and striped. The text always says how many days are left."
     }
   },
   "SystemCheck": {

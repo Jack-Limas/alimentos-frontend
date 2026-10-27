@@ -125,24 +125,43 @@
   },
   "Dashboard": {
     "metaTitle": "Panel · AlimentaIQ",
-    "eyebrow": "Panel",
+    "eyebrow": "Panel del centro",
     "greeting": "Hola, {name}",
-    "intro": "Este es tu panel provisional. Los módulos de inventario, pedidos y distribución llegarán en las próximas fases.",
-    "session": {
-      "title": "Tu sesión",
-      "email": "Correo",
-      "role": "Rol"
+    "intro": "Así está tu bodega hoy. Toca una tarjeta para ver los productos.",
+    "kpisLabel": "Indicadores de inventario",
+    "loadingKpis": "Cargando indicadores…",
+    "kpis": {
+      "totalProducts": {
+        "label": "Productos activos",
+        "hint": "Ver todo el catálogo"
+      },
+      "lowStock": {
+        "label": "Stock bajo",
+        "hint": "Por debajo del mínimo"
+      },
+      "outOfStock": {
+        "label": "Agotados",
+        "hint": "Sin stock disponible"
+      },
+      "expiringSoon": {
+        "label": "Vencen en 7 días",
+        "hint": "Su lote más próximo"
+      },
+      "wasteRiskHigh": {
+        "label": "Riesgo de merma",
+        "hint": "No alcanzan a salir"
+      }
     },
-    "admin": {
-      "title": "Administración",
-      "body": "Como administrador podrás gestionar usuarios, consultar el registro de auditoría y ajustar la configuración del centro."
+    "openList": "Abrir la lista",
+    "shortcuts": {
+      "title": "Atajos",
+      "products": "Buscar un producto",
+      "movements": "Revisar movimientos",
+      "operatorHint": "Registra entradas y salidas desde la ficha de cada producto con un administrador."
     },
-    "upcoming": {
-      "title": "Próximamente",
-      "inventory": "Inventario por lotes y vencimientos",
-      "orders": "Pedidos con prioridad",
-      "distribution": "Propuestas de distribución",
-      "alerts": "Alertas de desperdicio y faltantes"
+    "tip": {
+      "title": "Cómo leer la barra de frescura",
+      "body": "Cada lote tiene diez celdas que se apagan a medida que se acerca su vencimiento: verde, ámbar y rojo. Un lote vencido se ve gris y rayado. El texto siempre dice cuántos días quedan."
     }
   },
   "SystemCheck": {
