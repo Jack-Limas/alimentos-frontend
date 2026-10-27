@@ -2,7 +2,7 @@
 
 import { useFormatter, useTranslations } from 'next-intl';
 import { FreshnessBar } from '@/components/inventory/freshness-bar';
-import { Quantity } from '@/components/inventory/quantity';
+import { useFormatQuantity } from '@/components/inventory/quantity';
 import type { Lot, Unit } from '@/features/inventory/types';
 import { businessToday, calendarDateToUtc, daysBetween } from '@/lib/dates';
 
@@ -14,6 +14,7 @@ function lifeDaysOf(lot: Lot): number {
 export function LotList({ lots, unit }: { lots: Lot[]; unit: Unit }) {
   const t = useTranslations('ProductDetail.lots');
   const format = useFormatter();
+  const formatQuantity = useFormatQuantity();
   const firstUsable = lots.find((lot) => !lot.expired)?.id;
 
   if (lots.length === 0) {
@@ -56,9 +57,9 @@ export function LotList({ lots, unit }: { lots: Lot[]; unit: Unit }) {
             </div>
             <div className="text-right">
               <p className="text-sm font-semibold">
-                {t.rich('quantity', {
-                  quantity: () => <Quantity value={lot.quantity} unit={unit} />,
-                  initial: () => <Quantity value={lot.initialQuantity} unit={unit} />,
+                {t('quantity', {
+                  quantity: formatQuantity(lot.quantity, unit),
+                  initial: formatQuantity(lot.initialQuantity, unit),
                 })}
               </p>
               <p className="text-xs text-muted">

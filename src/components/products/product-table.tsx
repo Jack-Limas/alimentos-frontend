@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { FreshnessBar } from '@/components/inventory/freshness-bar';
-import { Quantity } from '@/components/inventory/quantity';
+import { Quantity, useFormatQuantity } from '@/components/inventory/quantity';
 import { CategoryTile, StockChip, WasteChip } from '@/components/inventory/status-chips';
 import type { Product } from '@/features/products/types';
 import { Link } from '@/i18n/navigation';
@@ -11,6 +11,7 @@ import { Link } from '@/i18n/navigation';
 export function ProductTable({ products }: { products: Product[] }) {
   const t = useTranslations('Products');
   const catalog = useTranslations('Catalog');
+  const formatQuantity = useFormatQuantity();
 
   return (
     <div className="hidden overflow-hidden rounded-card bg-surface shadow-card ring-1 ring-border lg:block">
@@ -63,8 +64,8 @@ export function ProductTable({ products }: { products: Product[] }) {
                   <Quantity value={product.availableQty} unit={product.unit} />
                 </p>
                 <p className="text-xs text-muted">
-                  {t.rich('table.minimum', {
-                    quantity: () => <Quantity value={product.minStock} unit={product.unit} />,
+                  {t('table.minimum', {
+                    quantity: formatQuantity(product.minStock, product.unit),
                   })}
                 </p>
               </td>

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
-import { Quantity } from '@/components/inventory/quantity';
+import { Quantity, useFormatQuantity } from '@/components/inventory/quantity';
 import type { ProductDetail } from '@/features/products/types';
 
 function Tile({
@@ -34,15 +34,14 @@ const availableAccent = {
 
 export function ProductMetrics({ product }: { product: ProductDetail }) {
   const t = useTranslations('ProductDetail.metrics');
+  const formatQuantity = useFormatQuantity();
 
   return (
     <dl aria-label={t('label')} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <Tile
         label={t('available')}
         value={<Quantity value={product.availableQty} unit={product.unit} />}
-        hint={t.rich('availableHint', {
-          quantity: () => <Quantity value={product.minStock} unit={product.unit} />,
-        })}
+        hint={t('availableHint', { quantity: formatQuantity(product.minStock, product.unit) })}
         accent={availableAccent[product.stockStatus]}
       />
       <Tile
