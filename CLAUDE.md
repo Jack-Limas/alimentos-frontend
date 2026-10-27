@@ -19,8 +19,15 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - **Light theme by default** (`defaultTheme: "light"`, `enableSystem: false`). Every component
   must also look right in dark mode (`dark:` variant).
 - **Mobile-first**: base styles target phones; add `sm:`/`lg:` for larger screens.
-- Use the design tokens from `src/app/globals.css` (`brand`, `expiry`, `critical`, `sand`, and the
-  semantic `background`, `surface`, `foreground`, `muted`, `border`, `primary`). No ad hoc colors.
+- Use the design tokens from `src/app/globals.css` (`brand`, `expiry`, `critical`, `sand`,
+  `forest` for the app shell, `berry` for waste risk, `lagoon` for adjustments and information,
+  and the semantic `background`, `surface`, `foreground`, `muted`, `border`, `primary`). No ad hoc
+  colors.
+- Status is never shown by color alone: chips and bars always carry text. Motion respects
+  `prefers-reduced-motion` (`motion-safe:`/`motion-reduce:` or `useReducedMotion`).
+- Calendar dates from the API (`expiryDate`) are formatted with `timeZone: 'UTC'`; date-times use
+  the business zone (`America/Bogota`). Server `reasons[]` and error codes are translated, never
+  shown as sent.
 - Data fetching goes through `src/lib/api` (`apiFetch`, `ApiError`) and TanStack Query. The
   client never sends computed figures (scores, recommended quantities, alerts): the server
   recomputes them.
