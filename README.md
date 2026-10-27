@@ -41,15 +41,18 @@ flowchart LR
 
 ## Rendering por ruta
 
-| Ruta                                  | Patrón    | Estado         | Notas                                                            |
-| ------------------------------------- | --------- | -------------- | ---------------------------------------------------------------- |
-| `/[locale]` (landing)                 | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                          |
-| `/[locale]/login`                     | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador |
-| `/[locale]/system-check`              | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador              |
-| `/[locale]/impact`                    | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                  |
-| Hoja de despacho                      | SSR       | Fase posterior | Enlace firmado [EXTRA]                                           |
-| `/[locale]/app` (tablero provisional) | CSR       | Hecho          | HTML estático = skeleton; guard en el cliente, `noindex`         |
-| Resto del área privada (inventario…)  | CSR       | Fase posterior | TanStack Query con `authFetch` (Bearer + refresh)                |
+| Ruta                           | Patrón    | Estado         | Notas                                                            |
+| ------------------------------ | --------- | -------------- | ---------------------------------------------------------------- |
+| `/[locale]` (landing)          | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                          |
+| `/[locale]/login`              | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador |
+| `/[locale]/system-check`       | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador              |
+| `/[locale]/impact`             | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                  |
+| Hoja de despacho               | SSR       | Fase posterior | Enlace firmado [EXTRA]                                           |
+| `/[locale]/app` (panel)        | CSR       | Hecho          | KPIs de `/inventory/summary`; HTML estático = skeleton           |
+| `/[locale]/app/products`       | CSR       | Hecho          | Filtros en la URL; tabla en escritorio, tarjetas en móvil        |
+| `/[locale]/app/products/[id]`  | CSR       | Hecho          | Métricas, razones traducidas, lotes FEFO; acciones ADMIN         |
+| `/[locale]/app/movements`      | CSR       | Hecho          | Solo ADMIN (guard de UX; la API responde 403 igual)              |
+| Pedidos, distribución, alertas | CSR       | Fase posterior | Se ven como "Próximamente" en la navegación                      |
 
 ## Autenticación
 
@@ -169,6 +172,29 @@ pestañas.
 
 Claro por defecto. El usuario puede cambiar a oscuro con el botón del header y la preferencia
 se guarda; la preferencia del sistema operativo se ignora a propósito (`enableSystem: false`).
+
+## Inventario y productos
+
+- **App shell**: sidebar verde bosque en escritorio y barra inferior en móvil (mobile-first: el
+  OPERATOR la usa en bodega). Las entradas dependen del rol (`features/app-shell/navigation.ts`);
+  Movimientos es solo ADMIN y los módulos futuros aparecen deshabilitados como "Próximamente".
+- **Barra de frescura**: diez celdas por lote que se apagan a medida que se acerca el vencimiento
+  (verde → ámbar a ≤ 7 días → rojo a ≤ 2 días; vencido = gris rayado). El texto con los días
+  siempre está visible, así que no depende solo del color. La lógica es pura y está probada
+  (`features/inventory/freshness.ts`).
+- **Razones**: el servidor manda `reasons[{ code, params }]` y la UI las traduce con next-intl
+  (`Reasons.*`). Un código desconocido muestra un mensaje genérico, nunca texto del servidor.
+- **Filtros en la URL**: `/app/products?search=&category=&stockStatus=&expiringWithinDays=` se
+  pueden recargar y compartir. Los valores inválidos se descartan antes de llamar a la API. El KPI
+  de riesgo de merma usa `wasteRisk=HIGH`, que se filtra en el navegador porque la API no tiene
+  ese filtro.
+- **Escrituras (ADMIN)**: crear y editar producto, entrada y salida en modales sobre `<dialog>`.
+  En un 409 `INSUFFICIENT_STOCK` el formulario muestra lo disponible (de `details`) y ofrece
+  "Usar X". Cada escritura invalida las queries afectadas (`features/inventory/query-keys.ts`).
+- **Fechas**: las de calendario (`expiryDate`) se formatean en UTC para no correrse un día, y las
+  fechas con hora en `America/Bogota` (`timeZone` de next-intl).
+- **Movimiento**: conteo de KPIs, barras que se llenan y botones que se hunden al presionar; con
+  `prefers-reduced-motion` todo queda estático.
 
 ## Por qué COOP y COEP
 
