@@ -315,7 +315,8 @@
       "distribution": "Distribución",
       "alerts": "Alertas"
     },
-    "today": "Hoy en Bogotá: {date}"
+    "today": "Hoy en Bogotá: {date}",
+    "comingSoonShort": "Pronto"
   },
   "Common": {
     "pagination": {
@@ -361,7 +362,7 @@
       "low": "Bajo",
       "out": "Agotado",
       "expiring": "Vence en",
-      "anyExpiry": "Cualquier fecha",
+      "anyExpiry": "Cualquier vencimiento",
       "withinDays": "≤ {days, plural, one {# día} other {# días}}",
       "status": "Estado del producto",
       "allStatuses": "Activos e inactivos",
@@ -406,10 +407,9 @@
       "coverageNone": "Sin salidas",
       "coverageHint": "Días que dura el stock al ritmo actual",
       "outflow": "Salida diaria promedio",
-      "outflowHint": "Despachos de los últimos 30 días",
+      "outflowHint": "Por día, con los despachos de los últimos 30 días",
       "expired": "Vencido en estantería",
-      "expiredHint": "Solo puede salir como merma",
-      "perDay": "/ día"
+      "expiredHint": "Solo puede salir como merma"
     },
     "reasons": {
       "title": "Por qué se ve así",

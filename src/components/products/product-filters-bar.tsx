@@ -112,9 +112,7 @@ export function ProductFiltersBar({ filters, onChange }: ProductFiltersBarProps)
             }
             className={selectClass}
           >
-            <option value="">
-              {t('expiring')}: {t('anyExpiry')}
-            </option>
+            <option value="">{t('anyExpiry')}</option>
             {/* Keep a value from the URL that is not one of the presets selectable. */}
             {[
               ...new Set([

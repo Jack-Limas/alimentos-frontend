@@ -315,7 +315,8 @@
       "distribution": "Distribution",
       "alerts": "Alerts"
     },
-    "today": "Today in Bogota: {date}"
+    "today": "Today in Bogota: {date}",
+    "comingSoonShort": "Soon"
   },
   "Common": {
     "pagination": {
@@ -361,7 +362,7 @@
       "low": "Low",
       "out": "Out",
       "expiring": "Expires in",
-      "anyExpiry": "Any date",
+      "anyExpiry": "Any expiry date",
       "withinDays": "≤ {days, plural, one {# day} other {# days}}",
       "status": "Product status",
       "allStatuses": "Active and inactive",
@@ -406,10 +407,9 @@
       "coverageNone": "No outflow",
       "coverageHint": "Days the stock lasts at the current pace",
       "outflow": "Average daily outflow",
-      "outflowHint": "Dispatches in the last 30 days",
+      "outflowHint": "Per day, from dispatches in the last 30 days",
       "expired": "Expired on the shelf",
-      "expiredHint": "It can only leave as waste",
-      "perDay": "/ day"
+      "expiredHint": "It can only leave as waste"
     },
     "reasons": {
       "title": "Why it looks like this",
