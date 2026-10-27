@@ -343,5 +343,93 @@
       "expired": "expired",
       "unknown": "no date"
     }
+  },
+  "Products": {
+    "metaTitle": "Inventory and products · AlimentaIQ",
+    "eyebrow": "Inventory",
+    "title": "Products and lots",
+    "intro": "Available stock, expiry dates and waste risk of every product, computed by the server.",
+    "newProduct": "New product",
+    "filters": {
+      "label": "Product filters",
+      "search": "Search by name",
+      "searchPlaceholder": "Rice, milk, tomato…",
+      "category": "Category",
+      "allCategories": "All categories",
+      "stock": "Stock status",
+      "allStock": "All",
+      "low": "Low",
+      "out": "Out",
+      "expiring": "Expires in",
+      "anyExpiry": "Any date",
+      "withinDays": "≤ {days, plural, one {# day} other {# days}}",
+      "status": "Product status",
+      "allStatuses": "Active and inactive",
+      "wasteHigh": "High waste risk",
+      "removeFilter": "Remove filter: {filter}"
+    },
+    "table": {
+      "caption": "Products that match the filters",
+      "product": "Product",
+      "available": "Available",
+      "stock": "Stock",
+      "waste": "Waste",
+      "freshness": "Nearest lot",
+      "minimum": "Minimum {quantity}"
+    },
+    "loading": "Loading products…",
+    "empty": {
+      "title": "There are no products yet",
+      "description": "Once you register the first product it shows up here with its stock and lots."
+    },
+    "noMatch": {
+      "title": "Nothing matches those filters",
+      "description": "Try another search or clear the filters to see the whole catalog."
+    },
+    "inactive": "Inactive",
+    "openDetail": "See details of {name}"
+  },
+  "ProductDetail": {
+    "metaTitle": "Product details · AlimentaIQ",
+    "back": "Back to products",
+    "loading": "Loading product…",
+    "notFound": {
+      "title": "We could not find this product",
+      "description": "The link may be wrong or the product no longer exists."
+    },
+    "metrics": {
+      "label": "Product indicators",
+      "available": "Available",
+      "availableHint": "Minimum: {quantity}",
+      "coverage": "Coverage",
+      "coverageValue": "{days, number} days",
+      "coverageNone": "No outflow",
+      "coverageHint": "Days the stock lasts at the current pace",
+      "outflow": "Average daily outflow",
+      "outflowHint": "Dispatches in the last 30 days",
+      "expired": "Expired on the shelf",
+      "expiredHint": "It can only leave as waste"
+    },
+    "reasons": {
+      "title": "Why it looks like this",
+      "none": "All good: enough stock and no expiry dates coming up."
+    },
+    "lots": {
+      "title": "Lots in FEFO order",
+      "subtitle": "The first to expire is the first to leave.",
+      "empty": "There are no lots with stock.",
+      "order": "#{position}",
+      "noCode": "No code",
+      "quantity": "{quantity} of {initial}",
+      "expires": "Expires on {date}",
+      "received": "Received on {date}",
+      "nextOut": "Leaves first"
+    },
+    "actions": {
+      "label": "Administrator actions",
+      "edit": "Edit",
+      "entry": "Register entry",
+      "exit": "Register exit"
+    }
   }
 }

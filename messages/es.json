@@ -343,5 +343,93 @@
       "expired": "vencido",
       "unknown": "sin fecha"
     }
+  },
+  "Products": {
+    "metaTitle": "Inventario y productos · AlimentaIQ",
+    "eyebrow": "Inventario",
+    "title": "Productos y lotes",
+    "intro": "Stock disponible, vencimientos y riesgo de merma de cada producto, calculados por el servidor.",
+    "newProduct": "Nuevo producto",
+    "filters": {
+      "label": "Filtros de productos",
+      "search": "Buscar por nombre",
+      "searchPlaceholder": "Arroz, leche, tomate…",
+      "category": "Categoría",
+      "allCategories": "Todas las categorías",
+      "stock": "Estado de stock",
+      "allStock": "Todo",
+      "low": "Bajo",
+      "out": "Agotado",
+      "expiring": "Vence en",
+      "anyExpiry": "Cualquier fecha",
+      "withinDays": "≤ {days, plural, one {# día} other {# días}}",
+      "status": "Estado del producto",
+      "allStatuses": "Activos e inactivos",
+      "wasteHigh": "Riesgo de merma alto",
+      "removeFilter": "Quitar filtro: {filter}"
+    },
+    "table": {
+      "caption": "Productos que coinciden con los filtros",
+      "product": "Producto",
+      "available": "Disponible",
+      "stock": "Stock",
+      "waste": "Merma",
+      "freshness": "Lote más próximo",
+      "minimum": "Mínimo {quantity}"
+    },
+    "loading": "Cargando productos…",
+    "empty": {
+      "title": "Todavía no hay productos",
+      "description": "Cuando registres el primer producto aparecerá aquí con su stock y sus lotes."
+    },
+    "noMatch": {
+      "title": "Nada coincide con esos filtros",
+      "description": "Prueba con otra búsqueda o limpia los filtros para ver todo el catálogo."
+    },
+    "inactive": "Inactivo",
+    "openDetail": "Ver detalle de {name}"
+  },
+  "ProductDetail": {
+    "metaTitle": "Detalle de producto · AlimentaIQ",
+    "back": "Volver a productos",
+    "loading": "Cargando producto…",
+    "notFound": {
+      "title": "No encontramos este producto",
+      "description": "Puede que el enlace esté mal o que el producto ya no exista."
+    },
+    "metrics": {
+      "label": "Indicadores del producto",
+      "available": "Disponible",
+      "availableHint": "Mínimo: {quantity}",
+      "coverage": "Cobertura",
+      "coverageValue": "{days, number} días",
+      "coverageNone": "Sin salidas",
+      "coverageHint": "Días que dura el stock al ritmo actual",
+      "outflow": "Salida diaria promedio",
+      "outflowHint": "Despachos de los últimos 30 días",
+      "expired": "Vencido en estantería",
+      "expiredHint": "Solo puede salir como merma"
+    },
+    "reasons": {
+      "title": "Por qué se ve así",
+      "none": "Todo en orden: stock suficiente y sin vencimientos cercanos."
+    },
+    "lots": {
+      "title": "Lotes en orden FEFO",
+      "subtitle": "El primero que vence es el primero que sale.",
+      "empty": "No hay lotes con stock.",
+      "order": "#{position}",
+      "noCode": "Sin código",
+      "quantity": "{quantity} de {initial}",
+      "expires": "Vence el {date}",
+      "received": "Recibido el {date}",
+      "nextOut": "Sale primero"
+    },
+    "actions": {
+      "label": "Acciones del administrador",
+      "edit": "Editar",
+      "entry": "Registrar entrada",
+      "exit": "Registrar salida"
+    }
   }
 }
