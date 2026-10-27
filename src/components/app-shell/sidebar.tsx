@@ -48,11 +48,11 @@ export function Sidebar({ user }: { user: AuthUser }) {
                     <span
                       aria-disabled="true"
                       aria-label={t('comingSoonLabel', { module: label })}
-                      className="flex h-11 cursor-not-allowed items-center gap-3 rounded-xl px-3 text-sm text-forest-300"
+                      className="flex h-11 cursor-not-allowed items-center gap-2.5 rounded-xl px-3 text-sm text-forest-300"
                     >
                       <Icon name={item.icon} />
-                      <span className="flex-1">{label}</span>
-                      <span className="rounded-full border border-forest-600 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-forest-200">
+                      <span className="min-w-0 flex-1 truncate">{label}</span>
+                      <span className="shrink-0 rounded-full border border-forest-600 px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase text-forest-200">
                         {t('comingSoon')}
                       </span>
                     </span>
