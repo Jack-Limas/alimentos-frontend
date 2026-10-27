@@ -33,8 +33,13 @@ export function BottomNav({ role }: { role: Role }) {
                   aria-label={t('comingSoonLabel', { module: t(`nav.${item.key}`) })}
                   className="flex h-16 flex-col items-center justify-center gap-1 text-[0.68rem] text-forest-400"
                 >
-                  <Icon name={item.icon} />
-                  <span>{t('comingSoon')}</span>
+                  <span className="relative">
+                    <Icon name={item.icon} />
+                    <span className="absolute -right-4 -top-2 rounded-full bg-forest-700 px-1 text-[0.55rem] font-bold uppercase leading-4 text-forest-100">
+                      {t('comingSoonShort')}
+                    </span>
+                  </span>
+                  <span className="max-w-full truncate px-1">{label}</span>
                 </span>
               </li>
             );
