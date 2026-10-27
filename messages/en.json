@@ -311,5 +311,18 @@
     "loadError": "We could not load this data.",
     "clearFilters": "Clear filters",
     "back": "Back"
+  },
+  "Freshness": {
+    "daysLeft": "{days, plural, =0 {Expires today} one {# day left} other {# days left}}",
+    "expired": "{days, plural, one {Expired # day ago} other {Expired # days ago}}",
+    "noLots": "No lots with stock",
+    "label": "Freshness: {status}",
+    "levels": {
+      "fresh": "fresh",
+      "warning": "expires soon",
+      "critical": "expires now",
+      "expired": "expired",
+      "unknown": "no date"
+    }
   }
 }

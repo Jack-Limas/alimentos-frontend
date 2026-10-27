@@ -311,5 +311,18 @@
     "loadError": "No pudimos cargar estos datos.",
     "clearFilters": "Limpiar filtros",
     "back": "Volver"
+  },
+  "Freshness": {
+    "daysLeft": "{days, plural, =0 {Vence hoy} one {Queda # día} other {Quedan # días}}",
+    "expired": "{days, plural, one {Vencido hace # día} other {Vencido hace # días}}",
+    "noLots": "Sin lotes con stock",
+    "label": "Frescura: {status}",
+    "levels": {
+      "fresh": "fresco",
+      "warning": "vence pronto",
+      "critical": "vence ya",
+      "expired": "vencido",
+      "unknown": "sin fecha"
+    }
   }
 }
