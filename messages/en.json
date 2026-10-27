@@ -431,5 +431,21 @@
       "entry": "Register entry",
       "exit": "Register exit"
     }
+  },
+  "ProductForm": {
+    "createTitle": "New product",
+    "createDescription": "Stock and expiry dates are computed from the lots you register later.",
+    "editTitle": "Edit {name}",
+    "editDescription": "To stop using a product mark it as inactive: it is not deleted.",
+    "name": "Name",
+    "category": "Category",
+    "unit": "Unit",
+    "minStock": "Minimum stock",
+    "minStockHint": "Below this quantity the product is flagged as low stock.",
+    "status": "Status",
+    "create": "Create product",
+    "save": "Save changes",
+    "created": "Product “{name}” created.",
+    "updated": "Changes to “{name}” saved."
   }
 }

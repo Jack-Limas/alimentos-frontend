@@ -431,5 +431,21 @@
       "entry": "Registrar entrada",
       "exit": "Registrar salida"
     }
+  },
+  "ProductForm": {
+    "createTitle": "Nuevo producto",
+    "createDescription": "El stock y los vencimientos se calculan con los lotes que registres después.",
+    "editTitle": "Editar {name}",
+    "editDescription": "Para dejar de usar un producto márcalo como inactivo: no se borra.",
+    "name": "Nombre",
+    "category": "Categoría",
+    "unit": "Unidad",
+    "minStock": "Stock mínimo",
+    "minStockHint": "Por debajo de esta cantidad el producto se marca con stock bajo.",
+    "status": "Estado",
+    "create": "Crear producto",
+    "save": "Guardar cambios",
+    "created": "Producto «{name}» creado.",
+    "updated": "Cambios de «{name}» guardados."
   }
 }
