@@ -55,6 +55,43 @@
   --color-sand-900: #26221e;
   --color-sand-950: #171513;
 
+  /* Deep forest: the app shell (sidebar, bottom bar) and strong headings. */
+  --color-forest-50: #eef7f3;
+  --color-forest-100: #d3ebe0;
+  --color-forest-200: #a8d6c2;
+  --color-forest-300: #74b99d;
+  --color-forest-400: #4a9a7c;
+  --color-forest-500: #2f7c61;
+  --color-forest-600: #22634e;
+  --color-forest-700: #1b4f3f;
+  --color-forest-800: #153e33;
+  --color-forest-900: #10302a;
+  --color-forest-950: #0a1f1b;
+
+  /* Berry: waste risk and returns. */
+  --color-berry-50: #fdf2f8;
+  --color-berry-100: #fbe4f1;
+  --color-berry-200: #f8c9e3;
+  --color-berry-300: #f19fcb;
+  --color-berry-400: #e66aab;
+  --color-berry-500: #d6418c;
+  --color-berry-600: #b92a70;
+  --color-berry-700: #9a1f5b;
+  --color-berry-800: #7f1d4d;
+  --color-berry-900: #6b1c43;
+
+  /* Lagoon: neutral information and manual adjustments. */
+  --color-lagoon-50: #effbfc;
+  --color-lagoon-100: #d6f3f7;
+  --color-lagoon-200: #b2e7ef;
+  --color-lagoon-300: #7dd4e3;
+  --color-lagoon-400: #41b8cf;
+  --color-lagoon-500: #259bb4;
+  --color-lagoon-600: #217d97;
+  --color-lagoon-700: #22657b;
+  --color-lagoon-800: #245466;
+  --color-lagoon-900: #224657;
+
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-heading), ui-serif, Georgia, serif;
 
