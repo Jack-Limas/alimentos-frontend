@@ -56,12 +56,7 @@ export function ProductMetrics({ product }: { product: ProductDetail }) {
       />
       <Tile
         label={t('outflow')}
-        value={
-          <>
-            <Quantity value={product.avgDailyOut30d} unit={product.unit} />
-            <span className="text-base font-normal text-muted"> {t('perDay')}</span>
-          </>
-        }
+        value={<Quantity value={product.avgDailyOut30d} unit={product.unit} />}
         hint={t('outflowHint')}
         accent="bg-forest-500"
       />
