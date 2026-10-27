@@ -488,5 +488,33 @@
       "submit": "Register exit",
       "done": "Exit registered: {quantity} of {name}."
     }
+  },
+  "Movements": {
+    "metaTitle": "Movements · AlimentaIQ",
+    "eyebrow": "Log",
+    "title": "Inventory movements",
+    "intro": "Every entry, exit, adjustment and return, newest first.",
+    "filters": {
+      "label": "Movement filters",
+      "type": "Type",
+      "allTypes": "All types",
+      "from": "From",
+      "to": "To"
+    },
+    "table": {
+      "caption": "Movements that match the filters",
+      "date": "Date",
+      "product": "Product",
+      "type": "Type",
+      "quantity": "Quantity",
+      "reason": "Reason",
+      "noReason": "No reason",
+      "unknownProduct": "Unknown product"
+    },
+    "loading": "Loading movements…",
+    "empty": {
+      "title": "No movements match those filters",
+      "description": "Change the type or the date range."
+    }
   }
 }

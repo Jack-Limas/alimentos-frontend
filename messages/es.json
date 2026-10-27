@@ -488,5 +488,33 @@
       "submit": "Registrar salida",
       "done": "Salida registrada: {quantity} de {name}."
     }
+  },
+  "Movements": {
+    "metaTitle": "Movimientos · AlimentaIQ",
+    "eyebrow": "Bitácora",
+    "title": "Movimientos de inventario",
+    "intro": "Cada entrada, salida, ajuste y devolución, del más reciente al más antiguo.",
+    "filters": {
+      "label": "Filtros de movimientos",
+      "type": "Tipo",
+      "allTypes": "Todos los tipos",
+      "from": "Desde",
+      "to": "Hasta"
+    },
+    "table": {
+      "caption": "Movimientos que coinciden con los filtros",
+      "date": "Fecha",
+      "product": "Producto",
+      "type": "Tipo",
+      "quantity": "Cantidad",
+      "reason": "Motivo",
+      "noReason": "Sin motivo",
+      "unknownProduct": "Producto desconocido"
+    },
+    "loading": "Cargando movimientos…",
+    "empty": {
+      "title": "No hay movimientos con esos filtros",
+      "description": "Cambia el tipo o el rango de fechas."
+    }
   }
 }
