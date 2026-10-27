@@ -408,7 +408,8 @@
       "outflow": "Average daily outflow",
       "outflowHint": "Dispatches in the last 30 days",
       "expired": "Expired on the shelf",
-      "expiredHint": "It can only leave as waste"
+      "expiredHint": "It can only leave as waste",
+      "perDay": "/ day"
     },
     "reasons": {
       "title": "Why it looks like this",

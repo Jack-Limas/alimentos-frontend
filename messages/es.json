@@ -408,7 +408,8 @@
       "outflow": "Salida diaria promedio",
       "outflowHint": "Despachos de los últimos 30 días",
       "expired": "Vencido en estantería",
-      "expiredHint": "Solo puede salir como merma"
+      "expiredHint": "Solo puede salir como merma",
+      "perDay": "/ día"
     },
     "reasons": {
       "title": "Por qué se ve así",
