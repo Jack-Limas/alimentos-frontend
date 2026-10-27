@@ -447,5 +447,45 @@
     "save": "Save changes",
     "created": "Product “{name}” created.",
     "updated": "Changes to “{name}” saved."
+  },
+  "StockForms": {
+    "entry": {
+      "title": "Register entry",
+      "description": "Creates a new lot of {name} with its expiry date.",
+      "quantity": "Quantity received",
+      "expiryDate": "Expiry date",
+      "expiryHint": "Today in Bogota is {today}.",
+      "lotCode": "Lot code",
+      "lotCodePlaceholder": "L-261026-01",
+      "note": "Note",
+      "submit": "Register entry",
+      "done": "Entry registered: {quantity} of {name}."
+    },
+    "exit": {
+      "title": "Register exit",
+      "description": "Takes stock of {name} out. Without a lot, the one that expires first leaves first (FEFO).",
+      "type": "Exit type",
+      "types": {
+        "EXIT_WASTE": {
+          "label": "Waste",
+          "hint": "Damaged or expired goods. It can use expired lots."
+        },
+        "ADJUSTMENT": {
+          "label": "Adjustment",
+          "hint": "Count correction. Only lots that have not expired."
+        }
+      },
+      "quantity": "Quantity",
+      "available": "Available: {quantity}",
+      "availableWithExpired": "Available: {quantity} · expired: {expired}",
+      "lot": "Lot",
+      "lotAuto": "Automatic (FEFO)",
+      "lotOption": "{code} · {quantity} · expires {date}",
+      "lotExpired": "{code} · {quantity} · expired",
+      "reason": "Reason",
+      "reasonPlaceholder": "Broken package, physical count…",
+      "submit": "Register exit",
+      "done": "Exit registered: {quantity} of {name}."
+    }
   }
 }

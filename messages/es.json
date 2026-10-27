@@ -447,5 +447,45 @@
     "save": "Guardar cambios",
     "created": "Producto «{name}» creado.",
     "updated": "Cambios de «{name}» guardados."
+  },
+  "StockForms": {
+    "entry": {
+      "title": "Registrar entrada",
+      "description": "Crea un lote nuevo de {name} con su fecha de vencimiento.",
+      "quantity": "Cantidad recibida",
+      "expiryDate": "Fecha de vencimiento",
+      "expiryHint": "Hoy en Bogotá es {today}.",
+      "lotCode": "Código del lote",
+      "lotCodePlaceholder": "L-261026-01",
+      "note": "Nota",
+      "submit": "Registrar entrada",
+      "done": "Entrada registrada: {quantity} de {name}."
+    },
+    "exit": {
+      "title": "Registrar salida",
+      "description": "Descuenta stock de {name}. Sin elegir lote, sale primero el que vence antes (FEFO).",
+      "type": "Tipo de salida",
+      "types": {
+        "EXIT_WASTE": {
+          "label": "Merma",
+          "hint": "Producto dañado o vencido. Puede consumir lotes vencidos."
+        },
+        "ADJUSTMENT": {
+          "label": "Ajuste",
+          "hint": "Corrección de conteo. Solo lotes vigentes."
+        }
+      },
+      "quantity": "Cantidad",
+      "available": "Disponible: {quantity}",
+      "availableWithExpired": "Disponible: {quantity} · vencido: {expired}",
+      "lot": "Lote",
+      "lotAuto": "Automático (FEFO)",
+      "lotOption": "{code} · {quantity} · vence {date}",
+      "lotExpired": "{code} · {quantity} · vencido",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Empaque roto, conteo físico…",
+      "submit": "Registrar salida",
+      "done": "Salida registrada: {quantity} de {name}."
+    }
   }
 }
