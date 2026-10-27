@@ -234,5 +234,14 @@
       "ADJUSTMENT": "Ajuste",
       "RETURN": "Devolución"
     }
+  },
+  "Reasons": {
+    "OUT_OF_STOCK": "No queda stock disponible. El mínimo esperado es {minStock, number} {unit}.",
+    "BELOW_MIN_STOCK": "Quedan {availableQty, number} {unit}, por debajo del mínimo de {minStock, number} {unit}.",
+    "EXPIRES_IN_DAYS": "{days, plural, =0 {El lote más próximo vence hoy.} one {El lote más próximo vence en # día.} other {El lote más próximo vence en # días.}}",
+    "EXPIRED_STOCK": "Hay {quantity, number} {unit} vencidos en estantería: solo pueden salir como merma.",
+    "NO_RECENT_OUTFLOW": "No hubo despachos en los últimos {windowDays, number} días.",
+    "COVERAGE_EXCEEDS_EXPIRY": "Al ritmo actual el stock dura {coverageDays, number} días, pero el lote vence en {daysToExpiry, plural, one {# día} other {# días}}.",
+    "UNKNOWN": "Hay una observación que esta versión de la aplicación aún no sabe mostrar."
   }
 }

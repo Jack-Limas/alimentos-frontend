@@ -234,5 +234,14 @@
       "ADJUSTMENT": "Adjustment",
       "RETURN": "Return"
     }
+  },
+  "Reasons": {
+    "OUT_OF_STOCK": "No stock is available. The expected minimum is {minStock, number} {unit}.",
+    "BELOW_MIN_STOCK": "{availableQty, number} {unit} left, below the minimum of {minStock, number} {unit}.",
+    "EXPIRES_IN_DAYS": "{days, plural, =0 {The nearest lot expires today.} one {The nearest lot expires in # day.} other {The nearest lot expires in # days.}}",
+    "EXPIRED_STOCK": "{quantity, number} {unit} on the shelf have expired: they can only leave as waste.",
+    "NO_RECENT_OUTFLOW": "Nothing was dispatched in the last {windowDays, number} days.",
+    "COVERAGE_EXCEEDS_EXPIRY": "At the current pace the stock lasts {coverageDays, number} days, but the lot expires in {daysToExpiry, plural, one {# day} other {# days}}.",
+    "UNKNOWN": "There is a note this version of the app cannot show yet."
   }
 }
