@@ -297,5 +297,19 @@
       "alerts": "Alerts"
     },
     "today": "Today in Bogota: {date}"
+  },
+  "Common": {
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous",
+      "next": "Next",
+      "status": "Page {page} of {pages}",
+      "total": "{total, plural, =0 {No results} one {# result} other {# results}}"
+    },
+    "loading": "Loading…",
+    "retry": "Retry",
+    "loadError": "We could not load this data.",
+    "clearFilters": "Clear filters",
+    "back": "Back"
   }
 }

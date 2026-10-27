@@ -297,5 +297,19 @@
       "alerts": "Alertas"
     },
     "today": "Hoy en Bogotá: {date}"
+  },
+  "Common": {
+    "pagination": {
+      "label": "Paginación",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "status": "Página {page} de {pages}",
+      "total": "{total, plural, =0 {Sin resultados} one {# resultado} other {# resultados}}"
+    },
+    "loading": "Cargando…",
+    "retry": "Reintentar",
+    "loadError": "No pudimos cargar estos datos.",
+    "clearFilters": "Limpiar filtros",
+    "back": "Volver"
   }
 }
