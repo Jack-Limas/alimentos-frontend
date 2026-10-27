@@ -243,5 +243,59 @@
     "NO_RECENT_OUTFLOW": "No hubo despachos en los últimos {windowDays, number} días.",
     "COVERAGE_EXCEEDS_EXPIRY": "Al ritmo actual el stock dura {coverageDays, number} días, pero el lote vence en {daysToExpiry, plural, one {# día} other {# días}}.",
     "UNKNOWN": "Hay una observación que esta versión de la aplicación aún no sabe mostrar."
+  },
+  "Forms": {
+    "errors": {
+      "required": "Este campo es obligatorio.",
+      "notANumber": "Escribe un número, por ejemplo 12,5.",
+      "mustBePositive": "Debe ser mayor que 0.",
+      "mustNotBeNegative": "No puede ser negativo.",
+      "tooManyDecimals": "Usa como máximo 3 decimales.",
+      "tooLarge": "La cantidad es demasiado grande.",
+      "invalidDate": "La fecha no es válida.",
+      "pastDate": "La fecha no puede ser anterior a hoy.",
+      "tooLong": "El texto es demasiado largo.",
+      "invalidOption": "Elige una opción de la lista."
+    },
+    "mutationErrors": {
+      "insufficientStock": "No alcanza el stock: solo hay {available, number} {unit} disponibles.",
+      "insufficientStockUnknown": "Otro movimiento consumió el stock mientras guardabas. Revisa las cantidades e inténtalo de nuevo.",
+      "duplicateName": "Ya existe un producto con ese nombre.",
+      "notFound": "El producto o el lote ya no existe. Recarga la página.",
+      "invalid": "Algunos datos no son válidos. Revísalos e inténtalo de nuevo.",
+      "forbidden": "Tu rol no permite esta acción.",
+      "sessionExpired": "Tu sesión terminó. Vuelve a iniciar sesión.",
+      "network": "No pudimos conectar con el servidor. Revisa tu conexión.",
+      "unexpected": "Algo salió mal. Inténtalo de nuevo en un momento."
+    },
+    "useAvailable": "Usar {available, number} {unit}",
+    "optional": "Opcional",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "saving": "Guardando…"
+  },
+  "AppShell": {
+    "navLabel": "Navegación principal",
+    "mobileNavLabel": "Navegación de la aplicación",
+    "comingSoon": "Próximamente",
+    "comingSoonLabel": "{module}: próximamente",
+    "workspace": "Centro de distribución",
+    "nav": {
+      "dashboard": "Panel",
+      "inventory": "Inventario y productos",
+      "movements": "Movimientos",
+      "orders": "Pedidos",
+      "distribution": "Distribución",
+      "alerts": "Alertas"
+    },
+    "navShort": {
+      "dashboard": "Panel",
+      "inventory": "Inventario",
+      "movements": "Movimientos",
+      "orders": "Pedidos",
+      "distribution": "Distribución",
+      "alerts": "Alertas"
+    },
+    "today": "Hoy en Bogotá: {date}"
   }
 }

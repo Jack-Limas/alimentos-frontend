@@ -243,5 +243,59 @@
     "NO_RECENT_OUTFLOW": "Nothing was dispatched in the last {windowDays, number} days.",
     "COVERAGE_EXCEEDS_EXPIRY": "At the current pace the stock lasts {coverageDays, number} days, but the lot expires in {daysToExpiry, plural, one {# day} other {# days}}.",
     "UNKNOWN": "There is a note this version of the app cannot show yet."
+  },
+  "Forms": {
+    "errors": {
+      "required": "This field is required.",
+      "notANumber": "Type a number, for example 12.5.",
+      "mustBePositive": "It must be greater than 0.",
+      "mustNotBeNegative": "It cannot be negative.",
+      "tooManyDecimals": "Use at most 3 decimals.",
+      "tooLarge": "The quantity is too large.",
+      "invalidDate": "The date is not valid.",
+      "pastDate": "The date cannot be before today.",
+      "tooLong": "The text is too long.",
+      "invalidOption": "Pick an option from the list."
+    },
+    "mutationErrors": {
+      "insufficientStock": "Not enough stock: only {available, number} {unit} available.",
+      "insufficientStockUnknown": "Another movement used the stock while you were saving. Check the quantities and try again.",
+      "duplicateName": "A product with that name already exists.",
+      "notFound": "The product or lot no longer exists. Reload the page.",
+      "invalid": "Some data is not valid. Check it and try again.",
+      "forbidden": "Your role cannot do this.",
+      "sessionExpired": "Your session ended. Log in again.",
+      "network": "We could not reach the server. Check your connection.",
+      "unexpected": "Something went wrong. Try again in a moment."
+    },
+    "useAvailable": "Use {available, number} {unit}",
+    "optional": "Optional",
+    "cancel": "Cancel",
+    "close": "Close",
+    "saving": "Saving…"
+  },
+  "AppShell": {
+    "navLabel": "Main navigation",
+    "mobileNavLabel": "App navigation",
+    "comingSoon": "Coming soon",
+    "comingSoonLabel": "{module}: coming soon",
+    "workspace": "Distribution center",
+    "nav": {
+      "dashboard": "Dashboard",
+      "inventory": "Inventory and products",
+      "movements": "Movements",
+      "orders": "Orders",
+      "distribution": "Distribution",
+      "alerts": "Alerts"
+    },
+    "navShort": {
+      "dashboard": "Home",
+      "inventory": "Inventory",
+      "movements": "Movements",
+      "orders": "Orders",
+      "distribution": "Distribution",
+      "alerts": "Alerts"
+    },
+    "today": "Today in Bogota: {date}"
   }
 }
