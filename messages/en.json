@@ -180,5 +180,59 @@
       "unreachableHint": "Could not reach the backend. Check NEXT_PUBLIC_API_URL and that CORS_ORIGINS includes this origin.",
       "configHint": "NEXT_PUBLIC_API_URL is not configured correctly."
     }
+  },
+  "Catalog": {
+    "units": {
+      "short": {
+        "KG": "kg",
+        "L": "L",
+        "UNIT": "units",
+        "BOX": "boxes"
+      },
+      "long": {
+        "KG": "Kilogram (kg)",
+        "L": "Liter (L)",
+        "UNIT": "Unit",
+        "BOX": "Box"
+      }
+    },
+    "categories": {
+      "FRUITS_VEGETABLES": "Fruits and vegetables",
+      "DAIRY": "Dairy",
+      "MEAT_POULTRY": "Meat and poultry",
+      "FISH": "Fish",
+      "BAKERY": "Bakery",
+      "GRAINS_LEGUMES": "Grains and legumes",
+      "CANNED": "Canned goods",
+      "BEVERAGES": "Beverages",
+      "FROZEN": "Frozen",
+      "OTHER": "Pantry and other"
+    },
+    "stockStatus": {
+      "OK": "Enough stock",
+      "LOW": "Low stock",
+      "OUT": "Out of stock"
+    },
+    "wasteRisk": {
+      "NONE": "No waste risk",
+      "LOW": "Low waste risk",
+      "HIGH": "High waste risk"
+    },
+    "wasteRiskShort": {
+      "NONE": "No risk",
+      "LOW": "Low risk",
+      "HIGH": "High risk"
+    },
+    "productStatus": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "movementTypes": {
+      "ENTRY": "Entry",
+      "EXIT_DISPATCH": "Dispatch",
+      "EXIT_WASTE": "Waste",
+      "ADJUSTMENT": "Adjustment",
+      "RETURN": "Return"
+    }
   }
 }

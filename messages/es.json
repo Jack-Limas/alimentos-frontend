@@ -180,5 +180,59 @@
       "unreachableHint": "No se pudo contactar al backend. Revisa NEXT_PUBLIC_API_URL y que CORS_ORIGINS incluya este origen.",
       "configHint": "NEXT_PUBLIC_API_URL no está configurada correctamente."
     }
+  },
+  "Catalog": {
+    "units": {
+      "short": {
+        "KG": "kg",
+        "L": "L",
+        "UNIT": "und.",
+        "BOX": "cajas"
+      },
+      "long": {
+        "KG": "Kilogramo (kg)",
+        "L": "Litro (L)",
+        "UNIT": "Unidad",
+        "BOX": "Caja"
+      }
+    },
+    "categories": {
+      "FRUITS_VEGETABLES": "Frutas y verduras",
+      "DAIRY": "Lácteos",
+      "MEAT_POULTRY": "Carnes y pollo",
+      "FISH": "Pescado",
+      "BAKERY": "Panadería",
+      "GRAINS_LEGUMES": "Granos y legumbres",
+      "CANNED": "Enlatados",
+      "BEVERAGES": "Bebidas",
+      "FROZEN": "Congelados",
+      "OTHER": "Despensa y otros"
+    },
+    "stockStatus": {
+      "OK": "Stock suficiente",
+      "LOW": "Stock bajo",
+      "OUT": "Agotado"
+    },
+    "wasteRisk": {
+      "NONE": "Sin riesgo de merma",
+      "LOW": "Riesgo de merma bajo",
+      "HIGH": "Riesgo de merma alto"
+    },
+    "wasteRiskShort": {
+      "NONE": "Sin riesgo",
+      "LOW": "Riesgo bajo",
+      "HIGH": "Riesgo alto"
+    },
+    "productStatus": {
+      "ACTIVE": "Activo",
+      "INACTIVE": "Inactivo"
+    },
+    "movementTypes": {
+      "ENTRY": "Entrada",
+      "EXIT_DISPATCH": "Despacho",
+      "EXIT_WASTE": "Merma",
+      "ADJUSTMENT": "Ajuste",
+      "RETURN": "Devolución"
+    }
   }
 }
