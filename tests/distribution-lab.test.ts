@@ -59,13 +59,15 @@ describe('lab metrics', () => {
     expect(longestFrame([], 100, 1350.26)).toEqual({ longestFrameMs: 1250.3, frames: 0 });
   });
 
-  it('counts long tasks and interactions inside the run window only', () => {
+  it('counts long tasks that overlap the run and interactions inside it', () => {
     const tasks = [
-      { startTime: 5, duration: 900 },
-      { startTime: 50, duration: 60 },
+      // Started just before `start` was read inside the same task: still counted.
+      { startTime: 98, duration: 900 },
+      { startTime: 300, duration: 60 },
       { startTime: 5000, duration: 70 },
+      { startTime: 10, duration: 60 },
     ];
-    expect(longTaskStats(tasks, 0, 1000)).toEqual({ count: 2, totalMs: 960 });
+    expect(longTaskStats(tasks, 100, 1000)).toEqual({ count: 2, totalMs: 960 });
 
     const events = [
       { startTime: 10, duration: 24, interactionId: 0 },

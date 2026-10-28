@@ -35,13 +35,19 @@ export function longestFrame(
   return { longestFrameMs: round1(longest), frames: points.length - 2 };
 }
 
-/** Long tasks (PerformanceObserver "longtask") that started inside the window. */
+/**
+ * Long tasks (PerformanceObserver "longtask") that overlap the window. A task
+ * can start a moment before `start` is read inside it, so overlap is used,
+ * not "started inside".
+ */
 export function longTaskStats(
   entries: readonly { startTime: number; duration: number }[],
   start: number,
   end: number,
 ): { count: number; totalMs: number } {
-  const inside = entries.filter((entry) => entry.startTime >= start && entry.startTime <= end);
+  const inside = entries.filter(
+    (entry) => entry.startTime <= end && entry.startTime + entry.duration >= start,
+  );
   return {
     count: inside.length,
     totalMs: round1(inside.reduce((sum, entry) => sum + entry.duration, 0)),
