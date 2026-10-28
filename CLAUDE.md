@@ -25,6 +25,10 @@ Conventions for anyone (human or AI assistant) working in this repository.
   colors.
 - Status is never shown by color alone: chips and bars always carry text. Motion respects
   `prefers-reduced-motion` (`motion-safe:`/`motion-reduce:` or `useReducedMotion`).
+- Order buttons come from the mirror state machine (`features/orders/state-machine.ts`); keep it in
+  sync with the backend table. The server has the last word: always handle its 409.
+- Buttons use `buttonClass`/`Button` (3D keycap with an `--edge` color); do not hand-roll new button
+  styles.
 - Calendar dates from the API (`expiryDate`) are formatted with `timeZone: 'UTC'`; date-times use
   the business zone (`America/Bogota`). Server `reasons[]` and error codes are translated, never
   shown as sent.
