@@ -105,3 +105,22 @@ export function useUpdateProduct(id: string) {
     onSuccess: invalidate,
   });
 }
+
+/** Every ACTIVE product with its metrics (pages of 100), for pickers such as the new order form. */
+export function useActiveProducts(enabled = true) {
+  const { authFetch } = useAuth();
+  return useQuery({
+    queryKey: [...productKeys.all, 'active-all'],
+    enabled,
+    queryFn: async () => {
+      const products: Product[] = [];
+      for (let page = 1; ; page += 1) {
+        const body = await authFetch<Paginated<Product>>(
+          `/products?status=ACTIVE&page=${page}&pageSize=${MAX_PAGE_SIZE}`,
+        );
+        products.push(...body.data);
+        if (page * MAX_PAGE_SIZE >= body.meta.total) return products;
+      }
+    },
+  });
+}
