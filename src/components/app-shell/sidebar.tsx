@@ -37,7 +37,9 @@ export function Sidebar({ user }: { user: AuthUser }) {
           <div className="mt-3 flex items-center gap-3">
             <Avatar userId={user.id} name={user.name} size="lg" className="ring-forest-700" />
             <div className="min-w-0">
-              <p className="truncate font-display text-lg font-semibold">{user.name}</p>
+              <p className="line-clamp-2 break-words font-display text-lg font-semibold leading-tight">
+                {user.name}
+              </p>
               <div className="mt-1">
                 <RoleBadge role={user.role} />
               </div>
