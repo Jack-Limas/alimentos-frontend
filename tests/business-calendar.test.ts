@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  addDays,
   businessDayBounds,
   businessToday,
   calendarDateToUtc,
@@ -24,6 +25,12 @@ describe('business calendar', () => {
   it('counts whole days across months', () => {
     expect(daysBetween('2026-10-30', '2026-11-02')).toBe(3);
     expect(daysBetween('2026-11-02', '2026-10-30')).toBe(-3);
+  });
+
+  it('adds calendar days across months and years', () => {
+    expect(addDays('2026-10-30', 2)).toBe('2026-11-01');
+    expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
+    expect(addDays('2026-03-01', -1)).toBe('2026-02-28');
   });
 
   it('rejects malformed and impossible dates', () => {

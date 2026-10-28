@@ -1,4 +1,5 @@
 export {
+  addDays,
   BUSINESS_TIME_ZONE,
   businessDayBounds,
   businessToday,

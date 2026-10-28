@@ -39,6 +39,10 @@ export function daysBetween(from: CalendarDate, to: CalendarDate): number {
   return Math.round((calendarDateToUtc(to).getTime() - calendarDateToUtc(from).getTime()) / DAY_MS);
 }
 
+export function addDays(date: CalendarDate, days: number): CalendarDate {
+  return new Date(calendarDateToUtc(date).getTime() + days * DAY_MS).toISOString().slice(0, 10);
+}
+
 /** Bogota is UTC-5 all year (no daylight saving time). */
 const BOGOTA_OFFSET = '-05:00';
 
