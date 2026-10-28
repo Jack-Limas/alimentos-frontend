@@ -44,7 +44,8 @@ describe('distribution engine parity with the backend', () => {
         now: () => 0,
       },
     );
-    const { processingMs: _ms, ...summary } = result.summary;
+    // processingMs is a timing, not part of the plan (toEqual ignores undefined keys).
+    const summary = { ...result.summary, processingMs: undefined };
     expect({ ranking: result.ranking, lines: result.lines, summary }).toEqual(fixture.expected);
   });
 
