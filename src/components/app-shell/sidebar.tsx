@@ -2,11 +2,13 @@
 
 import { useFormatter, useTranslations } from 'next-intl';
 import { RoleBadge } from '@/components/auth';
+import { Avatar } from '@/components/ui/avatar';
 import { Icon } from '@/components/ui/icons';
 import { isActive, navItemsFor } from '@/features/app-shell/navigation';
 import type { AuthUser } from '@/features/auth/types';
 import { Link, usePathname } from '@/i18n/navigation';
 import { businessToday, calendarDateToUtc } from '@/lib/dates';
+import { CriticalBadge } from './critical-badge';
 
 /** Desktop navigation: a deep forest panel next to the content. */
 export function Sidebar({ user }: { user: AuthUser }) {
@@ -32,9 +34,14 @@ export function Sidebar({ user }: { user: AuthUser }) {
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-forest-200">
             {t('workspace')}
           </p>
-          <p className="mt-2 truncate font-display text-lg font-semibold">{user.name}</p>
-          <div className="mt-2">
-            <RoleBadge role={user.role} />
+          <div className="mt-3 flex items-center gap-3">
+            <Avatar userId={user.id} name={user.name} size="lg" className="ring-forest-700" />
+            <div className="min-w-0">
+              <p className="truncate font-display text-lg font-semibold">{user.name}</p>
+              <div className="mt-1">
+                <RoleBadge role={user.role} />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -72,7 +79,8 @@ export function Sidebar({ user }: { user: AuthUser }) {
                     }`}
                   >
                     <Icon name={item.icon} />
-                    {label}
+                    <span className="flex-1">{label}</span>
+                    {item.key === 'alerts' ? <CriticalBadge /> : null}
                   </Link>
                 </li>
               );
