@@ -39,6 +39,8 @@ function observes(type: 'longtask' | 'event'): boolean {
   );
 }
 
+const round1 = (value: number | null) => (value === null ? null : Math.round(value * 10) / 10);
+
 const nextFrame = () => new Promise<number>((resolve) => requestAnimationFrame(resolve));
 
 export function PerformanceLab() {
@@ -60,6 +62,7 @@ export function PerformanceLab() {
   const wheel = useRef<HTMLSpanElement>(null);
   const counter = useRef<HTMLSpanElement>(null);
   const frames = useRef<number[]>([]);
+  const lastFrame = useRef(0);
   const recording = useRef(false);
   const longTasks = useRef<TimedEntry[]>([]);
   const events = useRef<TimedEntry[]>([]);
@@ -75,6 +78,7 @@ export function PerformanceLab() {
     let count = 0;
     const loop = (time: number) => {
       count += 1;
+      lastFrame.current = time;
       if (recording.current) frames.current.push(time);
       if (wheel.current) wheel.current.style.transform = `rotate(${String((time / 4) % 360)}deg)`;
       if (counter.current) counter.current.textContent = t('indicator.frames', { count });
@@ -112,7 +116,8 @@ export function PerformanceLab() {
     await nextFrame();
     // Start in a task of its own, so the browser attributes the work as one long task.
     await new Promise((resolve) => window.setTimeout(resolve, 0));
-    frames.current = [];
+    // Keep the last painted frame: the freeze is measured from it.
+    frames.current = [lastFrame.current];
     clickDelays.current = [];
     recording.current = true;
     const start = performance.now();
@@ -147,9 +152,10 @@ export function PerformanceLab() {
           frames: frame.frames,
           longTasks: tasks.count,
           longTasksMs: tasks.totalMs,
-          inpMs:
+          inpMs: round1(
             approximateInp(events.current, start, end) ??
-            approximateInp(clickDelays.current, start, end),
+              approximateInp(clickDelays.current, start, end),
+          ),
           startedAt: new Date().toISOString(),
         },
       ]);

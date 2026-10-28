@@ -19,20 +19,24 @@ export interface LabRun {
 }
 
 /**
- * Longest gap between consecutive frame timestamps. `start` and `end` close
- * the window, so a run that blocks every frame still shows its full freeze.
+ * Longest gap between consecutive frame timestamps during the run. The gap
+ * that matters starts at the last frame painted *before* the run (when it is
+ * in `timestamps`), not at `start`, so a frozen run shows its full length;
+ * `end` closes the window when no frame came after it yet.
  */
 export function longestFrame(
   timestamps: readonly number[],
   start: number,
   end: number,
 ): { longestFrameMs: number; frames: number } {
-  const points = [start, ...timestamps.filter((t) => t >= start && t <= end), end];
+  const before = timestamps.filter((t) => t < start).at(-1) ?? start;
+  const inside = timestamps.filter((t) => t >= start && t <= end);
+  const points = [before, ...inside, end];
   let longest = 0;
   for (let i = 1; i < points.length; i += 1) {
     longest = Math.max(longest, (points[i] ?? 0) - (points[i - 1] ?? 0));
   }
-  return { longestFrameMs: round1(longest), frames: points.length - 2 };
+  return { longestFrameMs: round1(longest), frames: inside.length };
 }
 
 /**

@@ -57,6 +57,12 @@ describe('lab metrics', () => {
     expect(longestFrame([16, 32, 48], 0, 64)).toEqual({ longestFrameMs: 16, frames: 3 });
     // The main thread was blocked: no frame at all for the whole run.
     expect(longestFrame([], 100, 1350.26)).toEqual({ longestFrameMs: 1250.3, frames: 0 });
+    // The freeze is measured from the last frame painted before the run.
+    expect(longestFrame([80, 96, 330, 346], 100, 320)).toEqual({
+      longestFrameMs: 224,
+      frames: 0,
+    });
+    expect(longestFrame([80, 96, 112, 330], 100, 340)).toEqual({ longestFrameMs: 218, frames: 2 });
   });
 
   it('counts long tasks that overlap the run and interactions inside it', () => {
