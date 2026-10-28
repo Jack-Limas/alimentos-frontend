@@ -38,6 +38,22 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - Pages stay statically rendered when possible (`setRequestLocale` + `generateStaticParams`).
 - Browser-only values are read with `useClientValue` to avoid hydration mismatches.
 
+## Distribution engine
+
+- `src/features/distribution/engine/` is a **copy** of the backend engine (no shared code). Keep it
+  pure and identical in behaviour; any change starts in the backend, then copy the code and the
+  parity fixtures (`tests/fixtures/distribution-parity/`) and update the source commit in README.
+- Heavy computation runs in the Web Worker through `EngineClient` / `useEngineWorker` (typed
+  protocol with `requestId`; stale results are dropped). Keep the
+  `new Worker(new URL('…', import.meta.url), { type: 'module' })` call literal so Turbopack bundles
+  the worker.
+- The client simulates; the server decides: proposals are always generated and confirmed by the
+  API, and its 409 `STALE_PROPOSAL` is translated, never hidden.
+- AI text is plain text formatted by the UI (`segmentAiText`); never render it as HTML or
+  Markdown. AI failures (404, 503, network) must never break a page.
+- Performance demos animate with `requestAnimationFrame` driven by JS, not CSS (CSS transform
+  animations keep running on the compositor while the main thread is blocked).
+
 ## Authentication
 
 - Private API calls go through `authFetch` (`useAuth()`), never a hand-made Bearer header: it
