@@ -516,5 +516,150 @@
       "title": "No hay movimientos con esos filtros",
       "description": "Cambia el tipo o el rango de fechas."
     }
+  },
+  "OrderMeta": {
+    "status": {
+      "PENDING": "Pendiente",
+      "IN_PREPARATION": "En preparación",
+      "READY_FOR_DISPATCH": "Listo para despacho",
+      "SHIPPED": "Enviado",
+      "DELIVERED": "Entregado",
+      "CANCELLED": "Cancelado"
+    },
+    "priority": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "URGENT": "Urgente"
+    },
+    "priorityLabel": "Prioridad {priority}",
+    "customerTypes": {
+      "SUPERMARKET": "Supermercado",
+      "RESTAURANT": "Restaurante",
+      "SCHOOL": "Colegio",
+      "HOSPITAL": "Hospital",
+      "FOOD_BANK": "Banco de alimentos"
+    },
+    "countdown": {
+      "today": "Vence hoy",
+      "upcoming": "{days, plural, one {Vence mañana} other {Vence en # días}}",
+      "overdue": "{days, plural, one {Vencido hace # día} other {Vencido hace # días}}"
+    },
+    "stepper": "Progreso del pedido",
+    "stepState": "{step}: {state}",
+    "stepStates": {
+      "done": "completado",
+      "current": "actual",
+      "todo": "pendiente"
+    },
+    "cancelledFlow": "Pedido cancelado"
+  },
+  "Orders": {
+    "metaTitle": "Pedidos · AlimentaIQ",
+    "eyebrow": "Pedidos",
+    "title": "Pedidos de clientes",
+    "intro": "Prioridad, cliente, fecha límite y estado de cada pedido. Los filtros quedan en la URL.",
+    "newOrder": "Nuevo pedido",
+    "filters": {
+      "label": "Filtros de pedidos",
+      "status": "Estado",
+      "statusGroups": {
+        "open": "Abiertos",
+        "all": "Todos"
+      },
+      "priority": "Prioridad",
+      "anyPriority": "Cualquier prioridad",
+      "customer": "Cliente",
+      "anyCustomer": "Todos los clientes",
+      "dueBefore": "Vencen antes de"
+    },
+    "loading": "Cargando pedidos…",
+    "empty": {
+      "title": "No hay pedidos con esos filtros",
+      "description": "Cambia el estado o la prioridad, o limpia los filtros."
+    },
+    "items": "{count, plural, one {# producto} other {# productos}}",
+    "openDetail": "Ver el pedido {code}",
+    "statusErrors": {
+      "requiresProposal": "Este pedido se prepara desde Distribución (próximamente): allí se asignan los lotes.",
+      "notAllowed": "Ese cambio de estado no está permitido desde el estado actual.",
+      "statusChanged": "Otra persona cambió este pedido hace un momento. Recargamos los datos.",
+      "forbidden": "Tu rol no puede hacer este cambio.",
+      "notFound": "El pedido ya no existe.",
+      "network": "No pudimos conectar con el servidor. Revisa tu conexión.",
+      "unexpected": "Algo salió mal. Inténtalo de nuevo en un momento."
+    }
+  },
+  "OrderDetail": {
+    "metaTitle": "Detalle de pedido · AlimentaIQ",
+    "back": "Volver a pedidos",
+    "loading": "Cargando pedido…",
+    "notFound": {
+      "title": "No encontramos este pedido",
+      "description": "Puede que el enlace esté mal o que el pedido ya no exista."
+    },
+    "customer": "Cliente",
+    "dueDate": "Fecha límite",
+    "createdAt": "Creado",
+    "notes": "Notas",
+    "items": {
+      "title": "Productos",
+      "product": "Producto",
+      "requested": "Solicitado",
+      "allocated": "Asignado",
+      "progress": "{allocated} de {requested} asignado"
+    },
+    "history": {
+      "title": "Historial",
+      "created": "Pedido creado",
+      "changed": "{from} → {to}",
+      "byYou": "por ti",
+      "note": "Nota: {note}"
+    },
+    "actions": {
+      "title": "Acciones",
+      "to": {
+        "READY_FOR_DISPATCH": "Marcar listo para despacho",
+        "SHIPPED": "Marcar como enviado",
+        "DELIVERED": "Confirmar entrega",
+        "CANCELLED": "Cancelar pedido"
+      },
+      "none": "No hay acciones disponibles para tu rol en este estado.",
+      "fromDistribution": "Para pasar a preparación, el pedido se asigna desde Distribución (próximamente).",
+      "noteLabel": "Nota (opcional)",
+      "notePlaceholder": "Motivo o comentario",
+      "confirmCancel": "¿Cancelar el pedido {code}? El stock despachado vuelve a sus lotes.",
+      "keep": "No, mantener",
+      "done": "Pedido {code}: {status}."
+    }
+  },
+  "NewOrder": {
+    "metaTitle": "Nuevo pedido · AlimentaIQ",
+    "title": "Nuevo pedido",
+    "intro": "El servidor no reserva stock al crear el pedido: los lotes se asignan en Distribución.",
+    "customer": "Cliente",
+    "customerSearch": "Buscar cliente por nombre",
+    "noCustomers": "Ningún cliente activo coincide.",
+    "priority": "Prioridad",
+    "dueDate": "Fecha límite",
+    "dueDateHint": "Desde hoy ({today}) en Bogotá.",
+    "notes": "Notas",
+    "items": "Productos",
+    "product": "Producto",
+    "productSearch": "Buscar producto",
+    "noProducts": "Ningún producto activo coincide.",
+    "quantity": "Cantidad",
+    "available": "Disponible: {quantity}",
+    "addItem": "Agregar producto",
+    "removeItem": "Quitar {name}",
+    "submit": "Crear pedido",
+    "created": "Pedido {code} creado.",
+    "errors": {
+      "customerRequired": "Elige un cliente.",
+      "itemsRequired": "Agrega al menos un producto.",
+      "productRequired": "Elige un producto.",
+      "duplicateProduct": "Este producto ya está en el pedido.",
+      "tooManyItems": "Máximo 50 productos por pedido."
+    }
   }
 }

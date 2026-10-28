@@ -516,5 +516,150 @@
       "title": "No movements match those filters",
       "description": "Change the type or the date range."
     }
+  },
+  "OrderMeta": {
+    "status": {
+      "PENDING": "Pending",
+      "IN_PREPARATION": "In preparation",
+      "READY_FOR_DISPATCH": "Ready for dispatch",
+      "SHIPPED": "Shipped",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Cancelled"
+    },
+    "priority": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    },
+    "priorityLabel": "{priority} priority",
+    "customerTypes": {
+      "SUPERMARKET": "Supermarket",
+      "RESTAURANT": "Restaurant",
+      "SCHOOL": "School",
+      "HOSPITAL": "Hospital",
+      "FOOD_BANK": "Food bank"
+    },
+    "countdown": {
+      "today": "Due today",
+      "upcoming": "{days, plural, one {Due tomorrow} other {Due in # days}}",
+      "overdue": "{days, plural, one {Overdue by # day} other {Overdue by # days}}"
+    },
+    "stepper": "Order progress",
+    "stepState": "{step}: {state}",
+    "stepStates": {
+      "done": "done",
+      "current": "current",
+      "todo": "to do"
+    },
+    "cancelledFlow": "Order cancelled"
+  },
+  "Orders": {
+    "metaTitle": "Orders · AlimentaIQ",
+    "eyebrow": "Orders",
+    "title": "Customer orders",
+    "intro": "Priority, customer, deadline and status of every order. Filters stay in the URL.",
+    "newOrder": "New order",
+    "filters": {
+      "label": "Order filters",
+      "status": "Status",
+      "statusGroups": {
+        "open": "Open",
+        "all": "All"
+      },
+      "priority": "Priority",
+      "anyPriority": "Any priority",
+      "customer": "Customer",
+      "anyCustomer": "All customers",
+      "dueBefore": "Due before"
+    },
+    "loading": "Loading orders…",
+    "empty": {
+      "title": "No orders match those filters",
+      "description": "Change the status or priority, or clear the filters."
+    },
+    "items": "{count, plural, one {# product} other {# products}}",
+    "openDetail": "Open order {code}",
+    "statusErrors": {
+      "requiresProposal": "This order is prepared from Distribution (coming soon): lots are assigned there.",
+      "notAllowed": "That status change is not allowed from the current status.",
+      "statusChanged": "Someone else just changed this order. We reloaded the data.",
+      "forbidden": "Your role cannot make this change.",
+      "notFound": "The order no longer exists.",
+      "network": "We could not reach the server. Check your connection.",
+      "unexpected": "Something went wrong. Try again in a moment."
+    }
+  },
+  "OrderDetail": {
+    "metaTitle": "Order details · AlimentaIQ",
+    "back": "Back to orders",
+    "loading": "Loading order…",
+    "notFound": {
+      "title": "We could not find this order",
+      "description": "The link may be wrong or the order no longer exists."
+    },
+    "customer": "Customer",
+    "dueDate": "Deadline",
+    "createdAt": "Created",
+    "notes": "Notes",
+    "items": {
+      "title": "Products",
+      "product": "Product",
+      "requested": "Requested",
+      "allocated": "Allocated",
+      "progress": "{allocated} of {requested} allocated"
+    },
+    "history": {
+      "title": "History",
+      "created": "Order created",
+      "changed": "{from} → {to}",
+      "byYou": "by you",
+      "note": "Note: {note}"
+    },
+    "actions": {
+      "title": "Actions",
+      "to": {
+        "READY_FOR_DISPATCH": "Mark ready for dispatch",
+        "SHIPPED": "Mark as shipped",
+        "DELIVERED": "Confirm delivery",
+        "CANCELLED": "Cancel order"
+      },
+      "none": "No actions are available for your role in this status.",
+      "fromDistribution": "To move into preparation, the order is assigned from Distribution (coming soon).",
+      "noteLabel": "Note (optional)",
+      "notePlaceholder": "Reason or comment",
+      "confirmCancel": "Cancel order {code}? Dispatched stock goes back to its lots.",
+      "keep": "No, keep it",
+      "done": "Order {code}: {status}."
+    }
+  },
+  "NewOrder": {
+    "metaTitle": "New order · AlimentaIQ",
+    "title": "New order",
+    "intro": "Creating an order does not reserve stock: lots are assigned in Distribution.",
+    "customer": "Customer",
+    "customerSearch": "Search a customer by name",
+    "noCustomers": "No active customer matches.",
+    "priority": "Priority",
+    "dueDate": "Deadline",
+    "dueDateHint": "From today ({today}) in Bogota.",
+    "notes": "Notes",
+    "items": "Products",
+    "product": "Product",
+    "productSearch": "Search a product",
+    "noProducts": "No active product matches.",
+    "quantity": "Quantity",
+    "available": "Available: {quantity}",
+    "addItem": "Add product",
+    "removeItem": "Remove {name}",
+    "submit": "Create order",
+    "created": "Order {code} created.",
+    "errors": {
+      "customerRequired": "Choose a customer.",
+      "itemsRequired": "Add at least one product.",
+      "productRequired": "Choose a product.",
+      "duplicateProduct": "This product is already in the order.",
+      "tooManyItems": "At most 50 products per order."
+    }
   }
 }
