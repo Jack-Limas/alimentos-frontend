@@ -26,7 +26,7 @@ describe('navigation by role', () => {
     expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('movements');
   });
 
-  it('gives both roles missions, orders, inventory, alerts and the coming-soon distribution', () => {
+  it('gives both roles missions, orders, inventory, alerts and distribution', () => {
     for (const role of ['ADMIN', 'OPERATOR'] as const) {
       expect(navItemsFor(role).map((i) => i.key)).toEqual(
         expect.arrayContaining([
@@ -39,7 +39,18 @@ describe('navigation by role', () => {
         ]),
       );
     }
-    expect(NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.key)).toEqual(['distribution']);
+    expect(NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.key)).toEqual([]);
+    expect(canAccessPath('/app/distribution/abc', 'OPERATOR')).toBe(true);
+  });
+
+  it('shows the performance lab to an ADMIN only, in the sidebar', () => {
+    expect(navItemsFor('ADMIN').map((i) => i.key)).toContain('lab');
+    expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('lab');
+    expect(canAccessPath('/app/lab/performance', 'OPERATOR')).toBe(false);
+    expect(canAccessPath('/app/lab/performance', 'ADMIN')).toBe(true);
+    for (const role of ['ADMIN', 'OPERATOR'] as const) {
+      expect(mobileNavFor(role).map((i) => i.key)).not.toContain('lab');
+    }
   });
 
   it('shows Customers to an ADMIN only and guards its path', () => {

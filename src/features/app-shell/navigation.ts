@@ -8,9 +8,10 @@ export type NavKey =
   | 'movements'
   | 'customers'
   | 'alerts'
-  | 'distribution';
+  | 'distribution'
+  | 'lab';
 export type NavIcon =
-  'home' | 'flag' | 'boxes' | 'clipboard' | 'arrows' | 'users' | 'bell' | 'truck';
+  'home' | 'flag' | 'boxes' | 'clipboard' | 'arrows' | 'users' | 'bell' | 'truck' | 'gauge';
 
 export interface NavItem {
   key: NavKey;
@@ -26,6 +27,8 @@ export interface NavItem {
 export const MOVEMENTS_ROLES: readonly Role[] = ['ADMIN'];
 /** Customers are managed by an ADMIN only (contract 4.5). */
 export const CUSTOMERS_ROLES: readonly Role[] = ['ADMIN'];
+/** The performance lab (main thread vs Web Worker) is an ADMIN tool. */
+export const LAB_ROLES: readonly Role[] = ['ADMIN'];
 /** Creating orders is ADMIN only; both roles read and move them. */
 export const ORDER_CREATE_ROLES: readonly Role[] = ['ADMIN'];
 
@@ -37,7 +40,8 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'alerts', icon: 'bell', href: '/app/alerts', roles: ROLES },
   { key: 'customers', icon: 'users', href: '/app/customers', roles: CUSTOMERS_ROLES },
   { key: 'movements', icon: 'arrows', href: '/app/movements', roles: MOVEMENTS_ROLES },
-  { key: 'distribution', icon: 'truck', roles: ROLES, comingSoon: true },
+  { key: 'distribution', icon: 'truck', href: '/app/distribution', roles: ROLES },
+  { key: 'lab', icon: 'gauge', href: '/app/lab/performance', roles: LAB_ROLES },
 ];
 
 /**
