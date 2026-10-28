@@ -2,17 +2,16 @@
 
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icons';
-import { isActive, navItemsFor } from '@/features/app-shell/navigation';
+import { isActive, mobileNavFor } from '@/features/app-shell/navigation';
 import type { Role } from '@/features/auth/types';
 import { Link, usePathname } from '@/i18n/navigation';
-
-const MAX_ITEMS = 5;
+import { CriticalBadge } from './critical-badge';
 
 /** Phone navigation, within thumb reach: the operator uses it standing in the warehouse. */
 export function BottomNav({ role }: { role: Role }) {
   const t = useTranslations('AppShell');
   const pathname = usePathname();
-  const items = navItemsFor(role).slice(0, MAX_ITEMS);
+  const items = mobileNavFor(role);
 
   return (
     <nav
@@ -53,11 +52,14 @@ export function BottomNav({ role }: { role: Role }) {
                 className="group flex h-16 flex-col items-center justify-center gap-1 text-[0.7rem] font-semibold"
               >
                 <span
-                  className={`flex h-8 w-14 items-center justify-center rounded-full transition group-active:scale-90 motion-reduce:group-active:scale-100 ${
-                    active ? 'bg-expiry-300 text-forest-950' : 'text-forest-100'
+                  className={`relative flex h-8 w-14 items-center justify-center rounded-full transition group-active:scale-90 motion-reduce:group-active:scale-100 ${
+                    active
+                      ? 'bg-expiry-300 text-forest-950 shadow-[0_3px_0_0_var(--color-expiry-600)]'
+                      : 'text-forest-100'
                   }`}
                 >
                   <Icon name={item.icon} />
+                  {item.key === 'alerts' ? <CriticalBadge floating /> : null}
                 </span>
                 <span className={active ? 'text-expiry-200' : 'text-forest-100'}>{label}</span>
               </Link>
