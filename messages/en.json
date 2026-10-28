@@ -726,5 +726,33 @@
       "unreadable": "We could not read that image.",
       "storage": "The browser did not allow saving the photo."
     }
+  },
+  "Missions": {
+    "metaTitle": "Today's missions · AlimentaIQ",
+    "eyebrow": "Warehouse",
+    "title": "Today's missions",
+    "intro": "Every order in preparation is a mission: pick it, ship it and confirm the delivery.",
+    "completedToday": "{count, plural, =0 {No missions completed today yet} one {# mission completed today} other {# missions completed today}}",
+    "streak": "{count} in a row!",
+    "pending": "{count, plural, one {# active mission} other {# active missions}}",
+    "loading": "Loading missions…",
+    "empty": {
+      "title": "No active missions",
+      "description": "When an order moves into preparation it shows up here."
+    },
+    "steps": {
+      "IN_PREPARATION": "Pick the products",
+      "READY_FOR_DISPATCH": "Waiting for dispatch",
+      "SHIPPED": "On the road"
+    },
+    "advance": {
+      "READY_FOR_DISPATCH": "Ready for dispatch",
+      "SHIPPED": "Mark shipped",
+      "DELIVERED": "Confirm delivery"
+    },
+    "progress": "Step {step} of {total}",
+    "openOrder": "Open order",
+    "celebrate": "Mission complete! {code} delivered.",
+    "advanced": "{code}: {status}."
   }
 }

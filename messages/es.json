@@ -726,5 +726,33 @@
       "unreadable": "No pudimos leer esa imagen.",
       "storage": "El navegador no permitió guardar la foto."
     }
+  },
+  "Missions": {
+    "metaTitle": "Misiones de hoy · AlimentaIQ",
+    "eyebrow": "Bodega",
+    "title": "Misiones de hoy",
+    "intro": "Cada pedido en preparación es una misión: alístalo, despáchalo y confirma la entrega.",
+    "completedToday": "{count, plural, =0 {Aún sin misiones completadas hoy} one {# misión completada hoy} other {# misiones completadas hoy}}",
+    "streak": "¡Racha de {count}!",
+    "pending": "{count, plural, one {# misión activa} other {# misiones activas}}",
+    "loading": "Cargando misiones…",
+    "empty": {
+      "title": "No hay misiones activas",
+      "description": "Cuando un pedido pase a preparación aparecerá aquí."
+    },
+    "steps": {
+      "IN_PREPARATION": "Alistar productos",
+      "READY_FOR_DISPATCH": "Esperando despacho",
+      "SHIPPED": "En camino"
+    },
+    "advance": {
+      "READY_FOR_DISPATCH": "Listo para despacho",
+      "SHIPPED": "Marcar enviado",
+      "DELIVERED": "Confirmar entrega"
+    },
+    "progress": "Paso {step} de {total}",
+    "openOrder": "Ver pedido",
+    "celebrate": "¡Misión cumplida! {code} entregado.",
+    "advanced": "{code}: {status}."
   }
 }
