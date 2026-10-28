@@ -754,5 +754,47 @@
     "openOrder": "Ver pedido",
     "celebrate": "¡Misión cumplida! {code} entregado.",
     "advanced": "{code}: {status}."
+  },
+  "Customers": {
+    "metaTitle": "Clientes · AlimentaIQ",
+    "eyebrow": "Clientes",
+    "title": "Clientes del centro",
+    "intro": "Supermercados, restaurantes, colegios, hospitales y bancos de alimentos que reciben pedidos.",
+    "newCustomer": "Nuevo cliente",
+    "search": "Buscar por nombre",
+    "searchPlaceholder": "Supermercado, colegio…",
+    "allTypes": "Todos",
+    "showInactive": "Mostrar inactivos",
+    "loading": "Cargando clientes…",
+    "empty": {
+      "title": "No hay clientes con esos filtros",
+      "description": "Prueba otra búsqueda o crea un cliente nuevo."
+    },
+    "inactive": "Inactivo",
+    "edit": "Editar",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "activated": "{name} quedó activo.",
+    "deactivated": "{name} quedó inactivo: no podrá recibir pedidos nuevos.",
+    "noPhone": "Sin teléfono",
+    "noEmail": "Sin correo",
+    "form": {
+      "createTitle": "Nuevo cliente",
+      "editTitle": "Editar {name}",
+      "description": "El teléfono y el correo son opcionales.",
+      "name": "Nombre",
+      "type": "Tipo",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "email": "Correo",
+      "create": "Crear cliente",
+      "save": "Guardar cambios",
+      "created": "Cliente {name} creado.",
+      "updated": "Cambios de {name} guardados.",
+      "errors": {
+        "invalidPhone": "Escribe un teléfono válido, por ejemplo 601 345 1200.",
+        "invalidEmail": "Escribe un correo válido."
+      }
+    }
   }
 }

@@ -754,5 +754,47 @@
     "openOrder": "Open order",
     "celebrate": "Mission complete! {code} delivered.",
     "advanced": "{code}: {status}."
+  },
+  "Customers": {
+    "metaTitle": "Customers · AlimentaIQ",
+    "eyebrow": "Customers",
+    "title": "Center customers",
+    "intro": "Supermarkets, restaurants, schools, hospitals and food banks that receive orders.",
+    "newCustomer": "New customer",
+    "search": "Search by name",
+    "searchPlaceholder": "Supermarket, school…",
+    "allTypes": "All",
+    "showInactive": "Show inactive",
+    "loading": "Loading customers…",
+    "empty": {
+      "title": "No customers match those filters",
+      "description": "Try another search or create a new customer."
+    },
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "activated": "{name} is active.",
+    "deactivated": "{name} is inactive: it cannot receive new orders.",
+    "noPhone": "No phone",
+    "noEmail": "No email",
+    "form": {
+      "createTitle": "New customer",
+      "editTitle": "Edit {name}",
+      "description": "Phone and email are optional.",
+      "name": "Name",
+      "type": "Type",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "create": "Create customer",
+      "save": "Save changes",
+      "created": "Customer {name} created.",
+      "updated": "Changes to {name} saved.",
+      "errors": {
+        "invalidPhone": "Type a valid phone number, for example 601 345 1200.",
+        "invalidEmail": "Type a valid email address."
+      }
+    }
   }
 }
