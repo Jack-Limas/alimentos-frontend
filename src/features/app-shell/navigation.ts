@@ -1,7 +1,16 @@
 import { ROLES, type Role } from '@/features/auth/types';
 
-export type NavKey = 'dashboard' | 'inventory' | 'movements' | 'orders' | 'distribution' | 'alerts';
-export type NavIcon = 'home' | 'boxes' | 'arrows' | 'clipboard' | 'truck' | 'bell';
+export type NavKey =
+  | 'dashboard'
+  | 'missions'
+  | 'inventory'
+  | 'orders'
+  | 'movements'
+  | 'customers'
+  | 'alerts'
+  | 'distribution';
+export type NavIcon =
+  'home' | 'flag' | 'boxes' | 'clipboard' | 'arrows' | 'users' | 'bell' | 'truck';
 
 export interface NavItem {
   key: NavKey;
@@ -15,15 +24,34 @@ export interface NavItem {
 
 /** Roles allowed on the movements screen (GET /inventory/movements is ADMIN only). */
 export const MOVEMENTS_ROLES: readonly Role[] = ['ADMIN'];
+/** Customers are managed by an ADMIN only (contract 4.5). */
+export const CUSTOMERS_ROLES: readonly Role[] = ['ADMIN'];
+/** Creating orders is ADMIN only; both roles read and move them. */
+export const ORDER_CREATE_ROLES: readonly Role[] = ['ADMIN'];
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'dashboard', icon: 'home', href: '/app', roles: ROLES },
+  { key: 'missions', icon: 'flag', href: '/app/missions', roles: ROLES },
+  { key: 'orders', icon: 'clipboard', href: '/app/orders', roles: ROLES },
   { key: 'inventory', icon: 'boxes', href: '/app/products', roles: ROLES },
+  { key: 'alerts', icon: 'bell', href: '/app/alerts', roles: ROLES },
+  { key: 'customers', icon: 'users', href: '/app/customers', roles: CUSTOMERS_ROLES },
   { key: 'movements', icon: 'arrows', href: '/app/movements', roles: MOVEMENTS_ROLES },
-  { key: 'orders', icon: 'clipboard', roles: ROLES, comingSoon: true },
   { key: 'distribution', icon: 'truck', roles: ROLES, comingSoon: true },
-  { key: 'alerts', icon: 'bell', roles: ROLES, comingSoon: true },
 ];
+
+/**
+ * Phone bottom bar per role (at most 5, within thumb reach). The operator works
+ * from Missions in the warehouse, so it comes first and replaces the dashboard.
+ */
+export const MOBILE_NAV: Readonly<Record<Role, readonly NavKey[]>> = Object.freeze({
+  OPERATOR: ['missions', 'orders', 'inventory', 'alerts'],
+  ADMIN: ['dashboard', 'orders', 'inventory', 'alerts', 'customers'],
+});
+
+export function mobileNavFor(role: Role): NavItem[] {
+  return MOBILE_NAV[role].flatMap((key) => NAV_ITEMS.find((item) => item.key === key) ?? []);
+}
 
 /** The entries a role sees, in order. Coming-soon entries are shown to everyone. */
 export function navItemsFor(role: Role): NavItem[] {

@@ -305,7 +305,9 @@
       "movements": "Movements",
       "orders": "Orders",
       "distribution": "Distribution",
-      "alerts": "Alerts"
+      "alerts": "Alerts",
+      "missions": "Today's missions",
+      "customers": "Customers"
     },
     "navShort": {
       "dashboard": "Home",
@@ -313,10 +315,13 @@
       "movements": "Movements",
       "orders": "Orders",
       "distribution": "Distribution",
-      "alerts": "Alerts"
+      "alerts": "Alerts",
+      "missions": "Missions",
+      "customers": "Customers"
     },
     "today": "Today in Bogota: {date}",
-    "comingSoonShort": "Soon"
+    "comingSoonShort": "Soon",
+    "criticalBadge": "{count, plural, one {# critical alert} other {# critical alerts}}"
   },
   "Common": {
     "pagination": {

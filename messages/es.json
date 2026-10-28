@@ -305,7 +305,9 @@
       "movements": "Movimientos",
       "orders": "Pedidos",
       "distribution": "Distribución",
-      "alerts": "Alertas"
+      "alerts": "Alertas",
+      "missions": "Misiones de hoy",
+      "customers": "Clientes"
     },
     "navShort": {
       "dashboard": "Panel",
@@ -313,10 +315,13 @@
       "movements": "Movimientos",
       "orders": "Pedidos",
       "distribution": "Distribución",
-      "alerts": "Alertas"
+      "alerts": "Alertas",
+      "missions": "Misiones",
+      "customers": "Clientes"
     },
     "today": "Hoy en Bogotá: {date}",
-    "comingSoonShort": "Pronto"
+    "comingSoonShort": "Pronto",
+    "criticalBadge": "{count, plural, one {# alerta crítica} other {# alertas críticas}}"
   },
   "Common": {
     "pagination": {
