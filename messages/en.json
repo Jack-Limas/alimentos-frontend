@@ -624,6 +624,8 @@
     "actions": {
       "title": "Actions",
       "to": {
+        "PENDING": "Back to pending",
+        "IN_PREPARATION": "Move to preparation",
         "READY_FOR_DISPATCH": "Mark ready for dispatch",
         "SHIPPED": "Mark as shipped",
         "DELIVERED": "Confirm delivery",
