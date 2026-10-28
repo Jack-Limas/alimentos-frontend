@@ -1,19 +1,20 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 import { RoleBadge } from '@/components/auth';
 import { FreshnessBar } from '@/components/inventory/freshness-bar';
 import { Button } from '@/components/ui/button';
 import { Icon, type IconName } from '@/components/ui/icons';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MOVEMENTS_ROLES } from '@/features/app-shell/navigation';
+import { homePathFor, MOVEMENTS_ROLES, PHONE_QUERY } from '@/features/app-shell/navigation';
 import { hasRole } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { useInventorySummary } from '@/features/inventory/api';
 import { FRESHNESS_RULES } from '@/features/inventory/freshness';
 import type { InventorySummary } from '@/features/inventory/types';
 import { serializeProductFilters, type ProductFilters } from '@/features/products/filters';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { CriticalAlertsCard, DueOrdersCard } from './attention-cards';
 import { KpiCard, type KpiTone } from './kpi-card';
 
@@ -48,6 +49,15 @@ export function DashboardHome() {
   const common = useTranslations('Common');
   const { user } = useAuth();
   const summary = useInventorySummary();
+  const router = useRouter();
+
+  // The operator works from Missions on the phone: send them there from /app.
+  useEffect(() => {
+    if (user === null) return;
+    const target = homePathFor(user.role, window.matchMedia(PHONE_QUERY).matches);
+    if (target !== '/app') router.replace(target);
+  }, [user, router]);
+
   if (user === null) return null;
 
   return (

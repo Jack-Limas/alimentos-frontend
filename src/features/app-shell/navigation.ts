@@ -49,6 +49,14 @@ export const MOBILE_NAV: Readonly<Record<Role, readonly NavKey[]>> = Object.free
   ADMIN: ['dashboard', 'orders', 'inventory', 'alerts', 'customers'],
 });
 
+/** Below the `lg` breakpoint the app uses the phone layout. */
+export const PHONE_QUERY = '(max-width: 63.99rem)';
+
+/** Where /app should land: an operator on a phone starts in Missions. */
+export function homePathFor(role: Role, isPhone: boolean): string {
+  return role === 'OPERATOR' && isPhone ? '/app/missions' : '/app';
+}
+
 export function mobileNavFor(role: Role): NavItem[] {
   return MOBILE_NAV[role].flatMap((key) => NAV_ITEMS.find((item) => item.key === key) ?? []);
 }

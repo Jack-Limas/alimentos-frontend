@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   canAccessPath,
   isActive,
+  homePathFor,
   mobileNavFor,
   MOVEMENTS_ROLES,
   NAV_ITEMS,
@@ -46,6 +47,12 @@ describe('navigation by role', () => {
     expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('customers');
     expect(canAccessPath('/app/customers', 'OPERATOR')).toBe(false);
     expect(canAccessPath('/app/orders/abc', 'OPERATOR')).toBe(true);
+  });
+
+  it('lands an operator on a phone in Missions and everyone else on the dashboard', () => {
+    expect(homePathFor('OPERATOR', true)).toBe('/app/missions');
+    expect(homePathFor('OPERATOR', false)).toBe('/app');
+    expect(homePathFor('ADMIN', true)).toBe('/app');
   });
 
   it('gives the operator Missions, Orders, Inventory and Alerts on the phone', () => {
