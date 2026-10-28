@@ -1023,7 +1023,7 @@
       "duration": "Total duration: from the click to having the result.",
       "frame": "Longest frame: the largest gap between two requestAnimationFrame callbacks.",
       "longTasks": "Long tasks: main-thread tasks over 50 ms (PerformanceObserver \"longtask\").",
-      "inp": "Approx. INP: the slowest interaction with the click button (PerformanceObserver \"event\", 16 ms threshold).",
+      "inp": "Approx. INP: the slowest interaction with the click button (PerformanceObserver \"event\", 16 ms threshold). If the browser reports no events, the click's wait measured in its own handler is used.",
       "unsupported": "This browser does not report long tasks or events; those columns stay empty."
     }
   }

@@ -1023,7 +1023,7 @@
       "duration": "Duración total: desde el clic hasta tener el resultado.",
       "frame": "Frame más largo: el mayor hueco entre dos callbacks de requestAnimationFrame.",
       "longTasks": "Long tasks: tareas de más de 50 ms del hilo principal (PerformanceObserver \"longtask\").",
-      "inp": "INP aprox.: la interacción más lenta con el botón de clics (PerformanceObserver \"event\", umbral 16 ms).",
+      "inp": "INP aprox.: la interacción más lenta con el botón de clics (PerformanceObserver \"event\", umbral 16 ms). Si el navegador no reporta eventos, se usa la espera del clic medida en su propio manejador.",
       "unsupported": "Este navegador no reporta long tasks o eventos; esas columnas quedan vacías."
     }
   }

@@ -63,6 +63,9 @@ export function PerformanceLab() {
   const recording = useRef(false);
   const longTasks = useRef<TimedEntry[]>([]);
   const events = useRef<TimedEntry[]>([]);
+  // Fallback when the browser reports no "event" entries (e.g. headless Chrome, which
+  // never presents a frame): how long each click waited before its handler ran.
+  const clickDelays = useRef<TimedEntry[]>([]);
 
   // The indicator is moved by JavaScript on every requestAnimationFrame, NOT by a CSS
   // animation: CSS transform animations run on the compositor thread and keep spinning
@@ -107,7 +110,10 @@ export function PerformanceLab() {
     // Let React paint the "running" state and the indicator spin before measuring.
     await nextFrame();
     await nextFrame();
+    // Start in a task of its own, so the browser attributes the work as one long task.
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
     frames.current = [];
+    clickDelays.current = [];
     recording.current = true;
     const start = performance.now();
     let engineMs = 0;
@@ -141,7 +147,9 @@ export function PerformanceLab() {
           frames: frame.frames,
           longTasks: tasks.count,
           longTasksMs: tasks.totalMs,
-          inpMs: approximateInp(events.current, start, end),
+          inpMs:
+            approximateInp(events.current, start, end) ??
+            approximateInp(clickDelays.current, start, end),
           startedAt: new Date().toISOString(),
         },
       ]);
@@ -250,7 +258,17 @@ export function PerformanceLab() {
           </div>
           <span ref={counter} className="font-display text-sm tabular-nums text-forest-100" />
           <p className="max-w-xs text-center text-xs text-forest-200">{t('indicator.hint')}</p>
-          <Button variant="citrus" onClick={() => setClicks((count) => count + 1)}>
+          <Button
+            variant="citrus"
+            onClick={(event) => {
+              clickDelays.current.push({
+                startTime: event.timeStamp,
+                duration: performance.now() - event.timeStamp,
+                interactionId: 1,
+              });
+              setClicks((count) => count + 1);
+            }}
+          >
             {t('clickMe')}
           </Button>
           <p role="status" className="text-sm font-semibold tabular-nums">
