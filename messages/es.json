@@ -317,7 +317,8 @@
       "distribution": "Distribución",
       "alerts": "Alertas",
       "missions": "Misiones de hoy",
-      "customers": "Clientes"
+      "customers": "Clientes",
+      "lab": "Laboratorio"
     },
     "navShort": {
       "dashboard": "Panel",
@@ -327,7 +328,8 @@
       "distribution": "Distribución",
       "alerts": "Alertas",
       "missions": "Misiones",
-      "customers": "Clientes"
+      "customers": "Clientes",
+      "lab": "Lab"
     },
     "today": "Hoy en Bogotá: {date}",
     "comingSoonShort": "Pronto",
@@ -805,6 +807,224 @@
         "invalidPhone": "Escribe un teléfono válido, por ejemplo 601 345 1200.",
         "invalidEmail": "Escribe un correo válido."
       }
+    }
+  },
+  "Distribution": {
+    "metaTitle": "Distribución",
+    "eyebrow": "Plan del día",
+    "title": "Distribución",
+    "intro": "Simula en tu navegador cómo se repartiría el stock entre los pedidos pendientes, compara criterios y genera la propuesta oficial.",
+    "pending": "{count, plural, =0 {Sin pedidos pendientes} one {# pedido pendiente} other {# pedidos pendientes}}",
+    "businessDate": "Día de negocio: {date}",
+    "strategies": {
+      "BALANCED": "Balanceada",
+      "URGENCY_FIRST": "Urgencia primero",
+      "WASTE_FIRST": "Merma primero",
+      "AI_ASSISTED": "Asistida por IA",
+      "CUSTOM": "Pesos propios"
+    },
+    "strategyHints": {
+      "BALANCED": "Prioridad, fecha de entrega y vencimiento en equilibrio.",
+      "URGENCY_FIRST": "Entregar a tiempo lo que vence pronto.",
+      "WASTE_FIRST": "Mover primero lo que está por vencer.",
+      "AI_ASSISTED": "Criterio balanceado; la IA ordena los empates y explica el plan.",
+      "CUSTOM": "Tú decides cuánto pesa cada factor."
+    },
+    "weights": {
+      "label": "Pesos del puntaje",
+      "priority": "Prioridad",
+      "deadlineUrgency": "Fecha de entrega",
+      "expiryPressure": "Vencimiento",
+      "value": "{value} %",
+      "total": "Siempre suman 100"
+    },
+    "fulfillment": {
+      "FULL": "Completo",
+      "PARTIAL": "Parcial",
+      "UNSERVED": "Sin stock"
+    },
+    "score": "{score} pts",
+    "rank": "#{rank}",
+    "simulator": {
+      "title": "Simulador",
+      "notice": "Simulación local; el servidor recalcula al generar.",
+      "running": "Calculando en el Worker… {served} de {total}",
+      "done": "Calculado en {ms} ms en un Web Worker",
+      "rankingLabel": "Orden en que se atenderían los pedidos",
+      "top": "Primeros {count}",
+      "empty": "No hay pedidos pendientes para simular.",
+      "error": "No pudimos simular con estos datos.",
+      "kpis": {
+        "ordersFull": "Completos",
+        "ordersPartial": "Parciales",
+        "ordersUnserved": "Sin stock",
+        "linesCount": "Líneas"
+      }
+    },
+    "compare": {
+      "title": "Comparar estrategias",
+      "intro": "Los primeros 10 pedidos de cada criterio. Resaltados: los que cambian de puesto.",
+      "running": "Comparando…",
+      "up": "{places, plural, one {Sube # puesto} other {Sube # puestos}}",
+      "down": "{places, plural, one {Baja # puesto} other {Baja # puestos}}",
+      "same": "Mismo puesto",
+      "changed": "Cambia de puesto"
+    },
+    "generate": {
+      "title": "Generar propuesta oficial",
+      "intro": "El servidor vuelve a calcular el plan con los datos actuales y lo guarda como borrador.",
+      "strategyLabel": "Criterio",
+      "useCustom": "Pesos propios del simulador ({priority}/{deadline}/{expiry})",
+      "submit": "Generar propuesta",
+      "submitting": "Generando…",
+      "created": "Propuesta generada"
+    },
+    "history": {
+      "title": "Historial de propuestas",
+      "empty": "Todavía no hay propuestas.",
+      "createdAt": "Creada {date}",
+      "orders": "{full} completos · {partial} parciales · {unserved} sin stock",
+      "open": "Ver propuesta",
+      "degraded": "Sin IA"
+    },
+    "status": {
+      "DRAFT": "Borrador",
+      "CONFIRMED": "Confirmada",
+      "DISCARDED": "Descartada"
+    },
+    "degraded": {
+      "title": "La IA no respondió; se usó el criterio balanceado.",
+      "notConfigured": "La IA no está configurada en este entorno.",
+      "timeout": "La IA tardó demasiado en responder.",
+      "quota": "La IA alcanzó su límite de uso por ahora.",
+      "unavailable": "La IA no está disponible en este momento."
+    },
+    "errors": {
+      "stockChanged": "El stock cambió desde que se generó la propuesta. No se aplicó nada.",
+      "orderChanged": "Un pedido cambió de estado desde que se generó la propuesta. No se aplicó nada.",
+      "notDraft": "Esta propuesta ya no es un borrador.",
+      "businessDateChanged": "La propuesta es de otro día; los lotes despachables cambiaron.",
+      "invalidWeights": "Los pesos deben sumar 100.",
+      "forbidden": "No tienes permiso para esta acción.",
+      "notFound": "No encontramos esta propuesta.",
+      "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
+      "unexpected": "Algo salió mal. Inténtalo de nuevo.",
+      "regenerate": "Generar de nuevo"
+    },
+    "detail": {
+      "metaTitle": "Propuesta de distribución",
+      "back": "Volver a Distribución",
+      "title": "Propuesta {strategy}",
+      "createdAt": "Generada {date}",
+      "weights": "Pesos {priority}/{deadline}/{expiry}",
+      "kpis": {
+        "ordersFull": "Pedidos completos",
+        "ordersPartial": "Pedidos parciales",
+        "ordersUnserved": "Pedidos sin stock",
+        "itemsProcessed": "Ítems",
+        "linesCount": "Líneas",
+        "rescoreCount": "Re-puntuaciones",
+        "processingMs": "Cálculo en el servidor"
+      },
+      "processing": "{ms} ms",
+      "totals": "Recomendado: {totals}",
+      "ordersTitle": "Pedidos en el orden del plan",
+      "columns": {
+        "product": "Producto",
+        "lot": "Lote",
+        "requested": "Solicitado",
+        "available": "Disponible",
+        "recommended": "Recomendado",
+        "reasons": "Razones"
+      },
+      "noLot": "Sin lote",
+      "lotCode": "Lote {code}",
+      "rescores": "{count, plural, one {Re-puntuado # vez} other {Re-puntuado # veces}}",
+      "orderNow": "Estado actual: {status}",
+      "confirm": "Confirmar propuesta",
+      "discard": "Descartar",
+      "confirmTitle": "¿Confirmar esta propuesta?",
+      "confirmBody": "Se descontará el stock por FEFO y {count, plural, one {# pedido pasará} other {# pedidos pasarán}} a preparación. Si algo cambió, no se aplicará nada.",
+      "confirmAction": "Sí, confirmar",
+      "cancel": "Cancelar",
+      "confirming": "Confirmando…",
+      "confirmed": "Propuesta confirmada: los pedidos pasaron a preparación",
+      "discarded": "Propuesta descartada",
+      "readOnly": "Esta propuesta está {status}: solo lectura."
+    },
+    "explanation": {
+      "title": "Explicación de la IA",
+      "intro": "Un resumen en lenguaje claro del plan. Las cifras salen del plan; la IA no las cambia.",
+      "generate": "Explicar con IA",
+      "regenerate": "Volver a explicar",
+      "loading": "La IA está leyendo el plan…",
+      "unavailable": "IA no disponible por ahora. El plan sigue siendo válido.",
+      "busy": "Demasiadas consultas a la IA. Espera un minuto.",
+      "unexpected": "No pudimos obtener la explicación.",
+      "meta": "{model} · {ms} ms",
+      "cached": "Guardada",
+      "highlights": "Lo más importante",
+      "tieBreak": "Orden sugerido para los empates"
+    },
+    "reasons": {
+      "PRIORITY_LOW": "Prioridad baja",
+      "PRIORITY_MEDIUM": "Prioridad media",
+      "PRIORITY_HIGH": "Prioridad alta",
+      "PRIORITY_URGENT": "Prioridad urgente",
+      "DUE_IN_DAYS": "{days, plural, =0 {Se entrega hoy} one {Se entrega mañana} other {Se entrega en # días}}",
+      "OVERDUE": "{days, plural, one {Entrega vencida hace # día} other {Entrega vencida hace # días}}",
+      "EXPIRES_IN_DAYS": "{days, plural, one {El lote vence mañana} other {El lote vence en # días}}",
+      "PARTIAL_STOCK": "Stock parcial: {allocated} de {requested} {unit}",
+      "NO_STOCK": "Sin stock para {requested} {unit}",
+      "UNKNOWN": "Otra razón del plan"
+    }
+  },
+  "Lab": {
+    "metaTitle": "Laboratorio de rendimiento",
+    "eyebrow": "Laboratorio",
+    "title": "Hilo principal vs Web Worker",
+    "intro": "El mismo motor de distribución con datos sintéticos. En el hilo principal la página se congela mientras calcula; en el Worker sigue respondiendo.",
+    "size": "Pedidos sintéticos",
+    "sizeValue": "{count, number} pedidos",
+    "seed": "Semilla",
+    "snapshot": "{orders, number} pedidos · {products, number} productos · {lots, number} lotes",
+    "indicator": {
+      "title": "Indicador movido por JavaScript",
+      "hint": "Se actualiza en cada frame con requestAnimationFrame. Si el hilo principal se bloquea, se detiene.",
+      "frames": "{count, number} frames"
+    },
+    "runMain": "Ejecutar en hilo principal",
+    "runWorker": "Ejecutar en Worker",
+    "running": "Ejecutando…",
+    "clickMe": "Haz clic mientras calcula",
+    "clicks": "{count, plural, =0 {Sin clics} one {# clic} other {# clics}}",
+    "results": {
+      "title": "Resultados",
+      "empty": "Ejecuta una prueba para ver los números.",
+      "mode": "Modo",
+      "orders": "Pedidos",
+      "duration": "Duración total",
+      "engine": "Motor",
+      "longestFrame": "Frame más largo",
+      "longTasks": "Long tasks",
+      "inp": "INP aprox.",
+      "modes": {
+        "main": "Hilo principal",
+        "worker": "Worker"
+      },
+      "ms": "{value, number} ms",
+      "longTasksValue": "{count} ({ms, number} ms)",
+      "none": "—",
+      "export": "Exportar JSON",
+      "clear": "Limpiar"
+    },
+    "notes": {
+      "title": "Cómo se mide",
+      "duration": "Duración total: desde el clic hasta tener el resultado.",
+      "frame": "Frame más largo: el mayor hueco entre dos callbacks de requestAnimationFrame.",
+      "longTasks": "Long tasks: tareas de más de 50 ms del hilo principal (PerformanceObserver \"longtask\").",
+      "inp": "INP aprox.: la interacción más lenta con el botón de clics (PerformanceObserver \"event\", umbral 16 ms).",
+      "unsupported": "Este navegador no reporta long tasks o eventos; esas columnas quedan vacías."
     }
   }
 }

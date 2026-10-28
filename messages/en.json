@@ -317,7 +317,8 @@
       "distribution": "Distribution",
       "alerts": "Alerts",
       "missions": "Today's missions",
-      "customers": "Customers"
+      "customers": "Customers",
+      "lab": "Lab"
     },
     "navShort": {
       "dashboard": "Home",
@@ -327,7 +328,8 @@
       "distribution": "Distribution",
       "alerts": "Alerts",
       "missions": "Missions",
-      "customers": "Customers"
+      "customers": "Customers",
+      "lab": "Lab"
     },
     "today": "Today in Bogota: {date}",
     "comingSoonShort": "Soon",
@@ -805,6 +807,224 @@
         "invalidPhone": "Type a valid phone number, for example 601 345 1200.",
         "invalidEmail": "Type a valid email address."
       }
+    }
+  },
+  "Distribution": {
+    "metaTitle": "Distribution",
+    "eyebrow": "Today's plan",
+    "title": "Distribution",
+    "intro": "Simulate in your browser how stock would be shared among pending orders, compare criteria and generate the official proposal.",
+    "pending": "{count, plural, =0 {No pending orders} one {# pending order} other {# pending orders}}",
+    "businessDate": "Business day: {date}",
+    "strategies": {
+      "BALANCED": "Balanced",
+      "URGENCY_FIRST": "Urgency first",
+      "WASTE_FIRST": "Waste first",
+      "AI_ASSISTED": "AI assisted",
+      "CUSTOM": "Custom weights"
+    },
+    "strategyHints": {
+      "BALANCED": "Priority, due date and expiry in balance.",
+      "URGENCY_FIRST": "Deliver on time what is due soon.",
+      "WASTE_FIRST": "Move first what is about to expire.",
+      "AI_ASSISTED": "Balanced criterion; the AI orders ties and explains the plan.",
+      "CUSTOM": "You decide how much each factor weighs."
+    },
+    "weights": {
+      "label": "Score weights",
+      "priority": "Priority",
+      "deadlineUrgency": "Due date",
+      "expiryPressure": "Expiry",
+      "value": "{value} %",
+      "total": "They always add up to 100"
+    },
+    "fulfillment": {
+      "FULL": "Full",
+      "PARTIAL": "Partial",
+      "UNSERVED": "No stock"
+    },
+    "score": "{score} pts",
+    "rank": "#{rank}",
+    "simulator": {
+      "title": "Simulator",
+      "notice": "Local simulation; the server recomputes when generating.",
+      "running": "Computing in the Worker… {served} of {total}",
+      "done": "Computed in {ms} ms in a Web Worker",
+      "rankingLabel": "Order in which the orders would be served",
+      "top": "First {count}",
+      "empty": "There are no pending orders to simulate.",
+      "error": "We could not simulate with this data.",
+      "kpis": {
+        "ordersFull": "Full",
+        "ordersPartial": "Partial",
+        "ordersUnserved": "No stock",
+        "linesCount": "Lines"
+      }
+    },
+    "compare": {
+      "title": "Compare strategies",
+      "intro": "The first 10 orders of each criterion. Highlighted: the ones that change place.",
+      "running": "Comparing…",
+      "up": "{places, plural, one {Up # place} other {Up # places}}",
+      "down": "{places, plural, one {Down # place} other {Down # places}}",
+      "same": "Same place",
+      "changed": "Changes place"
+    },
+    "generate": {
+      "title": "Generate the official proposal",
+      "intro": "The server computes the plan again with current data and saves it as a draft.",
+      "strategyLabel": "Criterion",
+      "useCustom": "Custom weights from the simulator ({priority}/{deadline}/{expiry})",
+      "submit": "Generate proposal",
+      "submitting": "Generating…",
+      "created": "Proposal generated"
+    },
+    "history": {
+      "title": "Proposal history",
+      "empty": "There are no proposals yet.",
+      "createdAt": "Created {date}",
+      "orders": "{full} full · {partial} partial · {unserved} without stock",
+      "open": "View proposal",
+      "degraded": "No AI"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "CONFIRMED": "Confirmed",
+      "DISCARDED": "Discarded"
+    },
+    "degraded": {
+      "title": "The AI did not answer; the balanced criterion was used.",
+      "notConfigured": "The AI is not configured in this environment.",
+      "timeout": "The AI took too long to answer.",
+      "quota": "The AI reached its usage limit for now.",
+      "unavailable": "The AI is not available right now."
+    },
+    "errors": {
+      "stockChanged": "Stock changed since the proposal was generated. Nothing was applied.",
+      "orderChanged": "An order changed status since the proposal was generated. Nothing was applied.",
+      "notDraft": "This proposal is no longer a draft.",
+      "businessDateChanged": "The proposal is from another day; dispatchable lots changed.",
+      "invalidWeights": "Weights must add up to 100.",
+      "forbidden": "You are not allowed to do this.",
+      "notFound": "We could not find this proposal.",
+      "network": "No connection to the server. Try again.",
+      "unexpected": "Something went wrong. Try again.",
+      "regenerate": "Generate again"
+    },
+    "detail": {
+      "metaTitle": "Distribution proposal",
+      "back": "Back to Distribution",
+      "title": "{strategy} proposal",
+      "createdAt": "Generated {date}",
+      "weights": "Weights {priority}/{deadline}/{expiry}",
+      "kpis": {
+        "ordersFull": "Full orders",
+        "ordersPartial": "Partial orders",
+        "ordersUnserved": "Orders without stock",
+        "itemsProcessed": "Items",
+        "linesCount": "Lines",
+        "rescoreCount": "Re-scores",
+        "processingMs": "Server computation"
+      },
+      "processing": "{ms} ms",
+      "totals": "Recommended: {totals}",
+      "ordersTitle": "Orders in plan order",
+      "columns": {
+        "product": "Product",
+        "lot": "Lot",
+        "requested": "Requested",
+        "available": "Available",
+        "recommended": "Recommended",
+        "reasons": "Reasons"
+      },
+      "noLot": "No lot",
+      "lotCode": "Lot {code}",
+      "rescores": "{count, plural, one {Re-scored # time} other {Re-scored # times}}",
+      "orderNow": "Current status: {status}",
+      "confirm": "Confirm proposal",
+      "discard": "Discard",
+      "confirmTitle": "Confirm this proposal?",
+      "confirmBody": "Stock will be taken FEFO and {count, plural, one {# order moves} other {# orders move}} to preparation. If anything changed, nothing is applied.",
+      "confirmAction": "Yes, confirm",
+      "cancel": "Cancel",
+      "confirming": "Confirming…",
+      "confirmed": "Proposal confirmed: the orders moved to preparation",
+      "discarded": "Proposal discarded",
+      "readOnly": "This proposal is {status}: read only."
+    },
+    "explanation": {
+      "title": "AI explanation",
+      "intro": "A plain-language summary of the plan. Figures come from the plan; the AI does not change them.",
+      "generate": "Explain with AI",
+      "regenerate": "Explain again",
+      "loading": "The AI is reading the plan…",
+      "unavailable": "AI not available for now. The plan is still valid.",
+      "busy": "Too many AI requests. Wait a minute.",
+      "unexpected": "We could not get the explanation.",
+      "meta": "{model} · {ms} ms",
+      "cached": "Saved",
+      "highlights": "Key points",
+      "tieBreak": "Suggested order for ties"
+    },
+    "reasons": {
+      "PRIORITY_LOW": "Low priority",
+      "PRIORITY_MEDIUM": "Medium priority",
+      "PRIORITY_HIGH": "High priority",
+      "PRIORITY_URGENT": "Urgent priority",
+      "DUE_IN_DAYS": "{days, plural, =0 {Due today} one {Due tomorrow} other {Due in # days}}",
+      "OVERDUE": "{days, plural, one {Overdue by # day} other {Overdue by # days}}",
+      "EXPIRES_IN_DAYS": "{days, plural, one {Lot expires tomorrow} other {Lot expires in # days}}",
+      "PARTIAL_STOCK": "Partial stock: {allocated} of {requested} {unit}",
+      "NO_STOCK": "No stock for {requested} {unit}",
+      "UNKNOWN": "Another plan reason"
+    }
+  },
+  "Lab": {
+    "metaTitle": "Performance lab",
+    "eyebrow": "Lab",
+    "title": "Main thread vs Web Worker",
+    "intro": "The same distribution engine with synthetic data. On the main thread the page freezes while it computes; in the Worker it keeps responding.",
+    "size": "Synthetic orders",
+    "sizeValue": "{count, number} orders",
+    "seed": "Seed",
+    "snapshot": "{orders, number} orders · {products, number} products · {lots, number} lots",
+    "indicator": {
+      "title": "Indicator driven by JavaScript",
+      "hint": "It updates on every frame with requestAnimationFrame. If the main thread is blocked, it stops.",
+      "frames": "{count, number} frames"
+    },
+    "runMain": "Run on the main thread",
+    "runWorker": "Run in the Worker",
+    "running": "Running…",
+    "clickMe": "Click while it computes",
+    "clicks": "{count, plural, =0 {No clicks} one {# click} other {# clicks}}",
+    "results": {
+      "title": "Results",
+      "empty": "Run a test to see the numbers.",
+      "mode": "Mode",
+      "orders": "Orders",
+      "duration": "Total duration",
+      "engine": "Engine",
+      "longestFrame": "Longest frame",
+      "longTasks": "Long tasks",
+      "inp": "Approx. INP",
+      "modes": {
+        "main": "Main thread",
+        "worker": "Worker"
+      },
+      "ms": "{value, number} ms",
+      "longTasksValue": "{count} ({ms, number} ms)",
+      "none": "—",
+      "export": "Export JSON",
+      "clear": "Clear"
+    },
+    "notes": {
+      "title": "How it is measured",
+      "duration": "Total duration: from the click to having the result.",
+      "frame": "Longest frame: the largest gap between two requestAnimationFrame callbacks.",
+      "longTasks": "Long tasks: main-thread tasks over 50 ms (PerformanceObserver \"longtask\").",
+      "inp": "Approx. INP: the slowest interaction with the click button (PerformanceObserver \"event\", 16 ms threshold).",
+      "unsupported": "This browser does not report long tasks or events; those columns stay empty."
     }
   }
 }
