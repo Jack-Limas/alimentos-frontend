@@ -711,5 +711,18 @@
       "ORDER_OVERDUE": "{orderCode} está vencido hace {daysOverdue, plural, one {# día} other {# días}}.",
       "UNKNOWN": "Hay una alerta que esta versión aún no sabe mostrar."
     }
+  },
+  "Profile": {
+    "changePhoto": "Cambiar foto",
+    "addPhoto": "Agregar foto",
+    "removePhoto": "Quitar foto",
+    "photoHint": "JPG, PNG o WebP hasta 5 MB. Se guarda solo en este navegador.",
+    "photoSaved": "Foto actualizada.",
+    "errors": {
+      "type": "Usa una imagen JPG, PNG o WebP.",
+      "size": "La imagen pesa más de 5 MB.",
+      "unreadable": "No pudimos leer esa imagen.",
+      "storage": "El navegador no permitió guardar la foto."
+    }
   }
 }

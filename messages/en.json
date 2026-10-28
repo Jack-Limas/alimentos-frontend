@@ -711,5 +711,18 @@
       "ORDER_OVERDUE": "{orderCode} is overdue by {daysOverdue, plural, one {# day} other {# days}}.",
       "UNKNOWN": "There is an alert this version cannot show yet."
     }
+  },
+  "Profile": {
+    "changePhoto": "Change photo",
+    "addPhoto": "Add photo",
+    "removePhoto": "Remove photo",
+    "photoHint": "JPG, PNG or WebP up to 5 MB. Saved in this browser only.",
+    "photoSaved": "Photo updated.",
+    "errors": {
+      "type": "Use a JPG, PNG or WebP image.",
+      "size": "The image is larger than 5 MB.",
+      "unreadable": "We could not read that image.",
+      "storage": "The browser did not allow saving the photo."
+    }
   }
 }
