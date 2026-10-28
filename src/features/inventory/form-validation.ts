@@ -33,7 +33,7 @@ function decimalsOf(text: string): number {
   return text.trim().replace(',', '.').split('.')[1]?.length ?? 0;
 }
 
-function quantity(allowZero: boolean) {
+export function quantity(allowZero: boolean) {
   return z
     .string()
     .trim()
@@ -47,18 +47,18 @@ function quantity(allowZero: boolean) {
     .refine((value) => value <= MAX_QTY, { error: 'tooLarge' });
 }
 
-const requiredText = (max: number) =>
+export const requiredText = (max: number) =>
   z.string().trim().min(1, { error: 'required' }).max(max, { error: 'tooLong' });
 
 /** Optional text: blank becomes undefined so it is not sent. */
-const optionalText = (max: number) =>
+export const optionalText = (max: number) =>
   z
     .string()
     .trim()
     .max(max, { error: 'tooLong' })
     .transform((text) => (text === '' ? undefined : text));
 
-const option = <T extends readonly [string, ...string[]]>(values: T) =>
+export const option = <T extends readonly [string, ...string[]]>(values: T) =>
   z.enum(values, { error: 'invalidOption' });
 
 export const productFormSchema = z.object({
@@ -69,15 +69,20 @@ export const productFormSchema = z.object({
   status: option(PRODUCT_STATUSES),
 });
 
+/** A calendar date input that cannot be before `today` (Bogota). */
+export function futureDate(today: CalendarDate) {
+  return z
+    .string()
+    .min(1, { error: 'required' })
+    .refine(isCalendarDate, { error: 'invalidDate', abort: true })
+    .refine((date) => date >= today, { error: 'pastDate' });
+}
+
 /** Entry: the expiry date cannot be before today in Bogota (the backend checks it too). */
 export function entryFormSchema(today: CalendarDate) {
   return z.object({
     quantity: quantity(false),
-    expiryDate: z
-      .string()
-      .min(1, { error: 'required' })
-      .refine(isCalendarDate, { error: 'invalidDate', abort: true })
-      .refine((date) => date >= today, { error: 'pastDate' }),
+    expiryDate: futureDate(today),
     lotCode: optionalText(64),
     note: optionalText(500),
   });
