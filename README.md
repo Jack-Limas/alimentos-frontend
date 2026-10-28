@@ -56,7 +56,8 @@ flowchart LR
 | `/[locale]/app/missions`                   | CSR       | Hecho          | Pantalla principal del OPERATOR en móvil                                 |
 | `/[locale]/app/alerts`                     | CSR       | Hecho          | Agrupadas por severidad; refresco cada 60 s                              |
 | `/[locale]/app/customers`                  | CSR       | Hecho          | Solo ADMIN                                                               |
-| Distribución                               | CSR       | Fase posterior | Se ve como "Próximamente" en la navegación                               |
+| `/[locale]/app/distribution` (+ `/[id]`)   | CSR       | Hecho          | Simulador en Web Worker, comparar, generar, confirmar; ADMIN y OPERATOR  |
+| `/[locale]/app/lab/performance`            | CSR       | Hecho          | Solo ADMIN: hilo principal vs Web Worker con datos sintéticos            |
 
 ## Autenticación
 
@@ -220,6 +221,64 @@ se guarda; la preferencia del sistema operativo se ignora a propósito (`enableS
   posterior.
 - **Botones 3D**: cada botón tiene un "borde" inferior sólido en el que se hunde al presionar y se
   eleva un píxel al pasar el mouse. Con `prefers-reduced-motion` solo cambia el color.
+
+## Distribución y motor en Web Worker
+
+- **Motor copiado, no compartido**: `src/features/distribution/engine/` es una copia del motor puro
+  de `alimentos-backend` (`MinHeap`, `scoreOrder`, estrategias `BALANCED`, `URGENCY_FIRST`,
+  `WASTE_FIRST`, `buildProposal`, `allocateFefo`). Diferencias: no tiene el desempate por IA (eso
+  lo hace el servidor en `AI_ASSISTED`) y acepta un `onProgress` que no cambia el resultado.
+- **Paridad**: `tests/fixtures/distribution-parity/` son copias exactas de los 3 fixtures del
+  backend, tomados del commit **`f716926`** de `alimentos-backend`. `tests/distribution-parity.test.ts`
+  exige el mismo `ranking`, `lines` y `summary` (salvo `processingMs`). Si el algoritmo cambia en
+  el backend, se copian de nuevo los fixtures y el código, y se actualiza este commit.
+- **Web Worker**: `src/workers/distribution.worker.ts`, creado en `create-worker.ts` con
+  `new Worker(new URL('…', import.meta.url), { type: 'module' })`. Según la documentación de
+  Next 16 incluida en `node_modules/next/dist/docs` (Turbopack: magic comments en `new Worker()`
+  y `turbopackWorkerAssetPrefix` para "Web Worker URLs (entrypoint + module chunks)"), Turbopack
+  empaqueta el worker como entrada propia: en el build aparece `static/chunks/turbopack-worker-*.js`,
+  que carga los chunks del motor. Se sirve desde el mismo origen con COOP/COEP, así que funciona
+  con `require-corp` (verificado: `crossOriginIsolated` es `true`).
+- **Protocolo tipado** (`worker-protocol.ts`): `run` → `progress` (cada N pedidos) → `result` |
+  `error`; `cancel` descarta un `run` que sigue en cola. `EngineClient` usa `requestId` y canales:
+  en cada canal solo cuenta el último `run` y los resultados viejos se descartan. Un cálculo en
+  curso no se puede interrumpir (es síncrono), así que cancelar termina el worker y se crea otro.
+  `useEngineWorker()` lo termina al desmontar.
+- **Pantalla `/app/distribution`**: simulador con pesos que siempre suman 100 (con debounce, en el
+  Worker, sobre `GET /distribution/snapshot`, ranking con animación FLIP que respeta
+  `prefers-reduced-motion`), comparación del top 10 de las 3 estrategias, generación de la
+  propuesta oficial (`{ strategy, weights?, locale }`; el servidor recalcula), detalle con KPIs,
+  líneas por pedido, frescura del lote y razones traducidas, confirmar (diálogo) y descartar. Los
+  409 `STALE_PROPOSAL` (`STOCK_CHANGED`, `ORDER_CHANGED`, `NOT_DRAFT`, `BUSINESS_DATE_CHANGED`) se
+  traducen y ofrecen "Generar de nuevo". Si `AI_ASSISTED` vuelve con `degraded: true` se muestra
+  un aviso amable. La tarjeta "Explicación de la IA" nunca rompe la pantalla: con 404, 503 o sin
+  red dice "IA no disponible por ahora". El texto de la IA es plano; el formato (códigos de
+  pedido como enlaces) lo pone el frontend.
+
+## Laboratorio: hilo principal vs Web Worker
+
+`/app/lab/performance` (solo ADMIN) genera un snapshot sintético **determinista** (semilla,
+1.000 a 20.000 pedidos) y ejecuta el mismo motor en el hilo principal o en el Worker. Mide la
+duración total, el frame más largo (huecos entre callbacks de `requestAnimationFrame`, tomados
+con `performance.now()`), las long tasks (`PerformanceObserver` `longtask`) y un INP aproximado
+del botón "Haz clic mientras calcula" (`PerformanceObserver` `event` con `durationThreshold` 16;
+si el navegador no reporta eventos, como Chrome headless, se usa la espera del clic medida en su
+manejador). El indicador se mueve con JavaScript en cada frame, **no con CSS**: las animaciones
+CSS de `transform` corren en el compositor y no se congelan, así que no demostrarían nada. Los
+resultados se exportan en JSON.
+
+Medición local (Chrome 155 headless, build de producción, 10.000 pedidos, semilla 20261028):
+
+| Modo           | Duración total | Motor  | Frame más largo | Long tasks | INP aprox. |
+| -------------- | -------------- | ------ | --------------- | ---------- | ---------- |
+| Hilo principal | 216 ms         | 216 ms | 218 ms          | 1 (216 ms) | 121 ms     |
+| Worker         | 363 ms         | 279 ms | 15 ms           | 0          | 2 ms       |
+| Hilo principal | 142 ms         | 142 ms | 144 ms          | 1 (141 ms) | 26 ms      |
+| Worker         | 426 ms         | 386 ms | 22 ms           | 0          | 1 ms       |
+
+Con 20.000 pedidos: hilo principal 606 ms congelado (frame de 608 ms, INP 490 ms); Worker 1.716 ms
+en total con el frame más largo en 65 ms. El Worker tarda más en total (copia del snapshot y CPU
+compartida) pero la página nunca se congela.
 
 ## Por qué COOP y COEP
 
