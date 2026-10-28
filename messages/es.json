@@ -661,5 +661,50 @@
       "duplicateProduct": "Este producto ya está en el pedido.",
       "tooManyItems": "Máximo 50 productos por pedido."
     }
+  },
+  "Alerts": {
+    "metaTitle": "Alertas · AlimentaIQ",
+    "eyebrow": "Alertas",
+    "title": "Lo que necesita atención",
+    "intro": "Calculadas al momento con el stock, los vencimientos y los pedidos. Se actualizan cada minuto.",
+    "updated": "Actualizado {time}",
+    "refresh": "Actualizar",
+    "loading": "Cargando alertas…",
+    "filters": "Filtrar por tipo",
+    "allTypes": "Todas",
+    "badge": "{count, plural, one {# alerta crítica} other {# alertas críticas}}",
+    "open": "Ver",
+    "empty": {
+      "title": "Todo en orden",
+      "description": "No hay alertas de este tipo ahora mismo."
+    },
+    "severity": {
+      "CRITICAL": "Críticas",
+      "WARNING": "Advertencias",
+      "INFO": "Información"
+    },
+    "severityOne": {
+      "CRITICAL": "Crítica",
+      "WARNING": "Advertencia",
+      "INFO": "Información"
+    },
+    "types": {
+      "LOW_STOCK": "Stock bajo",
+      "SHORTAGE_RISK": "Riesgo de faltante",
+      "EXPIRING_SOON": "Por vencer",
+      "WASTE_RISK": "Riesgo de merma",
+      "ORDER_DUE_SOON": "Pedidos por vencer"
+    },
+    "codes": {
+      "OUT_OF_STOCK": "{name} está agotado. El mínimo es {minStock, number}.",
+      "BELOW_MIN_STOCK": "{name}: quedan {availableQty, number}, por debajo del mínimo de {minStock, number}.",
+      "EXPIRES_IN_DAYS": "{name}: {days, plural, =0 {el lote más próximo vence hoy} one {el lote más próximo vence mañana} other {el lote más próximo vence en # días}}.",
+      "COVERAGE_EXCEEDS_EXPIRY": "{name}: el stock dura {coverageDays, number} días pero vence en {daysToExpiry, plural, one {# día} other {# días}}.",
+      "NO_RECENT_OUTFLOW": "{name}: sin despachos en {windowDays, number} días y un lote por vencer.",
+      "PENDING_DEMAND_EXCEEDS_STOCK": "{name}: los pedidos pendientes piden {demand, number} y solo hay {available, number}.",
+      "ORDER_DUE_IN_DAYS": "{orderCode} {days, plural, =0 {vence hoy} one {vence mañana} other {vence en # días}} y aún no sale.",
+      "ORDER_OVERDUE": "{orderCode} está vencido hace {daysOverdue, plural, one {# día} other {# días}}.",
+      "UNKNOWN": "Hay una alerta que esta versión aún no sabe mostrar."
+    }
   }
 }

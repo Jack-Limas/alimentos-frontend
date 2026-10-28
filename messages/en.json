@@ -661,5 +661,50 @@
       "duplicateProduct": "This product is already in the order.",
       "tooManyItems": "At most 50 products per order."
     }
+  },
+  "Alerts": {
+    "metaTitle": "Alerts · AlimentaIQ",
+    "eyebrow": "Alerts",
+    "title": "What needs attention",
+    "intro": "Computed on the spot from stock, expiry dates and orders. They refresh every minute.",
+    "updated": "Updated {time}",
+    "refresh": "Refresh",
+    "loading": "Loading alerts…",
+    "filters": "Filter by type",
+    "allTypes": "All",
+    "badge": "{count, plural, one {# critical alert} other {# critical alerts}}",
+    "open": "Open",
+    "empty": {
+      "title": "All good",
+      "description": "There are no alerts of this type right now."
+    },
+    "severity": {
+      "CRITICAL": "Critical",
+      "WARNING": "Warnings",
+      "INFO": "Information"
+    },
+    "severityOne": {
+      "CRITICAL": "Critical",
+      "WARNING": "Warning",
+      "INFO": "Info"
+    },
+    "types": {
+      "LOW_STOCK": "Low stock",
+      "SHORTAGE_RISK": "Shortage risk",
+      "EXPIRING_SOON": "Expiring soon",
+      "WASTE_RISK": "Waste risk",
+      "ORDER_DUE_SOON": "Orders coming due"
+    },
+    "codes": {
+      "OUT_OF_STOCK": "{name} is out of stock. The minimum is {minStock, number}.",
+      "BELOW_MIN_STOCK": "{name}: {availableQty, number} left, below the minimum of {minStock, number}.",
+      "EXPIRES_IN_DAYS": "{name}: {days, plural, =0 {the nearest lot expires today} one {the nearest lot expires tomorrow} other {the nearest lot expires in # days}}.",
+      "COVERAGE_EXCEEDS_EXPIRY": "{name}: stock lasts {coverageDays, number} days but expires in {daysToExpiry, plural, one {# day} other {# days}}.",
+      "NO_RECENT_OUTFLOW": "{name}: nothing dispatched in {windowDays, number} days and a lot about to expire.",
+      "PENDING_DEMAND_EXCEEDS_STOCK": "{name}: pending orders ask for {demand, number} and only {available, number} is left.",
+      "ORDER_DUE_IN_DAYS": "{orderCode} {days, plural, =0 {is due today} one {is due tomorrow} other {is due in # days}} and has not left yet.",
+      "ORDER_OVERDUE": "{orderCode} is overdue by {daysOverdue, plural, one {# day} other {# days}}.",
+      "UNKNOWN": "There is an alert this version cannot show yet."
+    }
   }
 }
