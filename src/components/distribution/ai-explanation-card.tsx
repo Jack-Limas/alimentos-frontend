@@ -68,7 +68,7 @@ export function AiExplanationCard({
   return (
     <section
       aria-labelledby="ai-title"
-      className="relative overflow-hidden rounded-card bg-gradient-to-br from-berry-50 via-surface to-lagoon-50 p-5 shadow-card ring-1 ring-berry-100 dark:from-berry-950/50 dark:via-surface dark:to-lagoon-950/40 dark:ring-berry-900 sm:p-6"
+      className="relative overflow-hidden rounded-card bg-gradient-to-br from-berry-50 via-surface to-lagoon-50 p-5 shadow-card ring-1 ring-berry-100 dark:from-berry-900/40 dark:via-surface dark:to-lagoon-900/30 dark:ring-berry-900 sm:p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">

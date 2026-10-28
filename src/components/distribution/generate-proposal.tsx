@@ -51,7 +51,7 @@ export function GenerateProposal({ weights }: { weights: Weights }) {
   return (
     <section
       aria-labelledby="generate-title"
-      className="rounded-card bg-gradient-to-br from-forest-50 to-lagoon-50 p-5 shadow-card ring-1 ring-forest-100 dark:from-forest-950/70 dark:to-lagoon-950/40 dark:ring-forest-800 sm:p-6"
+      className="rounded-card bg-gradient-to-br from-forest-50 to-lagoon-50 p-5 shadow-card ring-1 ring-forest-100 dark:from-forest-950/70 dark:to-lagoon-900/30 dark:ring-forest-800 sm:p-6"
     >
       <h2 id="generate-title" className="font-display text-xl font-semibold">
         {t('generate.title')}
