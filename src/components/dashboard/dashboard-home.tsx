@@ -14,6 +14,7 @@ import { FRESHNESS_RULES } from '@/features/inventory/freshness';
 import type { InventorySummary } from '@/features/inventory/types';
 import { serializeProductFilters, type ProductFilters } from '@/features/products/filters';
 import { Link } from '@/i18n/navigation';
+import { CriticalAlertsCard, DueOrdersCard } from './attention-cards';
 import { KpiCard, type KpiTone } from './kpi-card';
 
 interface KpiSpec {
@@ -106,6 +107,11 @@ export function DashboardHome() {
           </div>
         )}
       </section>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <CriticalAlertsCard />
+        <DueOrdersCard />
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
         <section className="rounded-card bg-surface p-6 shadow-card ring-1 ring-border">
