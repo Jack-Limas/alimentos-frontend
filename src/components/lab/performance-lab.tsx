@@ -78,8 +78,11 @@ export function PerformanceLab() {
     let count = 0;
     const loop = (time: number) => {
       count += 1;
-      lastFrame.current = time;
-      if (recording.current) frames.current.push(time);
+      // When the callback really ran: the `time` argument is the frame's begin time,
+      // which the browser may date inside a blocked task and so hide part of the freeze.
+      const ranAt = performance.now();
+      lastFrame.current = ranAt;
+      if (recording.current) frames.current.push(ranAt);
       if (wheel.current) wheel.current.style.transform = `rotate(${String((time / 4) % 360)}deg)`;
       if (counter.current) counter.current.textContent = t('indicator.frames', { count });
       id = requestAnimationFrame(loop);
