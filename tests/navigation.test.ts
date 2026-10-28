@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   canAccessPath,
   isActive,
+  mobileNavFor,
   MOVEMENTS_ROLES,
   NAV_ITEMS,
   navItemsFor,
@@ -24,11 +25,45 @@ describe('navigation by role', () => {
     expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('movements');
   });
 
-  it('gives both roles the dashboard, inventory and the coming-soon modules', () => {
+  it('gives both roles missions, orders, inventory, alerts and the coming-soon distribution', () => {
     for (const role of ['ADMIN', 'OPERATOR'] as const) {
       expect(navItemsFor(role).map((i) => i.key)).toEqual(
-        expect.arrayContaining(['dashboard', 'inventory', 'orders', 'distribution', 'alerts']),
+        expect.arrayContaining([
+          'dashboard',
+          'missions',
+          'orders',
+          'inventory',
+          'alerts',
+          'distribution',
+        ]),
       );
+    }
+    expect(NAV_ITEMS.filter((i) => i.comingSoon).map((i) => i.key)).toEqual(['distribution']);
+  });
+
+  it('shows Customers to an ADMIN only and guards its path', () => {
+    expect(navItemsFor('ADMIN').map((i) => i.key)).toContain('customers');
+    expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('customers');
+    expect(canAccessPath('/app/customers', 'OPERATOR')).toBe(false);
+    expect(canAccessPath('/app/orders/abc', 'OPERATOR')).toBe(true);
+  });
+
+  it('gives the operator Missions, Orders, Inventory and Alerts on the phone', () => {
+    expect(mobileNavFor('OPERATOR').map((i) => i.key)).toEqual([
+      'missions',
+      'orders',
+      'inventory',
+      'alerts',
+    ]);
+    expect(mobileNavFor('ADMIN').map((i) => i.key)).toEqual([
+      'dashboard',
+      'orders',
+      'inventory',
+      'alerts',
+      'customers',
+    ]);
+    for (const role of ['ADMIN', 'OPERATOR'] as const) {
+      for (const item of mobileNavFor(role)) expect(item.roles).toContain(role);
     }
   });
 
@@ -46,7 +81,8 @@ describe('navigation by role', () => {
   });
 
   it('highlights the dashboard only on /app and inventory on product pages', () => {
-    const [dashboard, inventory] = NAV_ITEMS;
+    const dashboard = NAV_ITEMS.find((i) => i.key === 'dashboard');
+    const inventory = NAV_ITEMS.find((i) => i.key === 'inventory');
     if (!dashboard || !inventory) throw new Error('missing items');
     expect(isActive(dashboard, '/app')).toBe(true);
     expect(isActive(dashboard, '/app/products')).toBe(false);
