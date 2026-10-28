@@ -41,18 +41,22 @@ flowchart LR
 
 ## Rendering por ruta
 
-| Ruta                           | Patrón    | Estado         | Notas                                                            |
-| ------------------------------ | --------- | -------------- | ---------------------------------------------------------------- |
-| `/[locale]` (landing)          | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                          |
-| `/[locale]/login`              | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador |
-| `/[locale]/system-check`       | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador              |
-| `/[locale]/impact`             | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                  |
-| Hoja de despacho               | SSR       | Fase posterior | Enlace firmado [EXTRA]                                           |
-| `/[locale]/app` (panel)        | CSR       | Hecho          | KPIs de `/inventory/summary`; HTML estático = skeleton           |
-| `/[locale]/app/products`       | CSR       | Hecho          | Filtros en la URL; tabla en escritorio, tarjetas en móvil        |
-| `/[locale]/app/products/[id]`  | CSR       | Hecho          | Métricas, razones traducidas, lotes FEFO; acciones ADMIN         |
-| `/[locale]/app/movements`      | CSR       | Hecho          | Solo ADMIN (guard de UX; la API responde 403 igual)              |
-| Pedidos, distribución, alertas | CSR       | Fase posterior | Se ven como "Próximamente" en la navegación                      |
+| Ruta                                       | Patrón    | Estado         | Notas                                                                    |
+| ------------------------------------------ | --------- | -------------- | ------------------------------------------------------------------------ |
+| `/[locale]` (landing)                      | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                                  |
+| `/[locale]/login`                          | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador         |
+| `/[locale]/system-check`                   | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador                      |
+| `/[locale]/impact`                         | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                          |
+| Hoja de despacho                           | SSR       | Fase posterior | Enlace firmado [EXTRA]                                                   |
+| `/[locale]/app` (panel)                    | CSR       | Hecho          | KPIs de `/inventory/summary`; HTML estático = skeleton                   |
+| `/[locale]/app/products`                   | CSR       | Hecho          | Filtros en la URL; tabla en escritorio, tarjetas en móvil                |
+| `/[locale]/app/products/[id]`              | CSR       | Hecho          | Métricas, razones traducidas, lotes FEFO; acciones ADMIN                 |
+| `/[locale]/app/movements`                  | CSR       | Hecho          | Solo ADMIN (guard de UX; la API responde 403 igual)                      |
+| `/[locale]/app/orders` (+ `/new`, `/[id]`) | CSR       | Hecho          | Filtros en la URL; crear solo ADMIN; botones según la máquina de estados |
+| `/[locale]/app/missions`                   | CSR       | Hecho          | Pantalla principal del OPERATOR en móvil                                 |
+| `/[locale]/app/alerts`                     | CSR       | Hecho          | Agrupadas por severidad; refresco cada 60 s                              |
+| `/[locale]/app/customers`                  | CSR       | Hecho          | Solo ADMIN                                                               |
+| Distribución                               | CSR       | Fase posterior | Se ve como "Próximamente" en la navegación                               |
 
 ## Autenticación
 
@@ -195,6 +199,27 @@ se guarda; la preferencia del sistema operativo se ignora a propósito (`enableS
   fechas con hora en `America/Bogota` (`timeZone` de next-intl).
 - **Movimiento**: conteo de KPIs, barras que se llenan y botones que se hunden al presionar; con
   `prefers-reduced-motion` todo queda estático.
+
+## Pedidos, misiones, alertas y clientes
+
+- **Máquina de estados espejo** (`features/orders/state-machine.ts`): la misma tabla del backend,
+  pura y probada por rol. Solo decide qué botones mostrar; el servidor valida cada cambio. Un 409 se
+  traduce por `details.reason` (`REQUIRES_PROPOSAL` → "se prepara desde Distribución").
+- **Cuenta regresiva** en días de calendario de Bogotá: a las 23:59 en Bogotá un pedido que vence
+  "hoy" sigue venciendo hoy aunque en UTC ya sea mañana.
+- **Prioridad con color e ícono**: URGENT rojo con un pulso suave, HIGH naranja, MEDIUM lagoon y LOW
+  gris; el texto siempre acompaña al color.
+- **Misiones de hoy**: los pedidos en preparación, listos y enviados como tarjetas con barra de
+  progreso y un botón grande para avanzar. Al entregar sale un confeti ligero y sube el contador
+  "misiones completadas hoy" (guardado por usuario y día en este navegador). En móvil es la
+  pantalla de inicio del OPERATOR.
+- **Alertas**: se traducen por código y parámetros; el conteo de CRITICAL aparece como insignia en
+  la navegación (consulta compartida, refresco cada 60 s; en la fase 5 pasa a un SharedWorker).
+- **Foto de perfil**: desde el menú de usuario. Se recorta a un cuadrado de 160 px y se guarda en
+  `localStorage` de este navegador (no es un secreto). Subirla al backend queda para una fase
+  posterior.
+- **Botones 3D**: cada botón tiene un "borde" inferior sólido en el que se hunde al presionar y se
+  eleva un píxel al pasar el mouse. Con `prefers-reduced-motion` solo cambia el color.
 
 ## Por qué COOP y COEP
 
