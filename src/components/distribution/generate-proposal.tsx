@@ -51,14 +51,14 @@ export function GenerateProposal({ weights }: { weights: Weights }) {
   return (
     <section
       aria-labelledby="generate-title"
-      className="rounded-card bg-gradient-to-br from-forest-50 to-lagoon-50 p-5 shadow-card ring-1 ring-forest-100 dark:from-forest-950/70 dark:to-lagoon-900/30 dark:ring-forest-800 sm:p-6"
+      className="self-start rounded-card bg-gradient-to-br from-forest-50 to-lagoon-50 p-5 shadow-card ring-1 ring-forest-100 dark:from-forest-950/70 dark:to-lagoon-900/30 dark:ring-forest-800 sm:p-6"
     >
       <h2 id="generate-title" className="font-display text-xl font-semibold">
         {t('generate.title')}
       </h2>
       <p className="mt-1 text-sm text-muted">{t('generate.intro')}</p>
 
-      <fieldset className="mt-4 grid gap-2 sm:grid-cols-2">
+      <fieldset className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
         <legend className="sr-only">{t('generate.strategyLabel')}</legend>
         {options.map((option) => (
           <label

@@ -76,15 +76,16 @@ export function StrategyWeights({
         <legend className="sr-only">{t('weights.label')}</legend>
         {WEIGHT_KEYS.map((key) => (
           <label key={key} className="block rounded-2xl bg-surface-muted/60 p-3 ring-1 ring-border">
-            <span className="flex items-center justify-between text-sm font-semibold">
-              <span className="flex items-center gap-2">
-                <span aria-hidden="true" className={`size-2.5 rounded-full ${barTone[key]}`} />
-                {t(`weights.${key}`)}
-              </span>
-              <output className="font-display tabular-nums">
-                {t('weights.value', { value: weights[key] })}
-              </output>
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              <span
+                aria-hidden="true"
+                className={`size-2.5 shrink-0 rounded-full ${barTone[key]}`}
+              />
+              {t(`weights.${key}`)}
             </span>
+            <output className="mt-1 block font-display text-2xl font-semibold tabular-nums">
+              {t('weights.value', { value: weights[key] })}
+            </output>
             <input
               type="range"
               min={0}
