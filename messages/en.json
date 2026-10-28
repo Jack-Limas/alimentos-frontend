@@ -162,6 +162,16 @@
     "tip": {
       "title": "How to read the freshness bar",
       "body": "Each lot has ten cells that go out as its expiry date gets closer: green, amber and red. An expired lot looks grey and striped. The text always says how many days are left."
+    },
+    "critical": {
+      "title": "Critical alerts",
+      "empty": "No critical alerts. Nice work.",
+      "seeAll": "See all alerts"
+    },
+    "dueOrders": {
+      "title": "Orders due today or tomorrow",
+      "empty": "No open order is due today or tomorrow.",
+      "seeAll": "See orders"
     }
   },
   "SystemCheck": {

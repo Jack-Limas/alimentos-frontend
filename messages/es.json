@@ -162,6 +162,16 @@
     "tip": {
       "title": "Cómo leer la barra de frescura",
       "body": "Cada lote tiene diez celdas que se apagan a medida que se acerca su vencimiento: verde, ámbar y rojo. Un lote vencido se ve gris y rayado. El texto siempre dice cuántos días quedan."
+    },
+    "critical": {
+      "title": "Alertas críticas",
+      "empty": "Sin alertas críticas. Buen trabajo.",
+      "seeAll": "Ver todas las alertas"
+    },
+    "dueOrders": {
+      "title": "Pedidos que vencen hoy o mañana",
+      "empty": "Ningún pedido abierto vence hoy ni mañana.",
+      "seeAll": "Ver pedidos"
     }
   },
   "SystemCheck": {
