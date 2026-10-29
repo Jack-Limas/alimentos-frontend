@@ -19,7 +19,7 @@ export function MetricsSection({
   return (
     <section
       aria-labelledby={id}
-      className="rounded-card bg-surface p-5 shadow-card ring-1 ring-border sm:p-6"
+      className="min-w-0 rounded-card bg-surface p-5 shadow-card ring-1 ring-border sm:p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">

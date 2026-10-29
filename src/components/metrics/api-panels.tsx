@@ -44,7 +44,7 @@ export function ApiPanels() {
   const sorted = sortByP95(routes);
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[3fr_2fr]">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[3fr_2fr]">
       <MetricsSection
         id="metrics-api"
         title={t('api.title')}
