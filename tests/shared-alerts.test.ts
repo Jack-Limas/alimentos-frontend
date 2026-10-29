@@ -207,6 +207,28 @@ describe('alerts hub (SharedWorker logic)', () => {
     expect(hub.state().ports).toBe(1);
   });
 
+  it('polls at once when a rejoin restarts polling after a due poll', async () => {
+    const { hub, calls, advance } = setup();
+    const tab = port();
+    hub.connect(tab);
+    hub.receive(tab, { type: 'hello', apiUrl: 'http://api', token: TOKEN });
+    await flush();
+    expect(calls).toHaveLength(1);
+    // Dropped and back within the minute: no extra request.
+    advance(HEARTBEAT_MS * 3);
+    hub.heartbeat();
+    hub.receive(tab, { type: 'hello', apiUrl: 'http://api', token: TOKEN });
+    await flush();
+    expect(calls).toHaveLength(1);
+    // Dropped again and back after the minute: the poll that the restart skipped happens now.
+    advance(HEARTBEAT_MS * 2 + 1);
+    hub.heartbeat();
+    expect(hub.state().polling).toBe(false);
+    hub.receive(tab, { type: 'hello', apiUrl: 'http://api', token: TOKEN });
+    await flush();
+    expect(calls).toHaveLength(2);
+  });
+
   it('keeps the last snapshot on a network error and reports it', async () => {
     const { hub } = setup([
       { status: 'ok', alerts: [alert('WARNING')] },

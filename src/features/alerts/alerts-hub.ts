@@ -79,6 +79,10 @@ export function createAlertsHub({
   function startPolling(): void {
     if (pollTimer === null && token !== null && ports.size > 0) {
       pollTimer = startInterval(() => void poll(), pollMs);
+      // Polling restarts when a dropped tab rejoins: if the last poll is already
+      // due, do it now, or tabs that keep dropping and rejoining would reset the
+      // 60 s timer forever and never get new alerts.
+      if (snapshot !== null && now() - snapshot.fetchedAt >= pollMs) void poll();
     }
   }
 
