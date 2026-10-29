@@ -63,6 +63,8 @@ export function PerformanceLab() {
   const poolWorkers = useClientValue(() => poolSize(navigator.hardwareConcurrency), 1);
   const [pool] = useState(() => ({ engine: null as ParallelEngine | null }));
   const poolControl = useRef<Int32Array | null>(null);
+  // Cancel pressed before the workers got the run: applied as soon as it starts.
+  const cancelRequested = useRef(false);
   const ring = useRef<SVGCircleElement>(null);
   const ringLabel = useRef<HTMLSpanElement>(null);
   const supportsLongTask = useClientValue(() => observes('longtask'), true);
@@ -146,6 +148,12 @@ export function PerformanceLab() {
   async function run(mode: LabRun['mode']) {
     setRunning(mode);
     setClicks(0);
+    if (mode === 'pool') {
+      cancelRequested.current = false;
+      // Do not show the previous run's 100 % while this one starts.
+      if (ring.current) ring.current.style.strokeDashoffset = String(RING_LENGTH);
+      if (ringLabel.current) ringLabel.current.textContent = '0 %';
+    }
     // Let React paint the "running" state and the indicator spin before measuring.
     await nextFrame();
     await nextFrame();
@@ -167,6 +175,7 @@ export function PerformanceLab() {
         pool.engine ??= new ParallelEngine(createPoolWorker, poolWorkers);
         const parallel = pool.engine.run({ snapshot, strategy: 'BALANCED', top: 10 });
         poolControl.current = parallel.control;
+        if (cancelRequested.current) pool.engine.cancel(parallel.control);
         const outcome = await parallel.done;
         workers = outcome.workers;
         if (outcome.status === 'done') engineMs = outcome.scoreMs + outcome.allocateMs;
@@ -346,6 +355,7 @@ export function PerformanceLab() {
                 size="sm"
                 onClick={() => {
                   if (poolControl.current) pool.engine?.cancel(poolControl.current);
+                  else cancelRequested.current = true;
                 }}
               >
                 {t('cancel')}
