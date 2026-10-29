@@ -115,7 +115,7 @@ export function BrowserPanel() {
             </Button>
           ) : null}
         </div>
-        <p className="mt-2 text-xs text-muted">
+        <p className="mt-2 text-xs text-muted [overflow-wrap:anywhere]">
           {t(`frontend.sources.${memory?.source ?? source}`)}
         </p>
         {measuring ? (
