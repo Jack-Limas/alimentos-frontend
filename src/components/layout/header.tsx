@@ -21,6 +21,12 @@ export function Header() {
           <Logo />
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/impact"
+            className="hidden rounded-full px-3 py-2 text-sm font-semibold text-muted transition hover:bg-surface-muted hover:text-foreground md:inline-flex"
+          >
+            {t('impact')}
+          </Link>
           <LanguageSwitcher />
           <ThemeToggle />
           <HeaderSessionActions />
