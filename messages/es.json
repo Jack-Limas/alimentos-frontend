@@ -1146,7 +1146,8 @@
         "CLS": "Saltos de diseño",
         "TTFB": "Primer byte",
         "FCP": "Primer contenido visible"
-      }
+      },
+      "ratingColumn": "Valoración"
     },
     "frontend": {
       "title": "Este navegador",

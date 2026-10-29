@@ -1146,7 +1146,8 @@
         "CLS": "Cumulative Layout Shift",
         "TTFB": "Time to First Byte",
         "FCP": "First Contentful Paint"
-      }
+      },
+      "ratingColumn": "Rating"
     },
     "frontend": {
       "title": "This browser",
