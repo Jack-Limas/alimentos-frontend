@@ -11,6 +11,7 @@ import {
 import {
   createVitalsReporter,
   toSample,
+  type ReporterSession,
   type VitalSample,
 } from '@/features/metrics/vitals-reporter';
 
@@ -95,30 +96,67 @@ describe('web vitals reporter', () => {
 
   it('reports only with a session', () => {
     const send = vi.fn<(sample: VitalSample) => Promise<void>>(() => Promise.resolve());
-    let session = false;
-    const report = createVitalsReporter({
+    const reporter = createVitalsReporter({
       send,
-      hasSession: () => session,
+      session: () => 'anonymous',
       currentPath: () => '/es/app',
       loadedPath: '/es/app',
     });
-    report({ name: 'FCP', value: 900 });
+    reporter.report({ name: 'FCP', value: 900 });
+    reporter.sessionChanged();
     expect(send).not.toHaveBeenCalled();
-    session = true;
-    report({ name: 'FCP', value: 900 });
-    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps early samples while the session loads and sends them once authenticated', () => {
+    const send = vi.fn<(sample: VitalSample) => Promise<void>>(() => Promise.resolve());
+    let state: ReporterSession = 'loading';
+    const reporter = createVitalsReporter({
+      send,
+      session: () => state,
+      currentPath: () => '/es/app',
+      loadedPath: `/es/app/orders/${ID}`,
+    });
+    reporter.report({ name: 'TTFB', value: 120 });
+    reporter.report({ name: 'FCP', value: 640 });
+    reporter.sessionChanged();
+    expect(send).not.toHaveBeenCalled();
+    state = 'authenticated';
+    reporter.sessionChanged();
+    expect(send.mock.calls.map(([sample]) => [sample.name, sample.page])).toEqual([
+      ['TTFB', '/app/orders/[id]'],
+      ['FCP', '/app/orders/[id]'],
+    ]);
+    reporter.sessionChanged();
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  it('drops the waiting samples when the session ends anonymous', () => {
+    const send = vi.fn<(sample: VitalSample) => Promise<void>>(() => Promise.resolve());
+    let state: ReporterSession = 'loading';
+    const reporter = createVitalsReporter({
+      send,
+      session: () => state,
+      currentPath: () => '/es',
+      loadedPath: '/es',
+    });
+    reporter.report({ name: 'TTFB', value: 120 });
+    state = 'anonymous';
+    reporter.sessionChanged();
+    state = 'authenticated';
+    reporter.sessionChanged();
+    expect(send).not.toHaveBeenCalled();
   });
 
   it('gives load metrics to the loaded page and INP/CLS to the current one', () => {
     const send = vi.fn<(sample: VitalSample) => Promise<void>>(() => Promise.resolve());
-    const report = createVitalsReporter({
+    const reporter = createVitalsReporter({
       send,
-      hasSession: () => true,
+      session: () => 'authenticated',
       currentPath: () => `/es/app/orders/${ID}`,
       loadedPath: '/es/app',
     });
-    report({ name: 'LCP', value: 1200 });
-    report({ name: 'INP', value: 350 });
+    reporter.report({ name: 'LCP', value: 1200 });
+    reporter.report({ name: 'INP', value: 350 });
     expect(send.mock.calls.map(([sample]) => [sample.name, sample.page, sample.rating])).toEqual([
       ['LCP', '/app', 'good'],
       ['INP', '/app/orders/[id]', 'needs-improvement'],
@@ -126,14 +164,14 @@ describe('web vitals reporter', () => {
   });
 
   it('ignores send failures', async () => {
-    const report = createVitalsReporter({
+    const reporter = createVitalsReporter({
       send: () => Promise.reject(new Error('offline')),
-      hasSession: () => true,
+      session: () => 'authenticated',
       currentPath: () => '/es/app',
       loadedPath: '/es/app',
     });
     expect(() => {
-      report({ name: 'TTFB', value: 100 });
+      reporter.report({ name: 'TTFB', value: 100 });
     }).not.toThrow();
     await Promise.resolve();
   });

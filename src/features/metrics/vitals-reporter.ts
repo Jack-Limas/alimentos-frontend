@@ -24,11 +24,16 @@ export function toSample(metric: { name: VitalName; value: number }, page: strin
   return { name: metric.name, value, rating: rateVital(metric.name, value), page };
 }
 
+/** Samples kept while the session is still being restored (TTFB and FCP come first). */
+const MAX_PENDING = 20;
+
+export type ReporterSession = 'loading' | 'authenticated' | 'anonymous';
+
 export interface VitalsReporterDeps {
   /** Sends one sample (fetch with keepalive and the session). */
   send: (sample: VitalSample) => Promise<unknown>;
   /** Only users with a session report: the endpoint needs a token. */
-  hasSession: () => boolean;
+  session: () => ReporterSession;
   /** The current pathname (with locale); read when a metric is reported. */
   currentPath: () => string;
   /** The pathname of the hard load, for TTFB, FCP and LCP. */
@@ -36,20 +41,43 @@ export interface VitalsReporterDeps {
 }
 
 /**
- * The callback given to onINP/onLCP/onCLS/onTTFB/onFCP. INP and CLS are
- * reported when the page is hidden, so they go to the page shown at that
- * moment; the load metrics go to the page that was loaded. Failures are
- * ignored: metrics must never bother the user.
+ * `report` is the callback given to onINP/onLCP/onCLS/onTTFB/onFCP. INP and
+ * CLS are reported when the page is hidden, so they go to the page shown at
+ * that moment; the load metrics go to the page that was loaded. While the
+ * session is still being restored the samples wait; `sessionChanged` sends
+ * them once it is authenticated and drops them if it ends anonymous. Failures
+ * are ignored: metrics must never bother the user.
  */
 export function createVitalsReporter({
   send,
-  hasSession,
+  session,
   currentPath,
   loadedPath,
 }: VitalsReporterDeps) {
-  return (metric: { name: VitalName; value: number }): void => {
-    if (!hasSession()) return;
-    const path = LOAD_METRICS.has(metric.name) ? loadedPath : currentPath();
-    send(toSample(metric, normalizePage(path))).catch(() => undefined);
+  let pending: VitalSample[] = [];
+  const deliver = (sample: VitalSample) => {
+    send(sample).catch(() => undefined);
+  };
+
+  return {
+    report(metric: { name: VitalName; value: number }): void {
+      const state = session();
+      if (state === 'anonymous') return;
+      const path = LOAD_METRICS.has(metric.name) ? loadedPath : currentPath();
+      const sample = toSample(metric, normalizePage(path));
+      if (state === 'loading') {
+        if (pending.length < MAX_PENDING) pending.push(sample);
+        return;
+      }
+      deliver(sample);
+    },
+
+    sessionChanged(): void {
+      const state = session();
+      if (state === 'loading') return;
+      const waiting = pending;
+      pending = [];
+      if (state === 'authenticated') waiting.forEach(deliver);
+    },
   };
 }
