@@ -54,6 +54,17 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - Performance demos animate with `requestAnimationFrame` driven by JS, not CSS (CSS transform
   animations keep running on the compositor while the main thread is blocked).
 
+## Shared workers, service worker and the pool
+
+- Alerts are read with `useSharedAlerts()` (SharedWorker, or per-tab polling when it is missing);
+  do not add another poll of `/alerts`. The SharedWorker never calls `/auth/refresh`: it asks a tab.
+- The access token may be posted to the SharedWorker, never logged or echoed back.
+- `public/sw.js` must never cache `/api`, other origins, `Authorization` requests or the login. Bump
+  nothing by hand: the build version in the script URL scopes the caches.
+- The page's main thread never calls `Atomics.wait`; use `waitForWorkers` (waitAsync or rAF).
+- Keep `new SharedWorker(new URL(…), …)` and `new Worker(new URL(…), …)` literal so Turbopack bundles
+  them.
+
 ## Authentication
 
 - Private API calls go through `authFetch` (`useAuth()`), never a hand-made Bearer header: it
