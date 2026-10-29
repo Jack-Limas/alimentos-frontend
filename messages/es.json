@@ -851,7 +851,7 @@
     }
   },
   "Distribution": {
-    "metaTitle": "Distribución",
+    "metaTitle": "Distribución · AlimentaIQ",
     "eyebrow": "Plan del día",
     "title": "Distribución",
     "intro": "Simula en tu navegador cómo se repartiría el stock entre los pedidos pendientes, compara criterios y genera la propuesta oficial.",
@@ -953,7 +953,7 @@
       "regenerate": "Generar de nuevo"
     },
     "detail": {
-      "metaTitle": "Propuesta de distribución",
+      "metaTitle": "Propuesta de distribución · AlimentaIQ",
       "back": "Volver a Distribución",
       "title": "Propuesta {strategy}",
       "createdAt": "Generada {date}",
@@ -1023,7 +1023,7 @@
     }
   },
   "Lab": {
-    "metaTitle": "Laboratorio de rendimiento",
+    "metaTitle": "Laboratorio de rendimiento · AlimentaIQ",
     "eyebrow": "Laboratorio",
     "title": "Hilo principal vs Web Worker",
     "intro": "El mismo motor de distribución con datos sintéticos. En el hilo principal la página se congela mientras calcula; en el Worker sigue respondiendo.",
@@ -1092,7 +1092,7 @@
     "reload": "Recargar"
   },
   "Metrics": {
-    "metaTitle": "Métricas",
+    "metaTitle": "Métricas · AlimentaIQ",
     "eyebrow": "Rendimiento",
     "title": "Métricas del sistema",
     "intro": "Cómo responden la API, el servidor y el navegador. Los datos viven en la memoria del backend y se reinician con cada despliegue.",
@@ -1205,7 +1205,7 @@
     }
   },
   "Reports": {
-    "metaTitle": "Reportes",
+    "metaTitle": "Reportes · AlimentaIQ",
     "eyebrow": "Exportar",
     "title": "Reportes",
     "intro": "Descarga los datos de la bodega en CSV (para Excel) o PDF. El servidor los genera en su pool de worker_threads.",
@@ -1258,7 +1258,7 @@
     }
   },
   "Impact": {
-    "metaTitle": "Nuestro impacto",
+    "metaTitle": "Nuestro impacto · AlimentaIQ",
     "metaDescription": "Cuánta comida despachamos, cuánta rescatamos antes de que venciera y a quién llegó en los últimos 30 días.",
     "eyebrow": "Impacto · últimos {days} días",
     "title": "Comida que llegó a la mesa",

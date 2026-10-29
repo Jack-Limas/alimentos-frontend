@@ -851,7 +851,7 @@
     }
   },
   "Distribution": {
-    "metaTitle": "Distribution",
+    "metaTitle": "Distribution · AlimentaIQ",
     "eyebrow": "Today's plan",
     "title": "Distribution",
     "intro": "Simulate in your browser how stock would be shared among pending orders, compare criteria and generate the official proposal.",
@@ -953,7 +953,7 @@
       "regenerate": "Generate again"
     },
     "detail": {
-      "metaTitle": "Distribution proposal",
+      "metaTitle": "Distribution proposal · AlimentaIQ",
       "back": "Back to Distribution",
       "title": "{strategy} proposal",
       "createdAt": "Generated {date}",
@@ -1023,7 +1023,7 @@
     }
   },
   "Lab": {
-    "metaTitle": "Performance lab",
+    "metaTitle": "Performance lab · AlimentaIQ",
     "eyebrow": "Lab",
     "title": "Main thread vs Web Worker",
     "intro": "The same distribution engine with synthetic data. On the main thread the page freezes while it computes; in the Worker it keeps responding.",
@@ -1092,7 +1092,7 @@
     "reload": "Reload"
   },
   "Metrics": {
-    "metaTitle": "Metrics",
+    "metaTitle": "Metrics · AlimentaIQ",
     "eyebrow": "Performance",
     "title": "System metrics",
     "intro": "How the API, the server and the browser respond. The data lives in the backend memory and resets on every deploy.",
@@ -1205,7 +1205,7 @@
     }
   },
   "Reports": {
-    "metaTitle": "Reports",
+    "metaTitle": "Reports · AlimentaIQ",
     "eyebrow": "Export",
     "title": "Reports",
     "intro": "Download the warehouse data as CSV (for Excel) or PDF. The server builds them in its worker_threads pool.",
@@ -1258,7 +1258,7 @@
     }
   },
   "Impact": {
-    "metaTitle": "Our impact",
+    "metaTitle": "Our impact · AlimentaIQ",
     "metaDescription": "How much food we dispatched, how much we rescued before it expired and who it reached in the last 30 days.",
     "eyebrow": "Impact · last {days} days",
     "title": "Food that reached the table",

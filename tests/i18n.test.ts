@@ -45,4 +45,19 @@ describe('i18n messages', () => {
       expect(invalid).toEqual([]);
     },
   );
+
+  it.each(Object.entries(catalogs))('%s.json: every page title ends with the brand', (_l, flat) => {
+    const titles = [...flat.entries()].filter(([key]) => key.endsWith('.metaTitle'));
+    expect(titles.length).toBeGreaterThan(15);
+    expect(titles.filter(([, value]) => !String(value).endsWith(' · AlimentaIQ'))).toEqual([]);
+  });
+
+  it.each(Object.entries(catalogs))(
+    '%s.json: the site has a title and a description',
+    (_l, flat) => {
+      expect(String(flat.get('Metadata.title')).length).toBeGreaterThan(10);
+      expect(String(flat.get('Metadata.description')).length).toBeGreaterThan(50);
+      expect(String(flat.get('Impact.metaDescription')).length).toBeGreaterThan(50);
+    },
+  );
 });
