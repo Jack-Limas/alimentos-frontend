@@ -65,7 +65,7 @@ export function BenchmarkChart({ run }: { run: BenchmarkReport }) {
       <figcaption className="text-sm font-semibold">{t('chartTitle')}</figcaption>
       <svg
         viewBox={`0 0 ${String(WIDTH)} ${String(height)}`}
-        className="mt-3 w-full"
+        className="mt-3 w-full max-w-3xl"
         role="img"
         aria-label={groups
           .map(

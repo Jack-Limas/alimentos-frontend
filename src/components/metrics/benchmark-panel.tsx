@@ -112,7 +112,7 @@ export function BenchmarkPanel() {
       ) : null}
 
       {latest ? (
-        <div className="mt-6 grid gap-6 xl:grid-cols-[2fr_3fr]">
+        <div className="mt-6 space-y-6">
           <BenchmarkChart run={latest} />
           <div>
             <h3 className="text-sm font-semibold">{t('results')}</h3>
