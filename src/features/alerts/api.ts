@@ -13,12 +13,13 @@ export const alertKeys = {
 };
 
 /**
- * One query shared by the alerts page, the dashboard and the navigation badge
- * (TanStack Query dedupes them). Phase 5 moves the polling to a SharedWorker.
+ * Per-tab polling: the fallback of useSharedAlerts when the browser has no
+ * SharedWorker (TanStack Query dedupes the consumers of one tab).
  */
-export function useAlerts() {
+export function useAlerts({ enabled = true }: { enabled?: boolean } = {}) {
   const { authFetch } = useAuth();
   return useQuery({
+    enabled,
     queryKey: alertKeys.all,
     queryFn: async () => (await authFetch<DataResponse<Alert[]>>('/alerts')).data,
     refetchInterval: ALERTS_REFETCH_MS,
