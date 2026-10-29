@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { use } from 'react';
-import { BackendPanel, IsolationPanel } from '@/components/system-check';
+import { BackendPanel, IsolationPanel, WorkersPanel } from '@/components/system-check';
 import type { Locale } from '@/i18n/routing';
 
 interface SystemCheckPageProps {
@@ -34,6 +34,7 @@ export default function SystemCheckPage({ params }: SystemCheckPageProps) {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <IsolationPanel />
         <BackendPanel />
+        <WorkersPanel />
       </div>
     </section>
   );

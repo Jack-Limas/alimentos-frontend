@@ -239,7 +239,9 @@
       "swUnsupported": "Not supported",
       "pool": "SharedArrayBuffer pool",
       "poolAvailable": "Available · {count, plural, one {# worker} other {# workers}}",
-      "poolUnavailable": "Unavailable: the page is not isolated (COOP/COEP)"
+      "poolUnavailable": "Unavailable: the page is not isolated (COOP/COEP)",
+      "ready": "All active",
+      "partial": "Partial"
     }
   },
   "Catalog": {
