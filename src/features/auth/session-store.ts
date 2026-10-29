@@ -2,6 +2,12 @@ import type { AuthUser, SessionStatus } from './types';
 
 /** sessionStorage key for the per-tab copy of the access token. */
 export const SESSION_STORAGE_KEY = 'aiq.session';
+/**
+ * localStorage key of a boolean hint: "this browser signed in and has not
+ * signed out". Never a token. Without it a page load skips /auth/refresh, so
+ * anonymous visitors do not send a request that can only answer 401.
+ */
+export const SIGNED_IN_HINT_KEY = 'aiq.signedIn';
 
 export interface SessionState {
   status: SessionStatus;
@@ -35,6 +41,15 @@ export const browserSessionStorage: StorageProvider = () => {
   }
 };
 
+/** localStorage is shared by the tabs, like the refresh cookie the hint stands for. */
+export const browserLocalStorage: StorageProvider = () => {
+  try {
+    return typeof window === 'undefined' ? null : window.localStorage;
+  } catch {
+    return null;
+  }
+};
+
 /**
  * Session state for one tab. The access token lives in memory; a copy goes to
  * sessionStorage (scoped to the tab, cleared when it closes) so a reload does
@@ -42,7 +57,10 @@ export const browserSessionStorage: StorageProvider = () => {
  * in its HttpOnly cookie. Every storage call is wrapped in try/catch: without
  * storage the session still works, it just does not survive a reload.
  */
-export function createSessionStore(getStorage: StorageProvider = browserSessionStorage) {
+export function createSessionStore(
+  getStorage: StorageProvider = browserSessionStorage,
+  getHintStorage: StorageProvider = browserLocalStorage,
+) {
   let state: SessionState = LOADING_SESSION;
   const listeners = new Set<() => void>();
 
@@ -62,6 +80,17 @@ export function createSessionStore(getStorage: StorageProvider = browserSessionS
       }
     } catch {
       // Quota exceeded or storage disabled: keep the in-memory session only.
+    }
+  }
+
+  function setHint(signedIn: boolean): void {
+    try {
+      const storage = getHintStorage();
+      if (!storage) return;
+      if (signedIn) storage.setItem(SIGNED_IN_HINT_KEY, '1');
+      else storage.removeItem(SIGNED_IN_HINT_KEY);
+    } catch {
+      // Storage disabled: hasSignedInHint() then answers "maybe".
     }
   }
 
@@ -93,8 +122,22 @@ export function createSessionStore(getStorage: StorageProvider = browserSessionS
       }
     },
 
+    /**
+     * False only when the hint storage works and holds no hint: then there is
+     * no refresh cookie worth trying. Unknown (no storage) counts as "maybe".
+     */
+    hasSignedInHint(): boolean {
+      try {
+        const storage = getHintStorage();
+        return storage === null || storage.getItem(SIGNED_IN_HINT_KEY) === '1';
+      } catch {
+        return true;
+      }
+    },
+
     authenticate(accessToken: string, user: AuthUser): void {
       persist(accessToken);
+      setHint(true);
       emit({ status: 'authenticated', user, accessToken });
     },
 
@@ -107,6 +150,7 @@ export function createSessionStore(getStorage: StorageProvider = browserSessionS
     /** Ends the session in this tab and removes the stored copy. */
     clear(): void {
       persist(null);
+      setHint(false);
       emit(ANONYMOUS_SESSION);
     },
   };

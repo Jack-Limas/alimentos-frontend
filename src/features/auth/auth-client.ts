@@ -115,6 +115,11 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
       // A reload of this tab: try the copied token first (authFetch refreshes on 401).
       store.updateAccessToken(persisted);
     } else {
+      // Never signed in here (or signed out): skip a refresh that could only answer 401.
+      if (!store.hasSignedInHint()) {
+        store.clear();
+        return;
+      }
       // A new tab, or the copy was lost: the refresh cookie may still hold a session.
       const renewed = await refreshAccessToken(null);
       if (renewed === null) return;

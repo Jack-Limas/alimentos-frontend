@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { SESSION_STORAGE_KEY } from '@/features/auth/session-store';
+import { SESSION_STORAGE_KEY, SIGNED_IN_HINT_KEY } from '@/features/auth/session-store';
 import { ApiError, NETWORK_ERROR_CODE } from '@/lib/api';
 import {
   API_ORIGIN,
@@ -8,6 +8,7 @@ import {
   DEMO_USER,
   type FakeAuthBackend,
 } from './helpers/fake-auth-backend';
+import { createMemoryStorage } from './helpers/memory-storage';
 import { createChannelHub, createTab } from './helpers/tabs';
 
 let backend: FakeAuthBackend;
@@ -249,5 +250,47 @@ describe('login and logout', () => {
 
     await expect(client.logout()).resolves.toBeUndefined();
     expect(client.store.getState().status).toBe('anonymous');
+  });
+});
+
+describe('signed-in hint (no 401 for anonymous visitors)', () => {
+  it('does not call /auth/refresh when this browser never signed in', async () => {
+    const shared = createMemoryStorage();
+    const { client } = createTab(createChannelHub(), undefined, shared);
+
+    await client.bootstrap();
+
+    expect(client.store.getState().status).toBe('anonymous');
+    expect(backend.count('/auth/refresh')).toBe(0);
+  });
+
+  it('a new tab still restores the session after a login in another tab', async () => {
+    const shared = createMemoryStorage();
+    const first = createTab(createChannelHub(), undefined, shared);
+    await first.client.login(credentials);
+    expect(shared.getItem(SIGNED_IN_HINT_KEY)).toBe('1');
+
+    const second = createTab(createChannelHub(), undefined, shared);
+    await second.client.bootstrap();
+
+    expect(second.client.store.getState()).toMatchObject({ status: 'authenticated' });
+    expect(backend.count('/auth/refresh')).toBe(1);
+  });
+
+  it('logout and a dead cookie remove the hint; it never holds a token', async () => {
+    const shared = createMemoryStorage();
+    const tab = createTab(createChannelHub(), undefined, shared);
+    await tab.client.login(credentials);
+    expect([...shared.items.values()]).toEqual(['1']);
+
+    await tab.client.logout();
+    expect(shared.getItem(SIGNED_IN_HINT_KEY)).toBeNull();
+
+    shared.setItem(SIGNED_IN_HINT_KEY, '1');
+    backend.state.cookie = null;
+    const next = createTab(createChannelHub(), undefined, shared);
+    await next.client.bootstrap();
+    expect(next.client.store.getState().status).toBe('anonymous');
+    expect(shared.getItem(SIGNED_IN_HINT_KEY)).toBeNull();
   });
 });

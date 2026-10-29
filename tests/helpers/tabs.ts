@@ -46,14 +46,22 @@ export function createMutex(): LockRunner {
 /** Runs the task with no lock at all (what a browser without Web Locks would do). */
 export const noLock: LockRunner = (task) => task();
 
-/** One browser tab: its own sessionStorage and auth client, a shared channel and lock. */
+/**
+ * One browser tab: its own sessionStorage and auth client, a shared channel and lock.
+ * `localStorage` (shared by the tabs of one browser) holds the signed-in hint; without
+ * it the hint is "unknown", as in a browser where storage is blocked.
+ */
 export function createTab(
   createChannel: () => AuthChannel,
   runExclusive: LockRunner = createMutex(),
+  localStorage: ReturnType<typeof createMemoryStorage> | null = null,
 ) {
   const storage = createMemoryStorage();
   const client = createAuthClient({
-    store: createSessionStore(() => storage),
+    store: createSessionStore(
+      () => storage,
+      () => localStorage,
+    ),
     channel: createChannel(),
     runExclusive,
   });
