@@ -1,13 +1,13 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useAlerts } from '@/features/alerts/api';
+import { useSharedAlerts } from '@/features/alerts/use-shared-alerts';
 import { countBySeverity } from '@/features/alerts/alert-messages';
 
 /** Count of CRITICAL alerts on the Alerts entry; hidden when there are none. */
 export function CriticalBadge({ floating = false }: { floating?: boolean }) {
   const t = useTranslations('AppShell');
-  const alerts = useAlerts();
+  const alerts = useSharedAlerts();
   const count = alerts.data ? countBySeverity(alerts.data, 'CRITICAL') : 0;
   if (count === 0) return null;
 

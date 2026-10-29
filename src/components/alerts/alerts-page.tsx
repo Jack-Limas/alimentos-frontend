@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Icon } from '@/components/ui/icons';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAlerts } from '@/features/alerts/api';
+import { useSharedAlerts } from '@/features/alerts/use-shared-alerts';
 import { countByType, filterByType, groupBySeverity } from '@/features/alerts/alert-messages';
 import { ALERT_TYPES, type AlertSeverity, type AlertType } from '@/features/alerts/types';
 import { AlertCard } from './alert-card';
@@ -21,7 +21,7 @@ export function AlertsPage() {
   const t = useTranslations('Alerts');
   const common = useTranslations('Common');
   const format = useFormatter();
-  const alerts = useAlerts();
+  const alerts = useSharedAlerts();
   const [types, setTypes] = useState<AlertType[]>([]);
 
   const toggle = (type: AlertType) =>

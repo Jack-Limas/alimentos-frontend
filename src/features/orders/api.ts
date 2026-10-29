@@ -2,6 +2,7 @@
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { alertKeys } from '@/features/alerts/api';
+import { requestSharedAlertsRefetch } from '@/features/alerts/browser-shared-alerts';
 import { useAuth } from '@/features/auth/use-auth';
 import type { DataResponse, Paginated } from '@/lib/api';
 import type { Order, OrderDetail, OrderInput, OrderStatus } from './types';
@@ -38,6 +39,7 @@ function useInvalidateOrders() {
     Promise.all([
       queryClient.invalidateQueries({ queryKey: orderKeys.all }),
       queryClient.invalidateQueries({ queryKey: alertKeys.all }),
+      Promise.resolve(requestSharedAlertsRefetch()),
     ]);
 }
 

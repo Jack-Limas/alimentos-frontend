@@ -2,6 +2,7 @@
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { alertKeys } from '@/features/alerts/api';
+import { requestSharedAlertsRefetch } from '@/features/alerts/browser-shared-alerts';
 import { useAuth } from '@/features/auth/use-auth';
 import { STOCK_WRITE_INVALIDATES } from '@/features/inventory/query-keys';
 import { orderKeys } from '@/features/orders/api';
@@ -85,6 +86,7 @@ export function useProposalAction(action: 'confirm' | 'discard') {
         ? [
             queryClient.invalidateQueries({ queryKey: orderKeys.all }),
             queryClient.invalidateQueries({ queryKey: alertKeys.all }),
+            Promise.resolve(requestSharedAlertsRefetch()),
             ...STOCK_WRITE_INVALIDATES.map((queryKey) =>
               queryClient.invalidateQueries({ queryKey }),
             ),

@@ -5,7 +5,7 @@ import { AlertCard } from '@/components/alerts/alert-card';
 import { DueCountdown, OrderStatusChip, PriorityBadge } from '@/components/orders/order-badges';
 import { Icon } from '@/components/ui/icons';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAlerts } from '@/features/alerts/api';
+import { useSharedAlerts } from '@/features/alerts/use-shared-alerts';
 import { useOrders } from '@/features/orders/api';
 import { OPEN_STATUSES, toOrdersApiQuery } from '@/features/orders/filters';
 import { Link } from '@/i18n/navigation';
@@ -16,7 +16,7 @@ const MAX_ITEMS = 4;
 /** The CRITICAL alerts, first ones only, with a link to the full list. */
 export function CriticalAlertsCard() {
   const t = useTranslations('Dashboard.critical');
-  const alerts = useAlerts();
+  const alerts = useSharedAlerts();
   const critical = (alerts.data ?? []).filter((alert) => alert.severity === 'CRITICAL');
 
   return (
