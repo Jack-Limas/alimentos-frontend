@@ -1,4 +1,8 @@
+import { HEARTBEAT_MS } from './alerts-hub';
 import type { AlertsSnapshot, HubMessage, TabMessage } from './shared-protocol';
+
+/** The worker pings every HEARTBEAT_MS: silence for longer than this means the tab was dropped. */
+export const REJOIN_AFTER_MS = HEARTBEAT_MS * 2.5;
 
 export type AlertsMode = 'shared' | 'per-tab';
 
@@ -57,17 +61,27 @@ export function createSharedAlertsClient({
     window.addEventListener('pagehide', handler);
     return () => window.removeEventListener('pagehide', handler);
   },
+  now = Date.now,
+  setInterval: startInterval = (fn, ms) => globalThis.setInterval(fn, ms),
+  clearInterval: stopInterval = (handle) => {
+    globalThis.clearInterval(handle as ReturnType<typeof globalThis.setInterval>);
+  },
 }: {
   connect: () => PortLike;
   auth: AuthBridge;
   apiUrl: string;
   onPageHide?: (handler: () => void) => () => void;
+  now?: () => number;
+  setInterval?: (fn: () => void, ms: number) => unknown;
+  clearInterval?: (handle: unknown) => void;
 }) {
   let state: SharedAlertsState = INITIAL;
   let port: PortLike | null = null;
   let lastToken: string | null = null;
   let stopAuth: (() => void) | null = null;
   let stopPageHide: (() => void) | null = null;
+  let watchdog: unknown = null;
+  let lastHeard = 0;
   const listeners = new Set<() => void>();
 
   const set = (patch: Partial<SharedAlertsState>) => {
@@ -77,6 +91,7 @@ export function createSharedAlertsClient({
   const send = (message: TabMessage) => port?.postMessage(message);
 
   function onMessage(message: HubMessage): void {
+    lastHeard = now();
     switch (message.type) {
       case 'snapshot':
         set({ snapshot: message.snapshot, error: null });
@@ -116,11 +131,22 @@ export function createSharedAlertsClient({
     stopPageHide = onPageHide(() => {
       send({ type: 'bye' });
     });
+    // A tab frozen in the background misses heartbeats and the worker drops it. When
+    // nothing has been heard for a while, say hello again (with the token) to rejoin.
+    lastHeard = now();
+    watchdog = startInterval(() => {
+      if (now() - lastHeard > REJOIN_AFTER_MS) {
+        lastHeard = now();
+        send({ type: 'hello', apiUrl, token: auth.getToken() });
+      }
+    }, HEARTBEAT_MS);
     set({ connected: true });
   }
 
   function close(): void {
     send({ type: 'bye' });
+    if (watchdog !== null) stopInterval(watchdog);
+    watchdog = null;
     stopAuth?.();
     stopPageHide?.();
     port?.close?.();

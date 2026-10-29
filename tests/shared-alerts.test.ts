@@ -187,6 +187,26 @@ describe('alerts hub (SharedWorker logic)', () => {
     expect(hub.state()).toMatchObject({ ports: 0, polling: false });
   });
 
+  it('takes back a dropped port that speaks again and resumes polling for it', async () => {
+    const { hub, advance } = setup();
+    const frozen = port();
+    hub.connect(frozen);
+    hub.receive(frozen, { type: 'hello', apiUrl: 'http://api', token: TOKEN });
+    await flush();
+    advance(HEARTBEAT_MS * 3);
+    hub.heartbeat();
+    expect(hub.state()).toMatchObject({ ports: 0, polling: false });
+
+    // The tab wakes up and says hello again.
+    hub.receive(frozen, { type: 'hello', apiUrl: 'http://api', token: TOKEN });
+    expect(hub.state()).toMatchObject({ ports: 1, polling: true });
+    expect(of(frozen, 'snapshot').length).toBeGreaterThanOrEqual(2);
+    // A late bye from an unknown port does nothing.
+    const stranger = port();
+    hub.receive(stranger, { type: 'bye' });
+    expect(hub.state().ports).toBe(1);
+  });
+
   it('keeps the last snapshot on a network error and reports it', async () => {
     const { hub } = setup([
       { status: 'ok', alerts: [alert('WARNING')] },
@@ -319,6 +339,40 @@ describe('tab side', () => {
     t.deliver({ type: 'need-refresh' });
     await flush();
     expect(t.sent).toContainEqual({ type: 'refresh-failed' });
+  });
+
+  it('says hello again when the worker has been silent for too long (dropped while frozen)', () => {
+    let now = 0;
+    const timers: (() => void)[] = [];
+    const sent: TabMessage[] = [];
+    const fakePort: TabPort = { postMessage: (m) => sent.push(m), onmessage: null };
+    const client = createSharedAlertsClient({
+      connect: () => fakePort,
+      apiUrl: 'http://api',
+      auth: {
+        getToken: () => 'tok',
+        subscribe: () => () => undefined,
+        refresh: () => Promise.resolve('tok'),
+      },
+      onPageHide: () => () => undefined,
+      now: () => now,
+      setInterval: (fn) => {
+        timers.push(fn);
+        return timers.length;
+      },
+      clearInterval: () => undefined,
+    });
+    client.subscribe(() => undefined);
+    now = 20_000;
+    timers.forEach((fn) => fn());
+    expect(sent.filter((m) => m.type === 'hello')).toHaveLength(1);
+    fakePort.onmessage?.({ data: { type: 'ping' } } as MessageEvent<HubMessage>);
+    now = 40_000;
+    timers.forEach((fn) => fn());
+    expect(sent.filter((m) => m.type === 'hello')).toHaveLength(1);
+    now = 80_000;
+    timers.forEach((fn) => fn());
+    expect(sent.filter((m) => m.type === 'hello')).toHaveLength(2);
   });
 
   it('exposes snapshots and status to the UI', () => {

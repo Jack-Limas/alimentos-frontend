@@ -157,16 +157,25 @@ export function createAlertsHub({
     else broadcast(status());
   }
 
+  function connect(port: PortLike): void {
+    ports.set(port, { lastSeen: now(), connectedAt: now() });
+    heartbeatTimer ??= startInterval(heartbeat, heartbeatMs);
+    // A new tab sees the current alerts at once, without a request of its own.
+    if (snapshot) port.postMessage({ type: 'snapshot', snapshot });
+    startPolling();
+    broadcast(status());
+  }
+
   return {
-    connect(port: PortLike): void {
-      ports.set(port, { lastSeen: now(), connectedAt: now() });
-      heartbeatTimer ??= startInterval(heartbeat, heartbeatMs);
-      // A new tab sees the current alerts at once, without a request of its own.
-      if (snapshot) port.postMessage({ type: 'snapshot', snapshot });
-      broadcast(status());
-    },
+    connect,
 
     receive(port: PortLike, message: TabMessage): void {
+      // A port dropped by the heartbeat (a frozen background tab) that speaks again
+      // is alive: it is registered again and gets the current alerts.
+      if (!ports.has(port)) {
+        if (message.type === 'bye') return;
+        connect(port);
+      }
       const state = ports.get(port);
       if (!state) return;
       state.lastSeen = now();
