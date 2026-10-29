@@ -22,3 +22,10 @@ export function segmentAiText(text: string): AiTextSegment[] {
   if (last < clean.length) segments.push({ type: 'text', value: clean.slice(last) });
   return segments;
 }
+
+/** The tie-break list can be long: the first five, the rest on demand. */
+export const TIE_BREAK_PREVIEW = 5;
+
+export function visibleTieBreak(codes: readonly string[], showAll: boolean): string[] {
+  return showAll ? [...codes] : codes.slice(0, TIE_BREAK_PREVIEW);
+}

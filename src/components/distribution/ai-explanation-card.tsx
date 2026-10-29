@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icons';
-import { segmentAiText } from '@/features/distribution/ai-text';
+import { segmentAiText, TIE_BREAK_PREVIEW, visibleTieBreak } from '@/features/distribution/ai-text';
 import { useExplainProposal } from '@/features/distribution/api';
 import {
   mapExplanationError,
@@ -54,6 +54,7 @@ export function AiExplanationCard({
   const explain = useExplainProposal(proposalId);
   const [failure, setFailure] = useState<ExplanationErrorKey | null>(null);
   const [cached, setCached] = useState(false);
+  const [showAllTies, setShowAllTies] = useState(false);
 
   async function run(refresh: boolean) {
     setFailure(null);
@@ -133,7 +134,22 @@ export function AiExplanationCard({
             {insight.tieBreakOrder && insight.tieBreakOrder.length > 0 ? (
               <p className="text-sm">
                 <span className="font-semibold">{t('tieBreak')}: </span>
-                <AiText text={insight.tieBreakOrder.join(' → ')} orderIds={orderIds} />
+                <AiText
+                  text={visibleTieBreak(insight.tieBreakOrder, showAllTies).join(' → ')}
+                  orderIds={orderIds}
+                />
+                {insight.tieBreakOrder.length > TIE_BREAK_PREVIEW ? (
+                  <button
+                    type="button"
+                    aria-expanded={showAllTies}
+                    onClick={() => setShowAllTies((value) => !value)}
+                    className="ml-2 font-semibold text-primary underline-offset-4 hover:underline"
+                  >
+                    {showAllTies
+                      ? t('showFewer')
+                      : t('showAll', { count: insight.tieBreakOrder.length })}
+                  </button>
+                ) : null}
               </p>
             ) : null}
             <p className="flex flex-wrap gap-2 text-xs text-muted">

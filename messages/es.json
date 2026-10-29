@@ -996,7 +996,9 @@
       "meta": "{model} · {ms} ms",
       "cached": "Guardada",
       "highlights": "Lo más importante",
-      "tieBreak": "Orden sugerido para los empates"
+      "tieBreak": "Orden sugerido para los empates",
+      "showAll": "Ver todos ({count})",
+      "showFewer": "Ver menos"
     },
     "reasons": {
       "PRIORITY_LOW": "Prioridad baja",

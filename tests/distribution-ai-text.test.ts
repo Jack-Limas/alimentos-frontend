@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { segmentAiText } from '@/features/distribution/ai-text';
+import { segmentAiText, visibleTieBreak } from '@/features/distribution/ai-text';
 
 describe('segmentAiText', () => {
   it('splits order codes out of the text so the UI can link them', () => {
@@ -21,5 +21,15 @@ describe('segmentAiText', () => {
   it('keeps plain text as one segment and handles empty text', () => {
     expect(segmentAiText('Todo en orden.')).toEqual([{ type: 'text', value: 'Todo en orden.' }]);
     expect(segmentAiText('  ')).toEqual([]);
+  });
+});
+
+describe('visibleTieBreak', () => {
+  const codes = Array.from({ length: 24 }, (_, i) => `PED-${String(i + 1).padStart(6, '0')}`);
+
+  it('shows the first five and everything on demand', () => {
+    expect(visibleTieBreak(codes, false)).toEqual(codes.slice(0, 5));
+    expect(visibleTieBreak(codes, true)).toHaveLength(24);
+    expect(visibleTieBreak(codes.slice(0, 3), false)).toHaveLength(3);
   });
 });

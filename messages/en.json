@@ -996,7 +996,9 @@
       "meta": "{model} · {ms} ms",
       "cached": "Saved",
       "highlights": "Key points",
-      "tieBreak": "Suggested order for ties"
+      "tieBreak": "Suggested order for ties",
+      "showAll": "Show all ({count})",
+      "showFewer": "Show fewer"
     },
     "reasons": {
       "PRIORITY_LOW": "Low priority",
