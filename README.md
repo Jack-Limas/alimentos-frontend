@@ -46,7 +46,7 @@ flowchart LR
 | `/[locale]` (landing)                      | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                                  |
 | `/[locale]/login`                          | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador         |
 | `/[locale]/system-check`                   | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador                      |
-| `/[locale]/impact`                         | ISR       | Fase posterior | `revalidate 3600`, consume `GET /public/impact`                          |
+| `/[locale]/impact`                         | ISR       | Hecho          | `revalidate 3600` para `es` y `en`, consume `GET /public/impact`         |
 | Hoja de despacho                           | SSR       | Fase posterior | Enlace firmado [EXTRA]                                                   |
 | `/[locale]/app` (panel)                    | CSR       | Hecho          | KPIs de `/inventory/summary`; HTML estático = skeleton                   |
 | `/[locale]/app/products`                   | CSR       | Hecho          | Filtros en la URL; tabla en escritorio, tarjetas en móvil                |
@@ -58,6 +58,8 @@ flowchart LR
 | `/[locale]/app/customers`                  | CSR       | Hecho          | Solo ADMIN                                                               |
 | `/[locale]/app/distribution` (+ `/[id]`)   | CSR       | Hecho          | Simulador en Web Worker, comparar, generar, confirmar; ADMIN y OPERATOR  |
 | `/[locale]/app/lab/performance`            | CSR       | Hecho          | Solo ADMIN: hilo principal vs Web Worker con datos sintéticos            |
+| `/[locale]/app/metrics`                    | CSR       | Hecho          | Solo ADMIN: API, servidor, Web Vitals, navegador y benchmark             |
+| `/[locale]/app/reports`                    | CSR       | Hecho          | Solo ADMIN: CSV/PDF de inventario, pedidos y mermas                      |
 
 ## Autenticación
 
@@ -344,6 +346,39 @@ copiar el snapshot a 4 workers con `postMessage` cuesta una tarea larga corta en
 por el JIT (la primera corrida de cada motor es la más lenta). Lo que sí muestra el pool es memoria
 compartida real: progreso y cancelación sin mensajes.
 
+## Métricas, Web Vitals y reportes
+
+- **Web Vitals** (`web-vitals` 6.2.3): INP, LCP, CLS, TTFB y FCP van a `POST /metrics/web-vitals`
+  con `fetch` `keepalive` y Bearer (vía `authFetch`), **solo con sesión**. TTFB y FCP llegan antes
+  de que la sesión se restaure: esperan en memoria y se envían si termina autenticada (se
+  descartan si termina anónima). La `page` es el patrón de la ruta sin idioma
+  (`/es/app/orders/4f1c…` → `/app/orders/[id]`); una URL desconocida se envía como `/[...rest]`,
+  nunca como se escribió. Una prueba mantiene la lista de patrones igual a `src/app/[locale]`.
+- **`/app/metrics`** (ADMIN): rutas de la API ordenadas por p95 (p50/p95/p99, peticiones, 5xx);
+  memoria (RSS, heap), lag del event loop y uptime del backend; p75 de Web Vitals por métrica y por
+  página con los umbrales de Google (INP 200/500, LCP 2500/4000, CLS 0,1/0,25, TTFB 800/1800, FCP
+  1800/3000), siempre con color **y** texto; Navigation Timing de esta carga; memoria con
+  `performance.measureUserAgentSpecificMemory()` (solo existe con aislamiento de origen cruzado,
+  muestra un spinner porque espera una recolección de basura), si no `performance.memory`, si no
+  "no disponible". El benchmark de Worker Threads respeta el máximo del backend (30.000, o el que
+  diga un 400), traduce el 409 `BENCHMARK_RUNNING` y dibuja barras en SVG hecho a mano.
+- **`/app/reports`** (ADMIN): una tarjeta por reporte con formato, idioma y rango (inventario es la
+  foto de hoy). La descarga usa `authRequest` (como `authFetch` pero devuelve la `Response`) → blob
+  → `<a download>` con el nombre de `Content-Disposition` (el backend lo expone por CORS). Muestra
+  `X-Generation-Time-Ms`, el tamaño y el tiempo total medido en el navegador, y el historial de la
+  sesión.
+- **`/[locale]/impact`** (pública, ISR): `export const revalidate = 3600` y
+  `generateStaticParams` para `es` y `en`. Pide `{API_URL_INTERNAL ?? NEXT_PUBLIC_API_URL}/api/v1/public/impact`
+  con un timeout de 8 s; si el backend no responde (también durante `next build`) la página se
+  genera con "Datos no disponibles" y el build no falla. Contadores animados (respetan
+  `prefers-reduced-motion`), hora de Bogotá y la nota de ISR. Enlazada desde el header y el
+  footer.
+- Verificado en el build local: `/es/impact` y `/en/impact` salen con `initialRevalidateSeconds:
+3600` en `.next/prerender-manifest.json` y responden `x-nextjs-cache: HIT` con
+  `Cache-Control: s-maxage=3600`. Next 16.4 no imprime la columna "Revalidate" en la tabla del
+  build cuando la ruta ISR es hija de `generateStaticParams` (solo mira la ruta padre
+  `/[locale]/impact`), aunque el valor se aplica.
+
 ## Por qué COOP y COEP
 
 `next.config.ts` envía en todas las rutas:
@@ -370,9 +405,10 @@ La página `/es/system-check` muestra `crossOriginIsolated`, `typeof SharedArray
 
 Plantilla en [.env.example](.env.example). Nunca se commitean valores reales.
 
-| Variable              | Obligatoria | Uso                                                 |
-| --------------------- | ----------- | --------------------------------------------------- |
-| `NEXT_PUBLIC_API_URL` | Sí          | Origen del backend, sin barra final y sin `/api/v1` |
+| Variable              | Obligatoria | Uso                                                                                 |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | Sí          | Origen del backend, sin barra final y sin `/api/v1`                                 |
+| `API_URL_INTERNAL`    | No          | Solo servidor: origen del backend para el ISR de `/impact` (si hay una red interna) |
 
 El cliente agrega `/api/v1` y envía `credentials: "include"`. El backend debe incluir el origen
 del frontend en su `CORS_ORIGINS`.
