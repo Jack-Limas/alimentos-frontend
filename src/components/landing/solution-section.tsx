@@ -19,7 +19,7 @@ export function SolutionSection() {
     >
       <div className="mx-auto grid max-w-6xl gap-10 rounded-[2rem] bg-surface-muted/70 px-5 py-14 ring-1 ring-border sm:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:px-14 lg:py-20">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-700 dark:text-brand-300">
             {t('eyebrow')}
           </p>
           <h2
