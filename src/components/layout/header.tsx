@@ -16,11 +16,12 @@ export function Header() {
       >
         {t('skipToContent')}
       </a>
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6">
         <Link href="/" aria-label={t('homeLabel')} className="rounded-md">
           <Logo />
         </Link>
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Tighter on 360 px phones: language, theme and the avatar must fit next to the logo. */}
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <Link
             href="/impact"
             className="hidden rounded-full px-3 py-2 text-sm font-semibold text-muted transition hover:bg-surface-muted hover:text-foreground md:inline-flex"
