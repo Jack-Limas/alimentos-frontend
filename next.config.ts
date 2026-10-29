@@ -20,13 +20,27 @@ const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
 ];
 
+/**
+ * Version of this build, for the service worker (/sw.js?v=<version>): each
+ * deploy gets new caches and the old ones are deleted. On Vercel it is the
+ * commit; locally the build time.
+ */
+const appVersion =
+  process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 12) ??
+  new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  env: { NEXT_PUBLIC_APP_VERSION: appVersion },
   poweredByHeader: false,
   // Do not let `next dev` generate AGENTS.md / CLAUDE.md agent-rules files.
   agentRules: false,
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      // The browser must always check for a new service worker script.
+      { source: '/sw.js', headers: [{ key: 'Cache-Control', value: 'no-cache' }] },
+    ];
   },
 };
 
