@@ -30,10 +30,15 @@
   "Landing": {
     "hero": {
       "eyebrow": "Intelligent Food Distribution Center",
-      "title": "No food lost between the warehouse and the table.",
+      "title": "No food lost between <hl>the warehouse and the table</hl>.",
       "subtitle": "AlimentaIQ organizes your inventory by lot and expiry date, prioritizes the orders that matter most and warns you before waste or shortages happen.",
       "cta": "Log in",
-      "secondaryCta": "See how it works"
+      "secondaryCta": "See how it works",
+      "chips": {
+        "fefo": "Automatic FEFO",
+        "alerts": "Instant alerts",
+        "ai": "AI that explains"
+      }
     },
     "preview": {
       "label": "Warehouse dashboard preview",
@@ -46,7 +51,10 @@
       "rice": "White rice · Lot L-2107",
       "riceStatus": "Healthy stock",
       "order": "PED-000123 · Hospital",
-      "orderStatus": "Urgent priority · ships first"
+      "orderStatus": "Urgent priority · ships first",
+      "floatTop": "Rescued before expiry",
+      "floatBottom": "98% of deliveries on time",
+      "demoNote": "Illustrative example"
     },
     "problem": {
       "eyebrow": "The problem",
@@ -104,6 +112,16 @@
       "invalidInput": "Check the information you entered and try again.",
       "network": "We could not reach the server. Check your connection and try again.",
       "unexpected": "Something went wrong. Try again in a few minutes."
+    },
+    "panel": {
+      "eyebrow": "Your warehouse, in order",
+      "title": "Less waste. More food on the table.",
+      "body": "Log in and decide with clear data: what goes first, what is about to expire and who to serve.",
+      "points": {
+        "fefo": "Lots ordered by expiry, no spreadsheets.",
+        "plan": "A distribution plan you can simulate and explain.",
+        "alerts": "Alerts before the problem reaches the table."
+      }
     }
   },
   "Auth": {

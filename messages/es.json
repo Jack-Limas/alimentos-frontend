@@ -30,10 +30,15 @@
   "Landing": {
     "hero": {
       "eyebrow": "Centro Inteligente de Distribución de Alimentos",
-      "title": "Que ningún alimento se pierda entre la bodega y la mesa.",
+      "title": "Que ningún alimento se pierda entre <hl>la bodega y la mesa</hl>.",
       "subtitle": "AlimentaIQ ordena tu inventario por lotes y fechas de vencimiento, prioriza los pedidos que más importan y te avisa antes de que el desperdicio o los faltantes ocurran.",
       "cta": "Iniciar sesión",
-      "secondaryCta": "Ver cómo funciona"
+      "secondaryCta": "Ver cómo funciona",
+      "chips": {
+        "fefo": "FEFO automático",
+        "alerts": "Alertas al instante",
+        "ai": "IA que explica"
+      }
     },
     "preview": {
       "label": "Vista previa del panel de bodega",
@@ -46,7 +51,10 @@
       "rice": "Arroz blanco · Lote L-2107",
       "riceStatus": "Stock saludable",
       "order": "PED-000123 · Hospital",
-      "orderStatus": "Prioridad urgente · sale primero"
+      "orderStatus": "Prioridad urgente · sale primero",
+      "floatTop": "Rescatado antes de vencer",
+      "floatBottom": "98 % de entregas a tiempo",
+      "demoNote": "Ejemplo ilustrativo"
     },
     "problem": {
       "eyebrow": "El problema",
@@ -104,6 +112,16 @@
       "invalidInput": "Revisa los datos ingresados e inténtalo de nuevo.",
       "network": "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
       "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo en unos minutos."
+    },
+    "panel": {
+      "eyebrow": "Tu bodega, en orden",
+      "title": "Menos desperdicio. Más comida en la mesa.",
+      "body": "Entra y decide con datos claros: qué sale primero, qué está por vencer y a quién atender.",
+      "points": {
+        "fefo": "Lotes ordenados por vencimiento, sin hojas de cálculo.",
+        "plan": "Un plan de distribución que puedes simular y explicar.",
+        "alerts": "Alertas antes de que el problema llegue a la mesa."
+      }
     }
   },
   "Auth": {
