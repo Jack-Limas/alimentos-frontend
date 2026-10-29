@@ -65,6 +65,17 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - Keep `new SharedWorker(new URL(…), …)` and `new Worker(new URL(…), …)` literal so Turbopack bundles
   them.
 
+## Metrics, reports and impact
+
+- Web vitals are sent only with a session and with the route pattern (`normalizePage`); never a
+  URL with IDs, query strings or typed text. Add every new page to `ROUTE_PATTERNS` (a test
+  checks it against `src/app/[locale]`).
+- File downloads go through `authRequest` (raw `Response` with the session), never a hand-made
+  Bearer header. The file name comes from `Content-Disposition` (`parseContentDisposition`).
+- `/[locale]/impact` is ISR (`export const revalidate = 3600`, a literal). `fetchImpact` never
+  throws: a backend that is down must not break `next build`.
+- Charts are hand-made SVG with values as text; no chart libraries.
+
 ## Authentication
 
 - Private API calls go through `authFetch` (`useAuth()`), never a hand-made Bearer header: it
