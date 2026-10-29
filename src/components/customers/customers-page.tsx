@@ -223,7 +223,7 @@ export function CustomersPage() {
         />
       ) : (
         <ul
-          className={`grid gap-4 sm:grid-cols-2 xl:grid-cols-3 ${customers.isPlaceholderData ? 'opacity-60' : ''}`}
+          className={`grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 ${customers.isPlaceholderData ? 'opacity-60' : ''}`}
         >
           {customers.data.data.map((customer, index) => (
             <CustomerCard key={customer.id} customer={customer} onEdit={setEditing} index={index} />

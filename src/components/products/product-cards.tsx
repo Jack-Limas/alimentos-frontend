@@ -19,7 +19,7 @@ export function ProductCards({ products }: { products: Product[] }) {
   const catalog = useTranslations('Catalog');
 
   return (
-    <ul className="grid gap-3 sm:grid-cols-2 lg:hidden">
+    <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:hidden">
       {products.map((product) => (
         <li key={product.id}>
           <Link

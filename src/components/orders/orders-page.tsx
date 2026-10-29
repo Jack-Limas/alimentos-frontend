@@ -220,7 +220,7 @@ export function OrdersPage() {
         <div
           className={`space-y-4 transition-opacity ${orders.isPlaceholderData ? 'opacity-60' : ''}`}
         >
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {orders.data.data.map((order, index) => (
               <OrderCard key={order.id} order={order} index={index} />
             ))}
