@@ -99,7 +99,7 @@ describe('parity: the pool gives exactly the single-worker plan', () => {
       expect(pooled).toEqual(single);
       const summary = { ...pooled.summary, processingMs: undefined };
       expect({ ranking: pooled.ranking, lines: pooled.lines, summary }).toEqual(fixture.expected);
-      expect(progressOf(control)).toBe(1);
+      expect(progressOf(control)).toBe(0.5);
       expect(Atomics.load(control, CONTROL.DONE)).toBe(
         Math.min(parts, fixture.snapshot.orders.length),
       );
@@ -153,7 +153,8 @@ describe('cancellation with the shared flag', () => {
       'cancelled',
     );
     expect(Atomics.load(control, CONTROL.PROGRESS)).toBe(250);
-    expect(progressOf(control)).toBe(0.25);
+    // Half the ring is the scoring: 250 of 1,000 scored = 12.5 %.
+    expect(progressOf(control)).toBe(0.125);
   });
 });
 
@@ -230,6 +231,28 @@ describe('ParallelEngine', () => {
     expect(outcome.result).toEqual(single);
     expect(outcome.workers).toBe(3);
     expect(progressOf(run.control)).toBe(1);
+  });
+
+  it('can also be cancelled during the sequential allocation', async () => {
+    const fake = fakeWorkers();
+    const engine = new ParallelEngine(fake.create, 2, () => 0);
+    const run = engine.run({ snapshot, strategy: 'BALANCED' });
+    // Cancel once the scoring is done, while worker 0 allocates.
+    const watcher = setInterval(() => {
+      if (Atomics.load(run.control, CONTROL.DONE) === 2) {
+        engine.cancel(run.control);
+        clearInterval(watcher);
+      }
+    }, 0);
+    await expect(run.done).resolves.toEqual({ status: 'cancelled', workers: 2 });
+    clearInterval(watcher);
+  });
+
+  it('reports the allocation in the second half of the progress', () => {
+    const { control } = createControl(100);
+    Atomics.store(control, CONTROL.PROGRESS, 100);
+    Atomics.store(control, CONTROL.ALLOCATED, 50);
+    expect(progressOf(control)).toBe(0.75);
   });
 
   it('cancels a run in the middle and reports it', async () => {

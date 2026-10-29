@@ -131,13 +131,17 @@ export function PerformanceLab() {
     return () => observers.forEach((observer) => observer.disconnect());
   }, []);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    // Start the pool's workers with the page, so the first measured run is not their start-up.
+    if (canPool) {
+      pool.engine ??= new ParallelEngine(createPoolWorker, poolWorkers);
+      pool.engine.warm();
+    }
+    return () => {
       pool.engine?.terminate();
       pool.engine = null;
-    },
-    [pool],
-  );
+    };
+  }, [pool, canPool, poolWorkers]);
 
   async function run(mode: LabRun['mode']) {
     setRunning(mode);

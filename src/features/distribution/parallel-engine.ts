@@ -81,8 +81,9 @@ export class ParallelEngine {
       const scored = this.now();
 
       const answer = this.expect(runId);
-      workers[0]?.postMessage({ type: 'allocate', runId, scores, top });
+      workers[0]?.postMessage({ type: 'allocate', runId, scores, control, top });
       const response = await answer;
+      if (response.type === 'cancelled') return { status: 'cancelled', workers: ranges.length };
       if (response.type !== 'allocated') throw new Error('Unexpected pool response');
       return {
         status: 'done',
@@ -94,6 +95,11 @@ export class ParallelEngine {
     })();
 
     return { control, done };
+  }
+
+  /** Start the workers now, so a measured run does not include their start-up. */
+  warm(): void {
+    this.ensureWorkers(this.size);
   }
 
   /** Mid-run: every worker sees the flag before its next order. */

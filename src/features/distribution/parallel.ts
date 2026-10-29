@@ -6,9 +6,10 @@ import { LotBook, type DistributionSnapshot, type PrioritizationStrategy } from 
  * - CANCEL: 1 asks every worker to stop (Atomics.store; workers Atomics.load it per order).
  * - DONE: workers that finished their part (Atomics.add + Atomics.notify).
  * - TOTAL: orders to score, for the progress ring.
+ * - ALLOCATED: orders served by the sequential allocation that follows.
  */
-export const CONTROL = { PROGRESS: 0, CANCEL: 1, DONE: 2, TOTAL: 3 } as const;
-export const CONTROL_LENGTH = 4;
+export const CONTROL = { PROGRESS: 0, CANCEL: 1, DONE: 2, TOTAL: 3, ALLOCATED: 4 } as const;
+export const CONTROL_LENGTH = 5;
 
 /** Workers of the pool: one core is left for the page, at most 4. */
 export function poolSize(hardwareConcurrency: number | undefined): number {
@@ -89,7 +90,25 @@ export function scoreRange({
 /** Progress from 0 to 1, read with Atomics.load (no message per step). */
 export function progressOf(control: Int32Array): number {
   const total = Atomics.load(control, CONTROL.TOTAL);
-  return total === 0 ? 1 : Math.min(1, Atomics.load(control, CONTROL.PROGRESS) / total);
+  if (total === 0) return 1;
+  // Half the ring for the parallel scoring, half for the sequential allocation.
+  const scored = Atomics.load(control, CONTROL.PROGRESS);
+  const allocated = Atomics.load(control, CONTROL.ALLOCATED);
+  return Math.min(1, (scored + allocated) / (2 * total));
+}
+
+/** Thrown inside the allocation when the shared cancel flag is set. */
+export class PoolCancelledError extends Error {
+  constructor() {
+    super('Cancelled');
+    this.name = 'PoolCancelledError';
+  }
+}
+
+/** Checked by the allocation every few orders: reports progress and honours Cancel. */
+export function allocationTick(control: Int32Array, served: number): void {
+  Atomics.store(control, CONTROL.ALLOCATED, served);
+  if (Atomics.load(control, CONTROL.CANCEL) === 1) throw new PoolCancelledError();
 }
 
 type WaitAsync = (

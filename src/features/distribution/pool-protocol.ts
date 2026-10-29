@@ -5,7 +5,7 @@ import {
   type RuleStrategyName,
   type Weights,
 } from './engine';
-import { scoreRange } from './parallel';
+import { allocationTick, PoolCancelledError, scoreRange } from './parallel';
 import { toEngineResult, type EngineResult } from './worker-protocol';
 
 /** Page → pool worker. Typed arrays over SharedArrayBuffers are shared, not copied. */
@@ -22,11 +22,13 @@ export type PoolRequest =
       control: Int32Array;
     }
   /** Worker 0 only, after every range is scored: the sequential heap + FEFO part. */
-  | { type: 'allocate'; runId: number; scores: Float64Array; top: number };
+  | { type: 'allocate'; runId: number; scores: Float64Array; control: Int32Array; top: number };
 
 export type PoolResponse =
   | { type: 'scored'; runId: number; outcome: 'done' | 'cancelled' }
   | { type: 'allocated'; runId: number; result: EngineResult; durationMs: number }
+  /** Cancel was pressed during the allocation. */
+  | { type: 'cancelled'; runId: number }
   | { type: 'error'; runId: number; message: string };
 
 interface CurrentRun {
@@ -68,9 +70,15 @@ export function createPoolHandler(
       }
       if (run?.runId !== request.runId) throw new Error('No scored snapshot for this run');
       const started = now();
+      const control = request.control;
       const result = buildProposal(run.snapshot, createStrategy(run.strategy, run.weights), {
         now,
         initialScores: request.scores,
+        // The sequential part reports progress and stops on Cancel too.
+        progressEvery: 100,
+        onProgress: (served) => {
+          allocationTick(control, served);
+        },
       });
       post({
         type: 'allocated',
@@ -79,6 +87,10 @@ export function createPoolHandler(
         durationMs: Math.round((now() - started) * 100) / 100,
       });
     } catch (error) {
+      if (error instanceof PoolCancelledError) {
+        post({ type: 'cancelled', runId: request.runId });
+        return;
+      }
       post({
         type: 'error',
         runId: request.runId,
