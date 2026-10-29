@@ -12,7 +12,8 @@
     "skipToContent": "Saltar al contenido",
     "homeLabel": "AlimentaIQ, ir al inicio",
     "login": "Iniciar sesión",
-    "goToPanel": "Ir al panel"
+    "goToPanel": "Ir al panel",
+    "impact": "Impacto"
   },
   "LanguageSwitcher": {
     "label": "Idioma",
@@ -25,7 +26,9 @@
   },
   "Footer": {
     "tagline": "Centro Inteligente de Distribución de Alimentos",
-    "project": "Proyecto universitario · {year}"
+    "project": "Proyecto universitario · {year}",
+    "impact": "Nuestro impacto",
+    "linksLabel": "Enlaces"
   },
   "Landing": {
     "hero": {
@@ -352,7 +355,9 @@
       "alerts": "Alertas",
       "missions": "Misiones de hoy",
       "customers": "Clientes",
-      "lab": "Laboratorio"
+      "lab": "Laboratorio",
+      "metrics": "Métricas",
+      "reports": "Reportes"
     },
     "navShort": {
       "dashboard": "Panel",
@@ -363,7 +368,9 @@
       "alerts": "Alertas",
       "missions": "Misiones",
       "customers": "Clientes",
-      "lab": "Lab"
+      "lab": "Lab",
+      "metrics": "Métricas",
+      "reports": "Reportes"
     },
     "today": "Hoy en Bogotá: {date}",
     "comingSoonShort": "Pronto",
@@ -1083,5 +1090,205 @@
   "Pwa": {
     "updateAvailable": "Nueva versión disponible",
     "reload": "Recargar"
+  },
+  "Metrics": {
+    "metaTitle": "Métricas",
+    "eyebrow": "Rendimiento",
+    "title": "Métricas del sistema",
+    "intro": "Cómo responden la API, el servidor y el navegador. Los datos viven en la memoria del backend y se reinician con cada despliegue.",
+    "refresh": "Actualizar",
+    "updated": "Actualizado {time}",
+    "noData": "Sin datos",
+    "ms": "{value} ms",
+    "mb": "{value} MB",
+    "api": {
+      "title": "API por ruta",
+      "intro": "Percentiles de las últimas 500 respuestas de cada ruta, ordenadas por p95 (la más lenta arriba).",
+      "caption": "Tiempos de respuesta de la API por patrón de ruta",
+      "route": "Ruta",
+      "p50": "p50",
+      "p95": "p95",
+      "p99": "p99",
+      "count": "Peticiones",
+      "errors": "Errores 5xx",
+      "empty": "Todavía no hay peticiones registradas."
+    },
+    "backend": {
+      "title": "Servidor",
+      "rss": "Memoria total (RSS)",
+      "heapUsed": "Heap de JavaScript usado",
+      "heapOf": "de {total}",
+      "lag": "Retraso del event loop",
+      "lagDetail": "media {mean} · p99 {p99} · máx. {max}",
+      "uptime": "Tiempo encendido",
+      "uptimeValue": "{hours, plural, =0 {} one {# h } other {# h }}{minutes} min"
+    },
+    "vitals": {
+      "title": "Web Vitals",
+      "intro": "p75 de lo que miden los navegadores de los usuarios con sesión, con los umbrales de Google.",
+      "empty": "Todavía no hay mediciones. Se envían al navegar por la app con sesión iniciada.",
+      "byPage": "Por página",
+      "caption": "p75 de cada métrica por página",
+      "page": "Página",
+      "metric": "Métrica",
+      "p75": "p75",
+      "samples": "Muestras",
+      "samplesCount": "{count, plural, one {# muestra} other {# muestras}}",
+      "thresholds": "Bueno ≤ {good} · Malo > {poor}",
+      "rating": {
+        "good": "Bueno",
+        "needs-improvement": "Mejorable",
+        "poor": "Malo"
+      },
+      "names": {
+        "INP": "Respuesta a la interacción",
+        "LCP": "Mayor elemento visible",
+        "CLS": "Saltos de diseño",
+        "TTFB": "Primer byte",
+        "FCP": "Primer contenido visible"
+      }
+    },
+    "frontend": {
+      "title": "Este navegador",
+      "intro": "Navigation Timing de la carga de esta página y la memoria que usa.",
+      "ttfb": "Primer byte (TTFB)",
+      "domContentLoaded": "DOMContentLoaded",
+      "load": "Evento load",
+      "pending": "En curso",
+      "timingUnavailable": "Este navegador no expone Navigation Timing.",
+      "memory": "Memoria",
+      "measure": "Medir memoria",
+      "measuring": "Midiendo…",
+      "measuringHint": "El navegador responde después de una recolección de basura: puede tardar unos segundos.",
+      "sources": {
+        "uasm": "performance.measureUserAgentSpecificMemory(): solo existe porque la página está aislada (COOP + COEP), igual que SharedArrayBuffer.",
+        "legacy": "performance.memory (no estándar, solo Chrome): heap de JavaScript usado. Sin aislamiento de origen cruzado no hay una medición más completa.",
+        "none": "No disponible en este navegador."
+      },
+      "memoryError": "No se pudo medir la memoria."
+    },
+    "benchmark": {
+      "title": "Benchmark de Worker Threads",
+      "intro": "El backend ejecuta el mismo análisis pesado en su hilo principal y en su pool de worker_threads, y mide cuánto tiempo deja de atender a los demás.",
+      "size": "Pedidos sintéticos",
+      "sizeValue": "{size} pedidos",
+      "sizeHint": "Entre {min} y {max}: el modo hilo principal bloquea el servidor para todos mientras dura.",
+      "run": "Ejecutar con {size} pedidos",
+      "running": "Ejecutando…",
+      "results": "Resultados",
+      "caption": "Resultados del benchmark: hilo principal frente al pool de workers",
+      "empty": "Todavía no has ejecutado el benchmark en esta sesión.",
+      "mode": "Modo",
+      "mainThread": "Hilo principal",
+      "workerPool": "Pool de workers",
+      "duration": "Duración",
+      "lagMax": "Event loop (máx.)",
+      "drift": "Sonda de 10 ms (mayor retraso)",
+      "ticks": "Ticks de la sonda",
+      "ticksValue": "{ticks} de {expected}",
+      "same": "Mismo resultado",
+      "sameYes": "Sí, el mismo plan",
+      "sameNo": "No coinciden",
+      "chartTitle": "Duración y bloqueo del servidor",
+      "chartDuration": "Duración",
+      "chartBlocked": "Servidor bloqueado (mayor retraso de la sonda)",
+      "run_n": "Corrida {n} · {size} pedidos",
+      "labLink": "Comparar en el navegador: laboratorio de rendimiento",
+      "errors": {
+        "running": "Ya hay un benchmark en curso en el servidor. Espera a que termine e inténtalo de nuevo.",
+        "tooBig": "El servidor acepta como máximo {max} pedidos. Ajustamos el tamaño.",
+        "forbidden": "Solo un administrador puede ejecutar el benchmark.",
+        "network": "No hay conexión con el servidor.",
+        "unexpected": "El benchmark no pudo completarse."
+      }
+    }
+  },
+  "Reports": {
+    "metaTitle": "Reportes",
+    "eyebrow": "Exportar",
+    "title": "Reportes",
+    "intro": "Descarga los datos de la bodega en CSV (para Excel) o PDF. El servidor los genera en su pool de worker_threads.",
+    "kinds": {
+      "inventory": {
+        "title": "Inventario",
+        "description": "Productos activos con su stock, lotes, vencimientos y riesgo de merma de hoy."
+      },
+      "orders": {
+        "title": "Pedidos",
+        "description": "Pedidos creados en el rango, con cliente, estado, prioridad y fecha límite."
+      },
+      "waste": {
+        "title": "Mermas",
+        "description": "Salidas por merma del rango y productos con riesgo alto de merma hoy."
+      }
+    },
+    "format": "Formato",
+    "formats": {
+      "csv": "CSV",
+      "pdf": "PDF"
+    },
+    "language": "Idioma del archivo",
+    "languages": {
+      "es": "Español",
+      "en": "Inglés"
+    },
+    "from": "Desde",
+    "to": "Hasta",
+    "today": "Foto de hoy",
+    "rangeError": "Revisa las fechas: \"Hasta\" no puede ser anterior a \"Desde\" y el rango no puede pasar de {max} días.",
+    "download": "Descargar {format}",
+    "downloading": "Generando…",
+    "done": "{file} descargado",
+    "history": {
+      "title": "Descargas de esta sesión",
+      "empty": "Aún no has descargado reportes.",
+      "caption": "Reportes descargados en esta sesión",
+      "file": "Archivo",
+      "size": "Tamaño",
+      "server": "Generación (servidor)",
+      "total": "Total (navegador)",
+      "at": "Hora"
+    },
+    "errors": {
+      "invalid": "El servidor rechazó los parámetros del reporte.",
+      "forbidden": "Solo un administrador puede descargar reportes.",
+      "network": "No hay conexión con el servidor.",
+      "unexpected": "No se pudo generar el reporte."
+    }
+  },
+  "Impact": {
+    "metaTitle": "Nuestro impacto",
+    "metaDescription": "Cuánta comida despachamos, cuánta rescatamos antes de que venciera y a quién llegó en los últimos 30 días.",
+    "eyebrow": "Impacto · últimos {days} días",
+    "title": "Comida que llegó a la mesa",
+    "intro": "Cifras agregadas de la bodega, sin datos personales: lo que despachamos, lo que rescatamos antes de que venciera y a quién atendimos.",
+    "window": "Del {from} al {to}",
+    "dispatched": {
+      "title": "Despachado",
+      "description": "Cantidad que salió hacia los clientes, por unidad (nunca sumamos unidades distintas).",
+      "empty": "Sin despachos en esta ventana."
+    },
+    "rescued": {
+      "title": "Rescatado",
+      "description": "Parte de lo despachado que venía de lotes a {days} días o menos de vencer.",
+      "share": "{pct} % de lo despachado"
+    },
+    "deliveries": {
+      "title": "Entregas a tiempo",
+      "detail": "{onTime} de {total, plural, one {# entrega} other {# entregas}} llegaron hasta su fecha límite",
+      "none": "Sin entregas en esta ventana."
+    },
+    "customers": {
+      "title": "Clientes atendidos",
+      "total": "{count, plural, one {# cliente} other {# clientes}} con entregas",
+      "none": "Sin clientes atendidos en esta ventana."
+    },
+    "updated": "Actualizado: {date}",
+    "isr": "Esta página se regenera cada hora (ISR): la ves rápido porque ya está generada, y Next.js la vuelve a pedir al backend en segundo plano.",
+    "unavailable": {
+      "title": "Datos no disponibles",
+      "description": "No pudimos obtener las cifras en la última regeneración. La página lo vuelve a intentar sola en menos de una hora."
+    },
+    "cta": "Conoce AlimentaIQ"
   }
 }

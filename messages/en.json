@@ -12,7 +12,8 @@
     "skipToContent": "Skip to content",
     "homeLabel": "AlimentaIQ, go to home",
     "login": "Log in",
-    "goToPanel": "Go to dashboard"
+    "goToPanel": "Go to dashboard",
+    "impact": "Impact"
   },
   "LanguageSwitcher": {
     "label": "Language",
@@ -25,7 +26,9 @@
   },
   "Footer": {
     "tagline": "Intelligent Food Distribution Center",
-    "project": "University project · {year}"
+    "project": "University project · {year}",
+    "impact": "Our impact",
+    "linksLabel": "Links"
   },
   "Landing": {
     "hero": {
@@ -352,7 +355,9 @@
       "alerts": "Alerts",
       "missions": "Today's missions",
       "customers": "Customers",
-      "lab": "Lab"
+      "lab": "Lab",
+      "metrics": "Metrics",
+      "reports": "Reports"
     },
     "navShort": {
       "dashboard": "Home",
@@ -363,7 +368,9 @@
       "alerts": "Alerts",
       "missions": "Missions",
       "customers": "Customers",
-      "lab": "Lab"
+      "lab": "Lab",
+      "metrics": "Metrics",
+      "reports": "Reports"
     },
     "today": "Today in Bogota: {date}",
     "comingSoonShort": "Soon",
@@ -1083,5 +1090,205 @@
   "Pwa": {
     "updateAvailable": "New version available",
     "reload": "Reload"
+  },
+  "Metrics": {
+    "metaTitle": "Metrics",
+    "eyebrow": "Performance",
+    "title": "System metrics",
+    "intro": "How the API, the server and the browser respond. The data lives in the backend memory and resets on every deploy.",
+    "refresh": "Refresh",
+    "updated": "Updated {time}",
+    "noData": "No data",
+    "ms": "{value} ms",
+    "mb": "{value} MB",
+    "api": {
+      "title": "API by route",
+      "intro": "Percentiles of the last 500 responses of each route, sorted by p95 (slowest first).",
+      "caption": "API response times by route pattern",
+      "route": "Route",
+      "p50": "p50",
+      "p95": "p95",
+      "p99": "p99",
+      "count": "Requests",
+      "errors": "5xx errors",
+      "empty": "No requests recorded yet."
+    },
+    "backend": {
+      "title": "Server",
+      "rss": "Total memory (RSS)",
+      "heapUsed": "JavaScript heap used",
+      "heapOf": "of {total}",
+      "lag": "Event loop delay",
+      "lagDetail": "mean {mean} · p99 {p99} · max {max}",
+      "uptime": "Uptime",
+      "uptimeValue": "{hours, plural, =0 {} one {# h } other {# h }}{minutes} min"
+    },
+    "vitals": {
+      "title": "Web Vitals",
+      "intro": "p75 of what signed-in users' browsers measure, with Google's thresholds.",
+      "empty": "No measurements yet. They are sent while browsing the app with a session.",
+      "byPage": "By page",
+      "caption": "p75 of each metric by page",
+      "page": "Page",
+      "metric": "Metric",
+      "p75": "p75",
+      "samples": "Samples",
+      "samplesCount": "{count, plural, one {# sample} other {# samples}}",
+      "thresholds": "Good ≤ {good} · Poor > {poor}",
+      "rating": {
+        "good": "Good",
+        "needs-improvement": "Needs improvement",
+        "poor": "Poor"
+      },
+      "names": {
+        "INP": "Interaction to Next Paint",
+        "LCP": "Largest Contentful Paint",
+        "CLS": "Cumulative Layout Shift",
+        "TTFB": "Time to First Byte",
+        "FCP": "First Contentful Paint"
+      }
+    },
+    "frontend": {
+      "title": "This browser",
+      "intro": "Navigation Timing of this page load and the memory it uses.",
+      "ttfb": "First byte (TTFB)",
+      "domContentLoaded": "DOMContentLoaded",
+      "load": "Load event",
+      "pending": "In progress",
+      "timingUnavailable": "This browser does not expose Navigation Timing.",
+      "memory": "Memory",
+      "measure": "Measure memory",
+      "measuring": "Measuring…",
+      "measuringHint": "The browser answers after a garbage collection: it may take a few seconds.",
+      "sources": {
+        "uasm": "performance.measureUserAgentSpecificMemory(): it only exists because the page is isolated (COOP + COEP), like SharedArrayBuffer.",
+        "legacy": "performance.memory (non-standard, Chrome only): JavaScript heap used. Without cross-origin isolation there is no fuller measurement.",
+        "none": "Not available in this browser."
+      },
+      "memoryError": "The memory could not be measured."
+    },
+    "benchmark": {
+      "title": "Worker Threads benchmark",
+      "intro": "The backend runs the same heavy analysis on its main thread and on its worker_threads pool, and measures how long it stops serving everyone else.",
+      "size": "Synthetic orders",
+      "sizeValue": "{size} orders",
+      "sizeHint": "Between {min} and {max}: the main-thread mode blocks the server for everyone while it runs.",
+      "run": "Run with {size} orders",
+      "running": "Running…",
+      "results": "Results",
+      "caption": "Benchmark results: main thread versus worker pool",
+      "empty": "You have not run the benchmark in this session yet.",
+      "mode": "Mode",
+      "mainThread": "Main thread",
+      "workerPool": "Worker pool",
+      "duration": "Duration",
+      "lagMax": "Event loop (max)",
+      "drift": "10 ms probe (longest delay)",
+      "ticks": "Probe ticks",
+      "ticksValue": "{ticks} of {expected}",
+      "same": "Same result",
+      "sameYes": "Yes, the same plan",
+      "sameNo": "They differ",
+      "chartTitle": "Duration and server blocking",
+      "chartDuration": "Duration",
+      "chartBlocked": "Server blocked (longest probe delay)",
+      "run_n": "Run {n} · {size} orders",
+      "labLink": "Compare in the browser: performance lab",
+      "errors": {
+        "running": "A benchmark is already running on the server. Wait for it to finish and try again.",
+        "tooBig": "The server accepts at most {max} orders. The size was adjusted.",
+        "forbidden": "Only an administrator can run the benchmark.",
+        "network": "The server cannot be reached.",
+        "unexpected": "The benchmark could not finish."
+      }
+    }
+  },
+  "Reports": {
+    "metaTitle": "Reports",
+    "eyebrow": "Export",
+    "title": "Reports",
+    "intro": "Download the warehouse data as CSV (for Excel) or PDF. The server builds them in its worker_threads pool.",
+    "kinds": {
+      "inventory": {
+        "title": "Inventory",
+        "description": "Active products with today's stock, lots, expiry dates and waste risk."
+      },
+      "orders": {
+        "title": "Orders",
+        "description": "Orders created in the range, with customer, status, priority and due date."
+      },
+      "waste": {
+        "title": "Waste",
+        "description": "Waste exits in the range and products at high waste risk today."
+      }
+    },
+    "format": "Format",
+    "formats": {
+      "csv": "CSV",
+      "pdf": "PDF"
+    },
+    "language": "File language",
+    "languages": {
+      "es": "Spanish",
+      "en": "English"
+    },
+    "from": "From",
+    "to": "To",
+    "today": "Today's snapshot",
+    "rangeError": "Check the dates: \"To\" cannot be before \"From\" and the range cannot exceed {max} days.",
+    "download": "Download {format}",
+    "downloading": "Generating…",
+    "done": "{file} downloaded",
+    "history": {
+      "title": "Downloads in this session",
+      "empty": "You have not downloaded any report yet.",
+      "caption": "Reports downloaded in this session",
+      "file": "File",
+      "size": "Size",
+      "server": "Generation (server)",
+      "total": "Total (browser)",
+      "at": "Time"
+    },
+    "errors": {
+      "invalid": "The server rejected the report parameters.",
+      "forbidden": "Only an administrator can download reports.",
+      "network": "The server cannot be reached.",
+      "unexpected": "The report could not be generated."
+    }
+  },
+  "Impact": {
+    "metaTitle": "Our impact",
+    "metaDescription": "How much food we dispatched, how much we rescued before it expired and who it reached in the last 30 days.",
+    "eyebrow": "Impact · last {days} days",
+    "title": "Food that reached the table",
+    "intro": "Aggregate warehouse figures, with no personal data: what we dispatched, what we rescued before it expired and who we served.",
+    "window": "From {from} to {to}",
+    "dispatched": {
+      "title": "Dispatched",
+      "description": "Quantity sent to customers, per unit (different units are never added up).",
+      "empty": "No dispatches in this window."
+    },
+    "rescued": {
+      "title": "Rescued",
+      "description": "Part of what was dispatched that came from lots {days} days or less from expiring.",
+      "share": "{pct}% of what was dispatched"
+    },
+    "deliveries": {
+      "title": "On-time deliveries",
+      "detail": "{onTime} of {total, plural, one {# delivery} other {# deliveries}} arrived by their due date",
+      "none": "No deliveries in this window."
+    },
+    "customers": {
+      "title": "Customers served",
+      "total": "{count, plural, one {# customer} other {# customers}} with deliveries",
+      "none": "No customers served in this window."
+    },
+    "updated": "Updated: {date}",
+    "isr": "This page is regenerated every hour (ISR): it loads fast because it is already built, and Next.js asks the backend again in the background.",
+    "unavailable": {
+      "title": "Data not available",
+      "description": "We could not get the figures in the last regeneration. The page tries again by itself within an hour."
+    },
+    "cta": "Discover AlimentaIQ"
   }
 }
