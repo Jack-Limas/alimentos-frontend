@@ -81,13 +81,25 @@ Conventions for anyone (human or AI assistant) working in this repository.
 - Private API calls go through `authFetch` (`useAuth()`), never a hand-made Bearer header: it
   handles the single-flight refresh, the cross-tab lock and the one retry.
 - The access token lives in memory with a copy in `sessionStorage` (`aiq.session`). Never put
-  tokens in `localStorage`, JS cookies, URLs or logs. The refresh token is an HttpOnly cookie the
+  tokens in `localStorage`, JS cookies, URLs or logs.
+  `localStorage` only holds the boolean hint `aiq.signedIn` (set on login, removed on logout or
+  a failed refresh): without it a page load skips `/auth/refresh`, so anonymous visitors never
+  get a 401. The refresh token is an HttpOnly cookie the
   frontend never reads.
 - Do not call `/auth/refresh` directly: concurrent refreshes trigger the backend's reuse
   detection and log every tab out.
 - `RequireAuth` and `RequireRole` are UX only; the API enforces access. There is no authenticated
   SSR (the Next server never receives the API cookie), so private pages are client-rendered.
 - Login redirects only to a `?next=` validated by `getSafeNextPath`.
+
+## Headers and SEO
+
+- Keep `Permissions-Policy`, `X-Frame-Options: DENY` and the CSP `frame-ancestors 'none'`. Do not
+  add a `script-src` CSP with nonces: it makes every page dynamic (no SSG/ISR) and a missing nonce
+  breaks production (README, "Cabeceras de seguridad").
+- Every `metaTitle` ends with " · AlimentaIQ" (a test checks it). Private pages stay `noindex` and
+  out of `robots.txt`.
+- Lists in a CSS grid start with `grid-cols-1` so long names cannot widen the page on phones.
 
 ## Cross-origin isolation
 
