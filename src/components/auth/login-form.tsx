@@ -13,6 +13,7 @@ import {
 import { getSafeNextPath, privateHome } from '@/features/auth/safe-next';
 import { useAuth } from '@/features/auth/use-auth';
 import { useCountdown } from '@/hooks/use-countdown';
+import { buttonClass } from '@/components/ui/button';
 import { PasswordField } from './password-field';
 
 const inputClass =
@@ -158,7 +159,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={submitting || locked}
-        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
+        className={`w-full ${buttonClass('primary', 'lg')}`}
       >
         {submitting && (
           <span
