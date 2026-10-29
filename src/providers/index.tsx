@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { WebVitalsReporter } from '@/components/metrics/web-vitals-reporter';
 import { ServiceWorkerUpdates } from '@/components/pwa/service-worker-updates';
 import { AuthProvider } from '@/features/auth/auth-provider';
 import { QueryProvider } from './query-provider';
@@ -9,7 +10,10 @@ export function Providers({ children }: { children: ReactNode }) {
     <ThemeProvider>
       <QueryProvider>
         {/* Inside QueryProvider: logging out clears the query cache. */}
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <WebVitalsReporter />
+        </AuthProvider>
         <ServiceWorkerUpdates />
       </QueryProvider>
     </ThemeProvider>
