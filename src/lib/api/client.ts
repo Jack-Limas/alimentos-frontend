@@ -15,14 +15,14 @@ export interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
 }
 
 /**
- * Thin fetch wrapper for the backend. Always sends cookies (the refresh token
- * cookie is SameSite=None on the API domain) and turns contract errors into
- * ApiError. No auth logic yet.
+ * The raw response of a backend request, for bodies that are not JSON (report
+ * downloads). Same cookies and error handling as apiFetch: a non-2xx answer
+ * throws ApiError.
  */
-export async function apiFetch<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+export async function apiRequest(path: string, options: ApiRequestOptions = {}): Promise<Response> {
   const { json, headers, ...init } = options;
   const requestHeaders = new Headers(headers);
-  requestHeaders.set('Accept', 'application/json');
+  if (!requestHeaders.has('Accept')) requestHeaders.set('Accept', 'application/json');
   if (json !== undefined) {
     requestHeaders.set('Content-Type', 'application/json');
   }
@@ -46,6 +46,16 @@ export async function apiFetch<T>(path: string, options: ApiRequestOptions = {})
   if (!response.ok) {
     throw await ApiError.fromResponse(response);
   }
+  return response;
+}
+
+/**
+ * Thin fetch wrapper for the backend. Always sends cookies (the refresh token
+ * cookie is SameSite=None on the API domain) and turns contract errors into
+ * ApiError. No auth logic yet.
+ */
+export async function apiFetch<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+  const response = await apiRequest(path, options);
   if (response.status === 204) {
     return undefined as T;
   }
