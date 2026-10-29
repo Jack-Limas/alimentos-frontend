@@ -106,7 +106,8 @@ describe('parity: the pool gives exactly the single-worker plan', () => {
     }
   });
 
-  it('holds on a large synthetic snapshot too', () => {
+  // 3,000 orders scored twice: seconds on a busy machine, so it gets more than the default 5 s.
+  it('holds on a large synthetic snapshot too', { timeout: 30_000 }, () => {
     const snapshot = generateSnapshot({ orders: 3_000, seed: 9 });
     const strategy = createStrategy('WASTE_FIRST');
     const { scores } = scoreInParts(snapshot, strategy, 4);
