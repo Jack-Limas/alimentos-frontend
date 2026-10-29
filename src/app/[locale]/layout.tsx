@@ -25,7 +25,7 @@ export async function generateMetadata({
     return {};
   }
   const t = await getTranslations({ locale, namespace: 'Metadata' });
-  return { title: t('title'), description: t('description') };
+  return { title: t('title'), description: t('description'), icons: { icon: '/icon.svg' } };
 }
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
