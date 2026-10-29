@@ -144,7 +144,7 @@ function ReportCard({
         </Field>
 
         {hasRange ? (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
             <Field id={`${id}-from`} label={t('from')}>
               <input
                 id={`${id}-from`}
@@ -177,7 +177,7 @@ function ReportCard({
             {rangeInvalid ? (
               <p
                 id={`${id}-range`}
-                className="col-span-2 text-xs font-semibold text-critical-700 dark:text-critical-300"
+                className="col-span-full text-xs font-semibold text-critical-700 dark:text-critical-300"
               >
                 {t('rangeError', { max: MAX_RANGE_DAYS })}
               </p>
