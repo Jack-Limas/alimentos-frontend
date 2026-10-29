@@ -226,6 +226,20 @@
       "retry": "Volver a comprobar",
       "unreachableHint": "No se pudo contactar al backend. Revisa NEXT_PUBLIC_API_URL y que CORS_ORIGINS incluya este origen.",
       "configHint": "NEXT_PUBLIC_API_URL no está configurada correctamente."
+    },
+    "workers": {
+      "title": "Workers del navegador",
+      "description": "Sondeo compartido de alertas, caché offline y pool de cálculo en paralelo.",
+      "sharedWorker": "SharedWorker",
+      "sharedSupported": "Soportado · {count, plural, one {# pestaña conectada} other {# pestañas conectadas}}",
+      "sharedFallback": "No soportado: cada pestaña consulta por su cuenta",
+      "serviceWorker": "Service Worker",
+      "swActive": "Activo · versión {version}",
+      "swInactive": "Inactivo (solo se registra en producción)",
+      "swUnsupported": "No soportado",
+      "pool": "Pool con SharedArrayBuffer",
+      "poolAvailable": "Disponible · {count, plural, one {# worker} other {# workers}}",
+      "poolUnavailable": "No disponible: la página no está aislada (COOP/COEP)"
     }
   },
   "Catalog": {
@@ -1044,5 +1058,18 @@
       "inp": "INP aprox.: la interacción más lenta con el botón de clics (PerformanceObserver \"event\", umbral 16 ms). Si el navegador no reporta eventos, se usa la espera del clic medida en su propio manejador.",
       "unsupported": "Este navegador no reporta long tasks o eventos; esas columnas quedan vacías."
     }
+  },
+  "Offline": {
+    "metaTitle": "Sin conexión · AlimentaIQ",
+    "eyebrow": "Sin conexión",
+    "title": "Parece que no hay internet",
+    "body": "No pudimos llegar al servidor. Cuando vuelva la conexión, AlimentaIQ sigue donde lo dejaste.",
+    "hint": "Los datos de inventario, pedidos y alertas no se guardan en este dispositivo: se cargan al volver la conexión.",
+    "retry": "Reintentar",
+    "home": "Ir al inicio"
+  },
+  "Pwa": {
+    "updateAvailable": "Nueva versión disponible",
+    "reload": "Recargar"
   }
 }

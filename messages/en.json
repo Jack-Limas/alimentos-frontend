@@ -226,6 +226,20 @@
       "retry": "Check again",
       "unreachableHint": "Could not reach the backend. Check NEXT_PUBLIC_API_URL and that CORS_ORIGINS includes this origin.",
       "configHint": "NEXT_PUBLIC_API_URL is not configured correctly."
+    },
+    "workers": {
+      "title": "Browser workers",
+      "description": "Shared alerts polling, offline cache and the parallel computing pool.",
+      "sharedWorker": "SharedWorker",
+      "sharedSupported": "Supported · {count, plural, one {# tab connected} other {# tabs connected}}",
+      "sharedFallback": "Not supported: every tab polls on its own",
+      "serviceWorker": "Service Worker",
+      "swActive": "Active · version {version}",
+      "swInactive": "Inactive (registered in production only)",
+      "swUnsupported": "Not supported",
+      "pool": "SharedArrayBuffer pool",
+      "poolAvailable": "Available · {count, plural, one {# worker} other {# workers}}",
+      "poolUnavailable": "Unavailable: the page is not isolated (COOP/COEP)"
     }
   },
   "Catalog": {
@@ -1044,5 +1058,18 @@
       "inp": "Approx. INP: the slowest interaction with the click button (PerformanceObserver \"event\", 16 ms threshold). If the browser reports no events, the click's wait measured in its own handler is used.",
       "unsupported": "This browser does not report long tasks or events; those columns stay empty."
     }
+  },
+  "Offline": {
+    "metaTitle": "Offline · AlimentaIQ",
+    "eyebrow": "Offline",
+    "title": "Looks like there is no internet",
+    "body": "We could not reach the server. When the connection is back, AlimentaIQ picks up where you left it.",
+    "hint": "Inventory, orders and alerts are not stored on this device: they load again when you are back online.",
+    "retry": "Try again",
+    "home": "Go home"
+  },
+  "Pwa": {
+    "updateAvailable": "New version available",
+    "reload": "Reload"
   }
 }
