@@ -13,11 +13,20 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
  * - External images (Cloudinary) must be loaded with `crossOrigin="anonymous"`.
  * - Fonts come from next/font, which self-hosts them on this origin.
  */
-const securityHeaders = [
+export const securityHeaders = [
   { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
   { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
+  // The app needs none of these; a compromised script cannot ask for them either.
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+  // Never inside a frame (clickjacking). X-Frame-Options for old browsers and the CSP
+  // frame-ancestors directive for current ones.
+  { key: 'X-Frame-Options', value: 'DENY' },
+  // Only frame-ancestors on purpose: a script-src policy with nonces would force every
+  // page to render dynamically (no SSG/ISR) and break Next's inline bootstrap scripts if
+  // a nonce is missed. See README, "Cabeceras de seguridad".
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
 ];
 
 /**
