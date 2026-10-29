@@ -9,6 +9,8 @@ import type { DistributionSnapshot, SnapshotOrder, SnapshotProduct } from './sna
 import type { PrioritizationStrategy } from './strategies';
 import type { StrategyName, Weights } from './weights';
 
+const NO_COMPONENTS = Object.freeze({ priority: 0, deadlineUrgency: 0, expiryPressure: 0 });
+
 /** An order goes back to the heap at most this many times when its score drops. */
 export const MAX_RESCORES = 3;
 
@@ -90,6 +92,13 @@ export interface BuildOptions {
    */
   onProgress?: (served: number, total: number) => void;
   progressEvery?: number;
+  /**
+   * Client-only: initial scores already computed (by the SharedArrayBuffer
+   * pool, one per order in snapshot order). They replace the first scoring
+   * pass; the heap, the lazy re-scoring and FEFO are unchanged, so the plan is
+   * the same as without them.
+   */
+  initialScores?: ArrayLike<number>;
 }
 
 /**
@@ -105,16 +114,25 @@ export interface BuildOptions {
 export function buildProposal(
   snapshot: DistributionSnapshot,
   strategy: PrioritizationStrategy,
-  { now = () => performance.now(), onProgress, progressEvery = 500 }: BuildOptions = {},
+  {
+    now = () => performance.now(),
+    onProgress,
+    progressEvery = 500,
+    initialScores,
+  }: BuildOptions = {},
 ): ProposalResult {
   const started = now();
   const today = snapshot.businessDate;
   const lots = new LotBook(snapshot.lots, today);
   const units = new Map(snapshot.products.map((product) => [product.id, product.unit]));
 
-  const initial: HeapEntry[] = snapshot.orders.map((order) => ({
+  const initial: HeapEntry[] = snapshot.orders.map((order, index) => ({
     order,
-    score: strategy.score(order, lots, today),
+    // Only the number orders the heap: components and reasons come from the re-score at pop.
+    score:
+      initialScores === undefined
+        ? strategy.score(order, lots, today)
+        : { score: initialScores[index] ?? 0, components: NO_COMPONENTS, reasons: [] },
     rescores: 0,
   }));
 
