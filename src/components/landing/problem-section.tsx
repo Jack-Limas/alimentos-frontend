@@ -58,7 +58,11 @@ export function ProblemSection() {
                 >
                   <Icon name={icon} className="size-6" />
                 </span>
-                <span className="font-display text-3xl font-semibold text-border">
+                {/* Decorative order; large text, so 3:1 contrast is enough (sand-500 passes). */}
+                <span
+                  aria-hidden="true"
+                  className="font-display text-3xl font-semibold text-sand-500 dark:text-sand-400"
+                >
                   {String(index + 1).padStart(2, '0')}
                 </span>
               </div>
