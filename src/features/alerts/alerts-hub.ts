@@ -130,11 +130,13 @@ export function createAlertsHub({
       broadcast(status());
       return;
     }
-    if (changed || awaitingRefresh) {
-      awaitingRefresh = false;
-      startPolling();
-      void poll();
-    }
+    // Every tab bootstraps with its own refresh, so tokens change often: a new
+    // token only triggers a request when there is nothing to show yet or the
+    // last one was rejected; otherwise the 60 s rhythm goes on with it.
+    const fetchNow = snapshot === null || awaitingRefresh;
+    awaitingRefresh = false;
+    startPolling();
+    if (changed && fetchNow) void poll();
   }
 
   function heartbeat(): void {

@@ -99,6 +99,20 @@ describe('alerts hub (SharedWorker logic)', () => {
     expect(calls).toHaveLength(2);
   });
 
+  it('does not poll again when another tab brings a new token and there is a snapshot', async () => {
+    const { hub, calls } = setup();
+    const [a, b] = [port(), port()];
+    hub.connect(a);
+    hub.connect(b);
+    hub.receive(a, { type: 'hello', apiUrl: 'http://api', token: 'token-of-a' });
+    await flush();
+    hub.receive(b, { type: 'hello', apiUrl: 'http://api', token: 'token-of-b' });
+    hub.receive(a, { type: 'token', token: 'refreshed-a' });
+    await flush();
+    expect(calls).toHaveLength(1);
+    expect(hub.state()).toMatchObject({ polling: true, hasToken: true });
+  });
+
   it('does not poll without a token', async () => {
     const { hub, calls } = setup();
     const a = port();
