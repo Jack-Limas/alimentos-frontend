@@ -1042,13 +1042,16 @@
       "inp": "INP aprox.",
       "modes": {
         "main": "Hilo principal",
-        "worker": "Worker"
+        "worker": "Worker",
+        "pool": "Pool paralelo"
       },
       "ms": "{value, number} ms",
       "longTasksValue": "{count} ({ms, number} ms)",
       "none": "—",
       "export": "Exportar JSON",
-      "clear": "Limpiar"
+      "clear": "Limpiar",
+      "workers": "Workers",
+      "cancelled": "(cancelado)"
     },
     "notes": {
       "title": "Cómo se mide",
@@ -1056,8 +1059,13 @@
       "frame": "Frame más largo: el mayor hueco entre dos callbacks de requestAnimationFrame.",
       "longTasks": "Long tasks: tareas de más de 50 ms del hilo principal (PerformanceObserver \"longtask\").",
       "inp": "INP aprox.: la interacción más lenta con el botón de clics (PerformanceObserver \"event\", umbral 16 ms). Si el navegador no reporta eventos, se usa la espera del clic medida en su propio manejador.",
-      "unsupported": "Este navegador no reporta long tasks o eventos; esas columnas quedan vacías."
-    }
+      "unsupported": "Este navegador no reporta long tasks o eventos; esas columnas quedan vacías.",
+      "pool": "Pool paralelo: N workers puntúan partes del snapshot en un Float64Array compartido; la asignación FEFO, que es secuencial, la hace un worker después con el heap. Cancelar cambia una bandera compartida que cada worker revisa por pedido."
+    },
+    "runPool": "Ejecutar en pool paralelo ({count})",
+    "cancel": "Cancelar",
+    "poolHint": "{count, plural, one {# worker puntúa} other {# workers puntúan}} en paralelo sobre memoria compartida; el progreso se lee con Atomics en cada frame.",
+    "poolUnavailable": "Pool paralelo no disponible: necesita SharedArrayBuffer, que solo existe si la página está aislada (COOP/COEP)."
   },
   "Offline": {
     "metaTitle": "Sin conexión · AlimentaIQ",

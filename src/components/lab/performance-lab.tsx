@@ -19,6 +19,9 @@ import {
   SYNTHETIC_MAX_ORDERS,
   SYNTHETIC_MIN_ORDERS,
 } from '@/features/distribution/synthetic';
+import { createPoolWorker } from '@/features/distribution/create-pool-worker';
+import { poolAvailable, poolSize, progressOf } from '@/features/distribution/parallel';
+import { ParallelEngine } from '@/features/distribution/parallel-engine';
 import { useEngineWorker } from '@/features/distribution/use-engine-worker';
 import { useClientValue } from '@/hooks/use-client-value';
 
@@ -41,6 +44,9 @@ function observes(type: 'longtask' | 'event'): boolean {
 
 const round1 = (value: number | null) => (value === null ? null : Math.round(value * 10) / 10);
 
+/** Circumference of the progress ring (r = 26). */
+const RING_LENGTH = 2 * Math.PI * 26;
+
 const nextFrame = () => new Promise<number>((resolve) => requestAnimationFrame(resolve));
 
 export function PerformanceLab() {
@@ -52,6 +58,13 @@ export function PerformanceLab() {
   const [running, setRunning] = useState<LabRun['mode'] | null>(null);
   const [runs, setRuns] = useState<LabRun[]>([]);
   const [clicks, setClicks] = useState(0);
+  // SharedArrayBuffer needs a cross-origin isolated page (COOP/COEP).
+  const canPool = useClientValue(() => poolAvailable(window), false);
+  const poolWorkers = useClientValue(() => poolSize(navigator.hardwareConcurrency), 1);
+  const [pool] = useState(() => ({ engine: null as ParallelEngine | null }));
+  const poolControl = useRef<Int32Array | null>(null);
+  const ring = useRef<SVGCircleElement>(null);
+  const ringLabel = useRef<HTMLSpanElement>(null);
   const supportsLongTask = useClientValue(() => observes('longtask'), true);
   const supportsEvent = useClientValue(() => observes('event'), true);
   const supported = { longtask: supportsLongTask, event: supportsEvent };
@@ -85,6 +98,13 @@ export function PerformanceLab() {
       if (recording.current) frames.current.push(ranAt);
       if (wheel.current) wheel.current.style.transform = `rotate(${String((time / 4) % 360)}deg)`;
       if (counter.current) counter.current.textContent = t('indicator.frames', { count });
+      // The pool's progress is read straight from shared memory every frame: no message per step.
+      const control = poolControl.current;
+      if (control && ring.current && ringLabel.current) {
+        const progress = progressOf(control);
+        ring.current.style.strokeDashoffset = String(RING_LENGTH * (1 - progress));
+        ringLabel.current.textContent = `${String(Math.round(progress * 100))} %`;
+      }
       id = requestAnimationFrame(loop);
     };
     id = requestAnimationFrame(loop);
@@ -111,6 +131,14 @@ export function PerformanceLab() {
     return () => observers.forEach((observer) => observer.disconnect());
   }, []);
 
+  useEffect(
+    () => () => {
+      pool.engine?.terminate();
+      pool.engine = null;
+    },
+    [pool],
+  );
+
   async function run(mode: LabRun['mode']) {
     setRunning(mode);
     setClicks(0);
@@ -125,10 +153,20 @@ export function PerformanceLab() {
     recording.current = true;
     const start = performance.now();
     let engineMs = 0;
+    let workers = mode === 'main' ? 0 : 1;
+    let cancelled = false;
     try {
       if (mode === 'main') {
         // Synchronous on purpose: this is what freezes the page.
         engineMs = buildProposal(snapshot, createStrategy('BALANCED')).summary.processingMs;
+      } else if (mode === 'pool') {
+        pool.engine ??= new ParallelEngine(createPoolWorker, poolWorkers);
+        const parallel = pool.engine.run({ snapshot, strategy: 'BALANCED', top: 10 });
+        poolControl.current = parallel.control;
+        const outcome = await parallel.done;
+        workers = outcome.workers;
+        if (outcome.status === 'done') engineMs = outcome.scoreMs + outcome.allocateMs;
+        else cancelled = true;
       } else {
         const outcome = await engine.run(
           { snapshot, strategy: 'BALANCED', detail: 'summary', top: 10, progressEvery: 1_000 },
@@ -138,6 +176,7 @@ export function PerformanceLab() {
       }
     } finally {
       const end = performance.now();
+      poolControl.current = null;
       await new Promise((resolve) => window.setTimeout(resolve, SETTLE_MS));
       recording.current = false;
       const frame = longestFrame(frames.current, start, end);
@@ -147,6 +186,8 @@ export function PerformanceLab() {
         {
           id: current.length + 1,
           mode,
+          workers,
+          cancelled,
           orders: snapshot.orders.length,
           seed,
           durationMs: Math.round((end - start) * 10) / 10,
@@ -250,6 +291,62 @@ export function PerformanceLab() {
             >
               {running === 'worker' ? t('running') : t('runWorker')}
             </Button>
+            <Button
+              variant="berry"
+              size="lg"
+              disabled={running !== null || !canPool}
+              onClick={() => void run('pool')}
+            >
+              {running === 'pool' ? t('running') : t('runPool', { count: poolWorkers })}
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 rounded-2xl bg-surface-muted/70 p-3 ring-1 ring-border">
+            {/* Progress of the pool, read with Atomics.load in each animation frame. */}
+            <div className="relative size-16 shrink-0">
+              <svg viewBox="0 0 64 64" className="size-16 -rotate-90" aria-hidden="true">
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="26"
+                  fill="none"
+                  strokeWidth="7"
+                  className="stroke-border"
+                />
+                <circle
+                  ref={ring}
+                  cx="32"
+                  cy="32"
+                  r="26"
+                  fill="none"
+                  strokeWidth="7"
+                  strokeLinecap="round"
+                  strokeDasharray={RING_LENGTH}
+                  strokeDashoffset={RING_LENGTH}
+                  className="stroke-berry-500"
+                />
+              </svg>
+              <span
+                ref={ringLabel}
+                className="absolute inset-0 flex items-center justify-center text-xs font-semibold tabular-nums"
+              >
+                0 %
+              </span>
+            </div>
+            <p className="min-w-0 flex-1 text-sm text-muted">
+              {canPool ? t('poolHint', { count: poolWorkers }) : t('poolUnavailable')}
+            </p>
+            {running === 'pool' ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  if (poolControl.current) pool.engine?.cancel(poolControl.current);
+                }}
+              >
+                {t('cancel')}
+              </Button>
+            ) : null}
           </div>
         </section>
 
@@ -318,6 +415,7 @@ export function PerformanceLab() {
                 <tr>
                   <th className="py-2 pr-3">#</th>
                   <th className="py-2 pr-3">{t('results.mode')}</th>
+                  <th className="py-2 pr-3 text-right">{t('results.workers')}</th>
                   <th className="py-2 pr-3 text-right">{t('results.orders')}</th>
                   <th className="py-2 pr-3 text-right">{t('results.duration')}</th>
                   <th className="py-2 pr-3 text-right">{t('results.engine')}</th>
@@ -335,12 +433,18 @@ export function PerformanceLab() {
                         className={`rounded-full px-2.5 py-0.5 text-xs ring-1 ${
                           entry.mode === 'main'
                             ? 'bg-critical-100 text-critical-700 ring-critical-200 dark:bg-critical-900/40 dark:text-critical-200 dark:ring-critical-800'
-                            : 'bg-lagoon-100 text-lagoon-800 ring-lagoon-200 dark:bg-lagoon-900/40 dark:text-lagoon-200 dark:ring-lagoon-800'
+                            : entry.mode === 'pool'
+                              ? 'bg-berry-100 text-berry-800 ring-berry-200 dark:bg-berry-900/40 dark:text-berry-200 dark:ring-berry-800'
+                              : 'bg-lagoon-100 text-lagoon-800 ring-lagoon-200 dark:bg-lagoon-900/40 dark:text-lagoon-200 dark:ring-lagoon-800'
                         }`}
                       >
                         {t(`results.modes.${entry.mode}`)}
                       </span>
+                      {entry.cancelled ? (
+                        <span className="ml-2 text-xs text-muted">{t('results.cancelled')}</span>
+                      ) : null}
                     </td>
+                    <td className="py-2 pr-3 text-right">{entry.workers}</td>
                     <td className="py-2 pr-3 text-right">{format.number(entry.orders)}</td>
                     <td className="py-2 pr-3 text-right">{ms(entry.durationMs)}</td>
                     <td className="py-2 pr-3 text-right">{ms(entry.engineMs)}</td>
@@ -371,6 +475,7 @@ export function PerformanceLab() {
             <li>{t('notes.frame')}</li>
             <li>{t('notes.longTasks')}</li>
             <li>{t('notes.inp')}</li>
+            <li>{t('notes.pool')}</li>
             {!supported.longtask || !supported.event ? <li>{t('notes.unsupported')}</li> : null}
           </ul>
         </details>

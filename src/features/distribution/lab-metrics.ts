@@ -1,7 +1,11 @@
 /** What one lab run measured (all times in milliseconds). */
 export interface LabRun {
   id: number;
-  mode: 'main' | 'worker';
+  mode: 'main' | 'worker' | 'pool';
+  /** Threads that computed: 0 = main thread, 1 = one worker, N = the pool. */
+  workers: number;
+  /** Stopped with Cancel before the end. */
+  cancelled: boolean;
   orders: number;
   seed: number;
   /** Click → result, as the user waits for it. */
