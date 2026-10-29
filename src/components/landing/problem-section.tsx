@@ -1,17 +1,38 @@
 import { useTranslations } from 'next-intl';
+import { Icon, type IconName } from '@/components/ui/icons';
 
-const problems = [
-  { key: 'expired', accent: 'border-t-expiry-500', marker: 'bg-expiry-500' },
-  { key: 'waste', accent: 'border-t-critical-500', marker: 'bg-critical-500' },
-  { key: 'shortages', accent: 'border-t-critical-400', marker: 'bg-critical-400' },
-  { key: 'late', accent: 'border-t-expiry-400', marker: 'bg-expiry-400' },
-] as const;
+const problems: {
+  key: 'expired' | 'waste' | 'shortages' | 'late';
+  icon: IconName;
+  tile: string;
+  edge: string;
+}[] = [
+  {
+    key: 'expired',
+    icon: 'clock',
+    tile: 'bg-expiry-400 text-forest-950',
+    edge: 'var(--color-expiry-600)',
+  },
+  {
+    key: 'waste',
+    icon: 'trash',
+    tile: 'bg-critical-500 text-white',
+    edge: 'var(--color-critical-700)',
+  },
+  {
+    key: 'shortages',
+    icon: 'boxes',
+    tile: 'bg-berry-500 text-white',
+    edge: 'var(--color-berry-700)',
+  },
+  { key: 'late', icon: 'truck', tile: 'bg-lagoon-500 text-white', edge: 'var(--color-lagoon-700)' },
+];
 
 export function ProblemSection() {
   const t = useTranslations('Landing.problem');
 
   return (
-    <section aria-labelledby="problem-title" className="bg-surface-muted/60">
+    <section aria-labelledby="problem-title">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
         <p className="text-sm font-semibold uppercase tracking-[0.14em] text-critical-600 dark:text-critical-400">
           {t('eyebrow')}
@@ -24,16 +45,24 @@ export function ProblemSection() {
         </h2>
 
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {problems.map(({ key, accent, marker }, index) => (
+          {problems.map(({ key, icon, tile, edge }, index) => (
             <li
               key={key}
-              className={`rounded-card border border-t-4 border-border bg-surface p-6 ${accent}`}
+              style={{ animationDelay: `${String(index * 60)}ms` }}
+              className="group rounded-card bg-surface p-6 shadow-card ring-1 ring-border transition motion-safe:animate-rise-in motion-safe:hover:-translate-y-1"
             >
-              <span className="flex items-center gap-2 text-sm font-semibold text-muted">
-                <span className={`size-2 rounded-full ${marker}`} aria-hidden="true" />
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <h3 className="mt-4 text-lg font-semibold">{t(`${key}Title`)}</h3>
+              <div className="flex items-center justify-between">
+                <span
+                  className={`inline-flex size-12 items-center justify-center rounded-2xl ${tile}`}
+                  style={{ boxShadow: `0 4px 0 0 ${edge}` }}
+                >
+                  <Icon name={icon} className="size-6" />
+                </span>
+                <span className="font-display text-3xl font-semibold text-border">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </div>
+              <h3 className="mt-5 text-lg font-semibold">{t(`${key}Title`)}</h3>
               <p className="mt-2 leading-relaxed text-muted">{t(`${key}Body`)}</p>
             </li>
           ))}
