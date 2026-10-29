@@ -280,6 +280,70 @@ Con 20.000 pedidos: hilo principal 606 ms congelado (frame de 608 ms, INP 490 ms
 en total con el frame más largo en 65 ms. El Worker tarda más en total (copia del snapshot y CPU
 compartida) pero la página nunca se congela.
 
+## Alertas compartidas entre pestañas (SharedWorker)
+
+- `src/workers/alerts.shared-worker.ts` hace **un solo** `GET /alerts` cada 60 s para todas las
+  pestañas y difunde `{ counts por severidad, alerts, fetchedAt }` a todos los puertos. La lógica
+  vive en `features/alerts/alerts-hub.ts` y se prueba sin el worker.
+- Cada pestaña le envía el access token por su `MessagePort` al conectarse, al iniciar sesión y en
+  cada refresh (`null` al cerrar sesión: el worker deja de sondear y limpia los datos). Ante un 401
+  el worker pide a **una** pestaña que refresque; la pestaña usa el refresh de siempre (single
+  flight + Web Lock `aiq-refresh`), así el worker nunca llama a `/auth/refresh`. El token solo
+  vive en memoria y nunca se registra.
+- Latido cada 15 s: los puertos de pestañas que murieron sin despedirse se quitan; `pagehide` envía
+  `bye`.
+- Si el navegador no tiene `SharedWorker` (Chrome en Android, por ejemplo), `useSharedAlerts()` usa
+  el sondeo por pestaña con TanStack Query de antes: la interfaz es la misma.
+
+## Service Worker y página offline
+
+- `public/sw.js` se registra solo en producción como `/sw.js?v=<versión del build>` (el commit en
+  Vercel). La versión nombra las cachés; al activarse una versión nueva se borran las viejas y la
+  app muestra "Nueva versión disponible · Recargar".
+- Precarga `/es/offline` y `/en/offline` (con sus archivos `_next/static`) y el ícono.
+  `_next/static`: cache-first. Navegaciones: network-first, luego la copia en caché y, sin red, la
+  página offline del idioma de la URL.
+- **Nunca** cachea `/api`, otros orígenes (el backend), peticiones con `Authorization`, métodos que
+  no sean GET ni el login.
+- Las respuestas guardadas conservan sus headers, incluidos COOP/COEP: una página servida desde la
+  caché sigue con `crossOriginIsolated = true` (verificado). `sw.js` recibe los headers de
+  `next.config` y `Cache-Control: no-cache`.
+
+## Pool paralelo con SharedArrayBuffer + Atomics (laboratorio)
+
+- `min(hardwareConcurrency - 1, 4)` workers (`src/workers/score-pool.worker.ts`) puntúan partes del
+  snapshot en paralelo y escriben en un `Float64Array` compartido. La asignación FEFO es secuencial:
+  la hace después el worker 0 con el heap, partiendo de esos puntajes (`initialScores`).
+- Control en un `Int32Array` compartido: progreso (`Atomics.add`), bandera de cancelación
+  (`Atomics.store` / `Atomics.load` por pedido) y workers terminados (`Atomics.add` +
+  `Atomics.notify`). El hilo principal **no** usa `Atomics.wait`: espera con `Atomics.waitAsync` o
+  revisando en cada frame. El anillo de progreso lee `Atomics.load` en cada frame, sin un
+  `postMessage` por avance: la primera mitad del anillo es el puntaje en paralelo y la segunda la
+  asignación. Cancelar funciona en las dos fases (la asignación revisa la bandera cada 100 pedidos).
+- Los workers del pool arrancan al abrir el laboratorio, así la primera corrida no mide su arranque.
+- El resultado es idéntico al del motor de un solo worker (pruebas con los fixtures de paridad).
+- Sin aislamiento de origen cruzado no hay `SharedArrayBuffer`: el modo queda deshabilitado y se
+  explica por qué.
+
+### Resultados medidos (build de producción local, Chrome, 12 núcleos, semilla 20261028)
+
+| #   | Modo                              | Workers | Pedidos | Duración total |  Motor | Frame más largo | Long tasks |
+| --- | --------------------------------- | ------: | ------: | -------------: | -----: | --------------: | ---------: |
+| 1   | Hilo principal                    |       0 |  10.000 |         540 ms | 537 ms |          550 ms | 1 (540 ms) |
+| 2   | Worker                            |       1 |  10.000 |         936 ms | 802 ms |           38 ms |          0 |
+| 3   | Pool paralelo                     |       4 |  10.000 |         710 ms | 706 ms |           71 ms |  1 (66 ms) |
+| 4   | Hilo principal                    |       0 |  20.000 |         368 ms | 368 ms |          374 ms | 1 (368 ms) |
+| 5   | Worker                            |       1 |  20.000 |         505 ms | 445 ms |           43 ms |          0 |
+| 6   | Pool paralelo                     |       4 |  20.000 |         531 ms | 530 ms |          128 ms | 1 (125 ms) |
+| 7   | Pool paralelo (cancelado al 50 %) |       4 |  20.000 |         218 ms |      — |          121 ms | 1 (118 ms) |
+
+Lectura honesta: el pool **no** es mucho más rápido que un worker. Solo el puntaje inicial se
+reparte; el heap con re-puntaje perezoso y la asignación FEFO son secuenciales (ley de Amdahl), y
+copiar el snapshot a 4 workers con `postMessage` cuesta una tarea larga corta en el hilo principal
+(66–125 ms, frente a 368–540 ms congelado en el hilo principal). Los tiempos varían entre corridas
+por el JIT (la primera corrida de cada motor es la más lenta). Lo que sí muestra el pool es memoria
+compartida real: progreso y cancelación sin mensajes.
+
 ## Por qué COOP y COEP
 
 `next.config.ts` envía en todas las rutas:
