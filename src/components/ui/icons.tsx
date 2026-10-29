@@ -22,6 +22,8 @@ type ExtraIcon =
 const paths: Record<NavIcon | ExtraIcon, string> = {
   flag: 'M5 21V4m0 0h11l-2 4 2 4H5',
   gauge: 'M4.5 17a8.5 8.5 0 1 1 15 0M12 13.5l4-5M12 15a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+  chart: 'M4 4v16h16M8 16v-4m4 4V8m4 8v-6',
+  file: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',
   users:
     'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm-6 9c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14c2 .7 3.5 3 3.5 6',
   clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-13v5l3 2',

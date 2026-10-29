@@ -21,6 +21,16 @@ const operator = { id: 'o', email: 'o@example.com', name: 'Op', role: 'OPERATOR'
 const admin = { ...operator, role: 'ADMIN' as const };
 
 describe('navigation by role', () => {
+  it('shows Metrics and Reports to an ADMIN only', () => {
+    expect(navItemsFor('ADMIN').map((i) => i.key)).toEqual(
+      expect.arrayContaining(['metrics', 'reports']),
+    );
+    expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('metrics');
+    expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('reports');
+    expect(canAccessPath('/app/metrics', 'OPERATOR')).toBe(false);
+    expect(canAccessPath('/app/reports', 'ADMIN')).toBe(true);
+  });
+
   it('shows Movements to an ADMIN only', () => {
     expect(navItemsFor('ADMIN').map((i) => i.key)).toContain('movements');
     expect(navItemsFor('OPERATOR').map((i) => i.key)).not.toContain('movements');
