@@ -8,58 +8,88 @@ repos.
 - Stack: Next.js 16 (App Router) · React 19 · TypeScript estricto · Tailwind CSS v4 ·
   TanStack Query · next-intl · next-themes.
 - Despliegue: Vercel.
-- Estado: diseño base, i18n (es/en), tema claro/oscuro, aislamiento de origen cruzado y
-  autenticación real (login, sesión entre pestañas y área privada con tablero provisional). Las
-  pantallas de negocio llegan en fases posteriores.
+- Estado: completo. Landing, login, panel, inventario por lotes, pedidos, misiones, alertas,
+  clientes, distribución con simulador en Web Worker, laboratorio de rendimiento, métricas,
+  reportes e impacto público, en español e inglés, tema claro y oscuro, móvil y escritorio.
+- Despliegue, rollback, ISR, Service Worker y checklist de la sustentación:
+  [docs/deployment.md](docs/deployment.md).
 
 ## Arquitectura
 
 ```mermaid
 flowchart LR
-  subgraph Browser["Navegador"]
-    UI["UI React 19<br/>TanStack Query · next-intl"]
-    WW["Web Worker<br/>motor de distribución (fase posterior)"]
-    POOL["Pool de Workers<br/>SharedArrayBuffer + Atomics (fase posterior)"]
-    UI <-->|postMessage| WW
-    UI <-->|SAB| POOL
+  subgraph Browser["Navegador (crossOriginIsolated)"]
+    UI["UI React 19<br/>TanStack Query · next-intl · next-themes"]
+    WW["Web Worker<br/>motor de distribución"]
+    POOL["Pool de Workers<br/>SharedArrayBuffer + Atomics"]
+    SHW["SharedWorker<br/>un sondeo de alertas para todas las pestañas"]
+    SVW["Service Worker<br/>estáticos + página offline"]
+    UI <-->|"postMessage (requestId)"| WW
+    UI <-->|"SAB: puntajes, progreso, cancelar"| POOL
+    UI <-->|"MessagePort (token, snapshot)"| SHW
+    SVW -.->|"intercepta navegaciones y /_next/static"| UI
   end
 
-  subgraph Vercel["Servidor Next (Vercel)"]
-    PX["proxy.ts<br/>detección de idioma"]
-    SSG["SSG: landing, login, system-check"]
-    ISR["ISR: /impact (fase posterior)"]
-    SSR["SSR: hoja de despacho (fase posterior)"]
+  subgraph Vercel["Next en Vercel"]
+    PX["proxy.ts<br/>idioma"]
+    SSG["SSG: landing, login, offline,<br/>system-check y shells de /app"]
+    ISR["ISR: /impact (revalidate 3600)"]
   end
 
   API["alimentos-backend<br/>(Fastify en Render)"]
 
   PX --> SSG
-  UI -->|"HTTPS · credentials: include"| API
-  ISR -->|GET /public/impact| API
-  SSR -->|GET /public/dispatch-sheets/:id| API
+  UI -->|"HTTPS · Bearer + cookie refresh"| API
+  SHW -->|"GET /alerts cada 60 s"| API
+  ISR -->|"GET /public/impact"| API
 ```
 
 ## Rendering por ruta
 
-| Ruta                                       | Patrón    | Estado         | Notas                                                                    |
-| ------------------------------------------ | --------- | -------------- | ------------------------------------------------------------------------ |
-| `/[locale]` (landing)                      | SSG       | Hecho          | `generateStaticParams` para `es` y `en`                                  |
-| `/[locale]/login`                          | SSG + CSR | Hecho          | Shell estático; el formulario y la sesión corren en el navegador         |
-| `/[locale]/system-check`                   | SSG + CSR | Hecho          | Shell estático; los valores se leen en el navegador                      |
-| `/[locale]/impact`                         | ISR       | Hecho          | `revalidate 3600` para `es` y `en`, consume `GET /public/impact`         |
-| Hoja de despacho                           | SSR       | Fase posterior | Enlace firmado [EXTRA]                                                   |
-| `/[locale]/app` (panel)                    | CSR       | Hecho          | KPIs de `/inventory/summary`; HTML estático = skeleton                   |
-| `/[locale]/app/products`                   | CSR       | Hecho          | Filtros en la URL; tabla en escritorio, tarjetas en móvil                |
-| `/[locale]/app/products/[id]`              | CSR       | Hecho          | Métricas, razones traducidas, lotes FEFO; acciones ADMIN                 |
-| `/[locale]/app/movements`                  | CSR       | Hecho          | Solo ADMIN (guard de UX; la API responde 403 igual)                      |
-| `/[locale]/app/orders` (+ `/new`, `/[id]`) | CSR       | Hecho          | Filtros en la URL; crear solo ADMIN; botones según la máquina de estados |
-| `/[locale]/app/missions`                   | CSR       | Hecho          | Pantalla principal del OPERATOR en móvil                                 |
-| `/[locale]/app/alerts`                     | CSR       | Hecho          | Agrupadas por severidad; refresco cada 60 s                              |
-| `/[locale]/app/customers`                  | CSR       | Hecho          | Solo ADMIN                                                               |
-| `/[locale]/app/distribution` (+ `/[id]`)   | CSR       | Hecho          | Simulador en Web Worker, comparar, generar, confirmar; ADMIN y OPERATOR  |
-| `/[locale]/app/lab/performance`            | CSR       | Hecho          | Solo ADMIN: hilo principal vs Web Worker con datos sintéticos            |
-| `/[locale]/app/metrics`                    | CSR       | Hecho          | Solo ADMIN: API, servidor, Web Vitals, navegador y benchmark             |
-| `/[locale]/app/reports`                    | CSR       | Hecho          | Solo ADMIN: CSV/PDF de inventario, pedidos y mermas                      |
+| Ruta                                       | Patrón    | Estado | Notas                                                                    |
+| ------------------------------------------ | --------- | ------ | ------------------------------------------------------------------------ |
+| `/[locale]` (landing)                      | SSG       | Hecho  | `generateStaticParams` para `es` y `en`                                  |
+| `/[locale]/login`                          | SSG + CSR | Hecho  | Shell estático; el formulario y la sesión corren en el navegador         |
+| `/[locale]/system-check`                   | SSG + CSR | Hecho  | Shell estático; los valores se leen en el navegador                      |
+| `/[locale]/impact`                         | ISR       | Hecho  | `revalidate 3600` para `es` y `en`, consume `GET /public/impact`         |
+| Hoja de despacho                           | SSR       | Fuera  | [EXTRA] no incluido (ver abajo)                                          |
+| `/[locale]/app` (panel)                    | CSR       | Hecho  | KPIs de `/inventory/summary`; HTML estático = skeleton                   |
+| `/[locale]/app/products`                   | CSR       | Hecho  | Filtros en la URL; tabla en escritorio, tarjetas en móvil                |
+| `/[locale]/app/products/[id]`              | CSR       | Hecho  | Métricas, razones traducidas, lotes FEFO; acciones ADMIN                 |
+| `/[locale]/app/movements`                  | CSR       | Hecho  | Solo ADMIN (guard de UX; la API responde 403 igual)                      |
+| `/[locale]/app/orders` (+ `/new`, `/[id]`) | CSR       | Hecho  | Filtros en la URL; crear solo ADMIN; botones según la máquina de estados |
+| `/[locale]/app/missions`                   | CSR       | Hecho  | Pantalla principal del OPERATOR en móvil                                 |
+| `/[locale]/app/alerts`                     | CSR       | Hecho  | Agrupadas por severidad; refresco cada 60 s                              |
+| `/[locale]/app/customers`                  | CSR       | Hecho  | Solo ADMIN                                                               |
+| `/[locale]/app/distribution` (+ `/[id]`)   | CSR       | Hecho  | Simulador en Web Worker, comparar, generar, confirmar; ADMIN y OPERATOR  |
+| `/[locale]/app/lab/performance`            | CSR       | Hecho  | Solo ADMIN: hilo principal vs Web Worker con datos sintéticos            |
+| `/[locale]/app/metrics`                    | CSR       | Hecho  | Solo ADMIN: API, servidor, Web Vitals, navegador y benchmark             |
+| `/[locale]/app/reports`                    | CSR       | Hecho  | Solo ADMIN: CSV/PDF de inventario, pedidos y mermas                      |
+
+### Por qué no hay SSR autenticado
+
+- La sesión vive en el navegador: el access token en memoria (copia en `sessionStorage`) y el
+  refresh en una cookie `HttpOnly` **del dominio del API** (`*.onrender.com`). El servidor de Next
+  (`*.vercel.app`) nunca recibe esa cookie, así que no puede pedir datos privados en nombre del
+  usuario sin inventar un segundo mecanismo de sesión (otra cookie, otro secreto, otro lugar donde
+  validar tokens).
+- Por eso las páginas privadas se prerenderizan como **shells estáticos** (skeleton) y los datos se
+  piden en el cliente con TanStack Query. `RequireAuth`/`RequireRole` son solo UX: la API decide.
+- Lo público sí se renderiza en el servidor: SSG para landing y login, **ISR** para `/impact`, que
+  solo usa el agregado público `GET /public/impact`.
+- La hoja de despacho con enlace firmado (SSR) era [EXTRA] y quedó fuera de alcance.
+
+## Mapa de concurrencia
+
+| Pieza                      | Archivo                                                                        | Para qué                                                                                    | Comunicación                                                                                                                                                    | Si no está disponible                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Web Worker**             | `src/workers/distribution.worker.ts`, `features/distribution/engine-client.ts` | Simular propuestas (miles de pedidos) sin congelar la UI                                    | `postMessage` con `requestId`; las respuestas viejas se descartan                                                                                               | Siempre existe en navegadores modernos                                                            |
+| **SharedWorker**           | `src/workers/alerts.shared-worker.ts`, `features/alerts/alerts-hub.ts`         | **Un** `GET /alerts` cada 60 s para todas las pestañas; el token llega por el `MessagePort` | Puertos con latido; ante 401 pide el refresh a una pestaña (Web Lock)                                                                                           | `useSharedAlerts()` usa el sondeo por pestaña con TanStack Query (Chrome Android, por ejemplo)    |
+| **Service Worker**         | `public/sw.js`, `components/pwa/service-worker-updates.tsx`                    | `/_next/static` cache-first, navegaciones network-first con página offline traducida        | Eventos `fetch`; versión en la URL del script                                                                                                                   | Solo en producción; sin él la app funciona igual, sin modo offline                                |
+| **Pool con SAB + Atomics** | `src/workers/score-pool.worker.ts`, `features/distribution/parallel-engine.ts` | Laboratorio: N workers puntúan en paralelo sobre un `Float64Array` compartido               | `Int32Array` de control: progreso, cancelar, terminados (`Atomics.add/load/notify`); la página espera con `Atomics.waitAsync` o por frame, nunca `Atomics.wait` | Sin aislamiento de origen cruzado no hay `SharedArrayBuffer`: el modo se deshabilita y se explica |
+
+El hilo principal nunca bloquea: lo pesado va a un worker, y cada tarea sabe cancelarse o
+descartarse si llega tarde.
 
 ## Autenticación
 
@@ -174,11 +204,64 @@ pestañas.
   prueba verifica que ambos archivos tengan exactamente las mismas claves y ningún valor vacío.
 - Next 16 renombró `middleware.ts` a **`proxy.ts`**; next-intl se conecta ahí con
   `createMiddleware(routing)` (`src/proxy.ts`).
+- `<html lang>` sigue al idioma de la URL; título y `description` salen de los mensajes de cada
+  idioma, y todos los títulos terminan en "· AlimentaIQ" (lo verifica una prueba).
+- Fechas de calendario (`expiryDate`) con `timeZone: 'UTC'`; fechas con hora en `America/Bogota`.
+  Los códigos de error y razones del servidor se traducen, nunca se muestran tal cual.
 
 ## Tema
 
 Claro por defecto. El usuario puede cambiar a oscuro con el botón del header y la preferencia
 se guarda; la preferencia del sistema operativo se ignora a propósito (`enableSystem: false`).
+Los colores salen de tokens (`src/app/globals.css`: `brand`, `expiry`, `critical`, `sand`,
+`forest`, `berry`, `lagoon` y los semánticos `background`, `surface`, `muted`…) y cada componente
+define su variante `dark:`. Un estado nunca se comunica solo con color: chips y barras llevan
+texto, y el movimiento respeta `prefers-reduced-motion`.
+
+## Accesibilidad, SEO y responsive
+
+Lighthouse sobre el build de producción local (puntajes antes → después de la fase 6):
+
+| Página                       | Modo       | Rendimiento | Accesibilidad | Buenas prácticas | SEO       |
+| ---------------------------- | ---------- | ----------- | ------------- | ---------------- | --------- |
+| Landing `/es`                | Móvil      | 84 → 81     | 96 → 100      | 96 → 100         | 100 → 100 |
+| Landing `/es`                | Escritorio | 100 → 95    | 96 → 100      | 96 → 100         | 100 → 100 |
+| Login `/es/login`            | Móvil      | 98 → 97     | 100 → 100     | 96 → 100         | 100 → 100 |
+| Login `/es/login`            | Escritorio | 100 → 100   | 100 → 100     | 96 → 100         | 100 → 100 |
+| Impacto `/es/impact`         | Móvil      | 88 → 89     | 100 → 100     | 96 → 100         | 100 → 100 |
+| Impacto `/es/impact`         | Escritorio | 100 → 100   | 100 → 100     | 96 → 100         | 100 → 100 |
+| Productos `/es/app/products` | Móvil      | 69 → 80     | 100 → 100     | 100 → 100        | 60 → 60   |
+| Productos `/es/app/products` | Escritorio | n/d → 92    | 100 → 100     | 100 → 100        | 60 → 60   |
+
+- Corregido: contraste de los números decorativos y del subtítulo de la landing; el 401 en consola
+  de los visitantes anónimos (ya no se llama a `/auth/refresh` si este navegador nunca inició
+  sesión: una marca booleana `aiq.signedIn` en `localStorage`, nunca un token); `robots.txt`
+  (excluye `/app` y `/system-check`); títulos con la marca en todas las páginas. "n/d": la corrida
+  inicial de escritorio de productos no terminó (timeout de Lighthouse).
+- `/app/*` es privado y lleva `robots: noindex` a propósito: su SEO 60 es el aviso de Lighthouse
+  "bloqueada para indexación", que es lo correcto.
+- Rendimiento varía entre corridas (CPU local compartida con el backend); accesibilidad, buenas
+  prácticas y SEO son deterministas.
+- Revisión responsive de las 22 pantallas en 360, 390, 768 y 1280 px (88 combinaciones): sin
+  scroll horizontal, sin elementos fuera de pantalla y sin texto recortado. Se corrigieron el
+  header con sesión a 360 px, las listas de pedidos, productos y clientes (los ítems de un grid
+  sin columnas definidas crecían con los nombres largos) y la tabla de rutas de `/app/metrics` a
+  768 px.
+
+## Cabeceras de seguridad
+
+Además de COOP/COEP (abajo), `next.config.ts` envía `Permissions-Policy: camera=(),
+microphone=(), geolocation=()`, `X-Frame-Options: DENY` y `Content-Security-Policy:
+frame-ancestors 'none'` (lo mismo para navegadores actuales).
+
+**Por qué no hay una CSP de scripts con nonces**: Next inyecta scripts inline para arrancar la
+app. Una `script-src` con nonce obliga a generar el nonce en cada petición desde `proxy.ts`, lo que
+vuelve **dinámicas** todas las páginas (se pierden SSG e ISR, y con ellos la velocidad de la
+landing, `/impact` y los shells cacheados por el Service Worker); y un nonce que falte en un solo
+script deja la página en blanco en producción. Sin nonces, una CSP útil necesitaría
+`'unsafe-inline'`, que anula su propósito. El riesgo se cubre de otra forma: React escapa todo,
+el texto de la IA se muestra como texto plano (nunca HTML ni Markdown), no hay `dangerouslySetInnerHTML`
+en todo el código, los tokens no viven en `localStorage` y la CSP limita el framing.
 
 ## Inventario y productos
 
@@ -444,6 +527,11 @@ NEXT_PUBLIC_API_URL=http://localhost:4000 npm run dev
 | `npm run format`       | Formatea con Prettier             |
 | `npm run format:check` | Verifica el formato (lo usa CI)   |
 
+Pruebas (`npm test`, Vitest, sin navegador ni backend): protocolo del SharedWorker y su
+alternativa, estrategias del Service Worker, partición y paridad del pool, cancelación, motor de
+distribución con los fixtures de paridad del backend, autenticación entre pestañas, Web Vitals,
+reportes, ISR de `/impact`, cabeceras de seguridad y paridad i18n.
+
 ## Puertos
 
 | Servicio             | Puerto local |
@@ -453,6 +541,8 @@ NEXT_PUBLIC_API_URL=http://localhost:4000 npm run dev
 | `alimentos-ai`       | 4100         |
 
 ## Despliegue en Vercel
+
+Guía completa (variables, rollback, ISR, Service Worker, checklist): [docs/deployment.md](docs/deployment.md).
 
 - Framework: Next.js (detectado automáticamente). Install: `npm ci` · Build: `npm run build`.
 - Node: 22 (`engines` en `package.json`).
