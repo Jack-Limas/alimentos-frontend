@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icons';
 import { serviceWorkerUrl, shouldRegister, watchForUpdates } from '@/features/pwa/service-worker';
@@ -9,18 +9,20 @@ import { serviceWorkerUrl, shouldRegister, watchForUpdates } from '@/features/pw
 /**
  * Registers the service worker in production and shows "New version
  * available · Reload" when a new one is waiting. Reloading asks the waiting
- * worker to take over, and the page reloads once it controls it.
+ * worker to take over, and the page reloads once it controls it. The first
+ * install also changes the controller (clients.claim): that one must not
+ * reload the page, so only a reload the user asked for does.
  */
 export function ServiceWorkerUpdates() {
   const t = useTranslations('Pwa');
   const [waiting, setWaiting] = useState<ServiceWorkerRegistration | null>(null);
+  const userAskedToReload = useRef(false);
 
   useEffect(() => {
     if (!shouldRegister(process.env.NODE_ENV, window)) return;
-    let reloading = false;
     const onControllerChange = () => {
-      if (reloading) return;
-      reloading = true;
+      if (!userAskedToReload.current) return;
+      userAskedToReload.current = false;
       window.location.reload();
     };
     navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
@@ -49,7 +51,10 @@ export function ServiceWorkerUpdates() {
       <Button
         variant="citrus"
         size="sm"
-        onClick={() => waiting.waiting?.postMessage({ type: 'SKIP_WAITING' })}
+        onClick={() => {
+          userAskedToReload.current = true;
+          waiting.waiting?.postMessage({ type: 'SKIP_WAITING' });
+        }}
       >
         {t('reload')}
       </Button>
