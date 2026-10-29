@@ -10,6 +10,8 @@ export interface AuthContextValue {
   logout: AuthClient['logout'];
   /** apiFetch with Bearer and transparent refresh, for TanStack Query functions. */
   authFetch: AuthClient['authFetch'];
+  /** The same, returning the raw Response (file downloads). */
+  authRequest: AuthClient['authRequest'];
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

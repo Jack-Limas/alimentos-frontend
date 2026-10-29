@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login: client.login,
       logout: client.logout,
       authFetch: client.authFetch,
+      authRequest: client.authRequest,
     }),
     [session.status, session.user, client],
   );

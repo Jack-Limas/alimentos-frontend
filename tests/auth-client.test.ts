@@ -113,6 +113,17 @@ describe('authFetch', () => {
     await expect(client.authFetch('/forbidden')).rejects.toMatchObject({ status: 403 });
     expect(backend.count('/auth/refresh')).toBe(0);
   });
+  it('authRequest returns the raw response and refreshes like authFetch', async () => {
+    const { client } = await loggedInTabWithExpiredToken();
+
+    const response = await client.authRequest('/products');
+
+    expect(response).toBeInstanceOf(Response);
+    expect(response.ok).toBe(true);
+    expect(backend.count('/products')).toBe(2);
+    expect(backend.count('/auth/refresh')).toBe(1);
+    await expect(client.authRequest('/forbidden')).rejects.toMatchObject({ status: 403 });
+  });
 });
 
 describe('bootstrap', () => {

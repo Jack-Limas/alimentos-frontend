@@ -1,4 +1,4 @@
-import { ApiError, apiFetch, type ApiRequestOptions } from '@/lib/api';
+import { ApiError, apiFetch, apiRequest, type ApiRequestOptions } from '@/lib/api';
 import { AUTH_PATHS, postLogin, postLogout, postRefresh, withBearer } from './api';
 import type { AuthChannel, AuthMessage } from './auth-channel';
 import type { LockRunner } from './refresh-lock';
@@ -75,24 +75,38 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
   }
 
   /**
-   * apiFetch with `Authorization: Bearer`. On a renewable 401 it refreshes once
-   * and retries the original request once; a second 401 ends the session.
+   * Sends a request with `Authorization: Bearer`. On a renewable 401 it
+   * refreshes once and retries the original request once; a second 401 ends
+   * the session.
    */
-  async function authFetch<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+  async function withSession<T>(
+    send: (options: ApiRequestOptions) => Promise<T>,
+    options: ApiRequestOptions,
+  ): Promise<T> {
     const usedToken = store.getState().accessToken;
     try {
-      return await apiFetch<T>(path, withBearer(options, usedToken));
+      return await send(withBearer(options, usedToken));
     } catch (error) {
       if (!isRenewable(error)) throw error;
       const renewed = await refreshAccessToken(usedToken);
       if (renewed === null) throw error;
       try {
-        return await apiFetch<T>(path, withBearer(options, renewed));
+        return await send(withBearer(options, renewed));
       } catch (retryError) {
         if (isRenewable(retryError)) store.clear();
         throw retryError;
       }
     }
+  }
+
+  /** apiFetch (JSON) with the session. */
+  function authFetch<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+    return withSession((sent) => apiFetch<T>(path, sent), options);
+  }
+
+  /** apiRequest (raw response, e.g. a file download) with the session. */
+  function authRequest(path: string, options: ApiRequestOptions = {}): Promise<Response> {
+    return withSession((sent) => apiRequest(path, sent), options);
   }
 
   async function restoreSession(): Promise<void> {
@@ -164,7 +178,7 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
     return channel.subscribe(handleMessage);
   }
 
-  return { store, authFetch, refreshAccessToken, bootstrap, login, logout, connect };
+  return { store, authFetch, authRequest, refreshAccessToken, bootstrap, login, logout, connect };
 }
 
 export type AuthClient = ReturnType<typeof createAuthClient>;
