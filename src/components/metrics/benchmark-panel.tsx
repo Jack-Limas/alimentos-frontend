@@ -5,11 +5,12 @@ import { useId, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import {
-  BENCHMARK_DEFAULT_MAX,
-  BENCHMARK_MIN,
   benchmarkErrorKey,
   benchmarkMaxFrom,
+  clampSize,
+  effectiveLimits,
   useBenchmark,
+  useBenchmarkLimits,
   type BenchmarkErrorKey,
   type BenchmarkReport,
 } from '@/features/metrics/api';
@@ -26,9 +27,14 @@ export function BenchmarkPanel() {
   const format = useFormatter();
   const id = useId();
   const benchmark = useBenchmark();
-  // The backend's maximum: 30,000 unless a 400 says otherwise.
-  const [max, setMax] = useState(BENCHMARK_DEFAULT_MAX);
-  const [size, setSize] = useState(10_000);
+  // GET /benchmarks/limits (BENCHMARK_MAX_SIZE on the server); a 400 may still lower it.
+  const serverLimits = useBenchmarkLimits();
+  const [maxFromError, setMaxFromError] = useState<number | null>(null);
+  const limits = effectiveLimits(serverLimits.data, maxFromError);
+  const { min, max } = limits;
+  const [wanted, setWanted] = useState(10_000);
+  // Always inside the current range, e.g. 8,000 on Render's free plan.
+  const size = clampSize(wanted, limits);
   const [runs, setRuns] = useState<BenchmarkReport[]>([]);
   const [error, setError] = useState<BenchmarkErrorKey | null>(null);
 
@@ -43,10 +49,7 @@ export function BenchmarkPanel() {
       },
       onError: (caught) => {
         const backendMax = benchmarkMaxFrom(caught);
-        if (backendMax !== null) {
-          setMax(backendMax);
-          setSize((current) => Math.min(current, backendMax));
-        }
+        if (backendMax !== null) setMaxFromError(backendMax);
         setError(benchmarkErrorKey(caught));
       },
     });
@@ -77,19 +80,19 @@ export function BenchmarkPanel() {
           <input
             id={`${id}-size`}
             type="range"
-            min={BENCHMARK_MIN}
+            min={min}
             max={max}
             step={STEP}
             value={size}
             disabled={benchmark.isPending}
             onChange={(event) => {
-              setSize(Number(event.target.value));
+              setWanted(Number(event.target.value));
             }}
             aria-describedby={`${id}-hint`}
             className="mt-2 w-full accent-berry-600"
           />
           <p id={`${id}-hint`} className="mt-1 text-xs text-muted">
-            {t('sizeHint', { min: format.number(BENCHMARK_MIN), max: format.number(max) })}
+            {t('sizeHint', { min: format.number(min), max: format.number(max) })}
           </p>
         </div>
         <Button

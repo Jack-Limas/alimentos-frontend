@@ -51,14 +51,39 @@ export interface BenchmarkReport {
   result: { size: number; products: number; lots: number; checksum: number };
 }
 
-/** The backend's limits (1,000 to 30,000 synthetic orders); a 400 may lower the maximum. */
+/** Used until GET /benchmarks/limits answers (and if it fails). */
 export const BENCHMARK_MIN = 1_000;
 export const BENCHMARK_DEFAULT_MAX = 30_000;
+
+/** GET /benchmarks/limits: the maximum follows BENCHMARK_MAX_SIZE on the server. */
+export interface BenchmarkLimits {
+  minSize: number;
+  maxSize: number;
+}
 
 export const metricsKeys = {
   api: ['metrics', 'api'] as const,
   webVitals: ['metrics', 'web-vitals'] as const,
+  benchmarkLimits: ['benchmarks', 'limits'] as const,
 };
+
+/**
+ * The size range to offer: the server's limits, lowered further if a 400
+ * named a smaller maximum (a server reconfigured since the limits loaded).
+ */
+export function effectiveLimits(
+  server: BenchmarkLimits | undefined,
+  maxFromError: number | null,
+): { min: number; max: number } {
+  const min = server?.minSize ?? BENCHMARK_MIN;
+  const max = Math.min(server?.maxSize ?? BENCHMARK_DEFAULT_MAX, maxFromError ?? Infinity);
+  return { min, max: Math.max(min, max) };
+}
+
+/** A size inside the range, on the slider's 1,000 steps. */
+export function clampSize(size: number, { min, max }: { min: number; max: number }): number {
+  return Math.min(max, Math.max(min, size));
+}
 
 /** Routes by p95, slowest first; routes without samples go last. */
 export function sortByP95(routes: readonly RouteMetrics[]): RouteMetrics[] {
@@ -81,6 +106,17 @@ export function useWebVitalsReport() {
     queryFn: async () =>
       (await authFetch<DataResponse<WebVitalsReport>>('/metrics/web-vitals')).data,
     refetchInterval: 30_000,
+  });
+}
+
+export function useBenchmarkLimits() {
+  const { authFetch } = useAuth();
+  return useQuery({
+    queryKey: metricsKeys.benchmarkLimits,
+    queryFn: async () =>
+      (await authFetch<DataResponse<BenchmarkLimits>>('/benchmarks/limits')).data,
+    // Configuration: it only changes with a redeploy of the backend.
+    staleTime: Infinity,
   });
 }
 

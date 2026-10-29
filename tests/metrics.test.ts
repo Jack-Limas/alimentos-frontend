@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BENCHMARK_DEFAULT_MAX,
   benchmarkErrorKey,
+  clampSize,
+  effectiveLimits,
   benchmarkMaxFrom,
   sortByP95,
   type RouteMetrics,
@@ -23,6 +26,25 @@ describe('API metrics', () => {
   it('sorts routes by p95, slowest first, empty ones last', () => {
     const sorted = sortByP95([route('a', 12), route('b', null), route('c', 80), route('d', 30)]);
     expect(sorted.map((r) => r.route)).toEqual(['c', 'd', 'a', 'b']);
+  });
+});
+
+describe('benchmark limits', () => {
+  it('follows GET /benchmarks/limits and a lower maximum named by a 400', () => {
+    expect(effectiveLimits(undefined, null)).toEqual({ min: 1_000, max: BENCHMARK_DEFAULT_MAX });
+    expect(effectiveLimits({ minSize: 1_000, maxSize: 8_000 }, null)).toEqual({
+      min: 1_000,
+      max: 8_000,
+    });
+    expect(effectiveLimits({ minSize: 1_000, maxSize: 8_000 }, 5_000).max).toBe(5_000);
+    expect(effectiveLimits({ minSize: 1_000, maxSize: 8_000 }, 20_000).max).toBe(8_000);
+  });
+
+  it('keeps the chosen size inside the range', () => {
+    const limits = { min: 1_000, max: 8_000 };
+    expect(clampSize(10_000, limits)).toBe(8_000);
+    expect(clampSize(500, limits)).toBe(1_000);
+    expect(clampSize(4_000, limits)).toBe(4_000);
   });
 });
 
