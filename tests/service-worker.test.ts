@@ -90,6 +90,11 @@ describe('service worker caching strategies (public/sw.js)', () => {
     expect(sw.strategyFor(request('/icon.svg'))).toBe('bypass');
   });
 
+  it('never caches /api/wake (same origin, not under the API backend)', () => {
+    expect(sw.strategyFor(request('/api/wake'))).toBe('bypass');
+    expect(sw.strategyFor(request('/api/wake', { mode: 'cors' }))).toBe('bypass');
+  });
+
   it('falls back to the offline page in the language of the URL', () => {
     expect(sw.offlinePageFor('/en/app/orders')).toBe('/en/offline');
     expect(sw.offlinePageFor('/en')).toBe('/en/offline');
