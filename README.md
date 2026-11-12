@@ -14,6 +14,54 @@ repos.
 - Despliegue, rollback, ISR, Service Worker y checklist de la sustentación:
   [docs/deployment.md](docs/deployment.md).
 
+## Cómo evaluar este proyecto
+
+**No hay registro público, por diseño.** AlimentaIQ es la herramienta interna de un centro de
+distribución: las cuentas las crea la organización, como en un ERP. Un registro abierto dejaría
+que cualquiera viera inventario, clientes y pedidos, y los roles no tendrían sentido.
+
+Para explorarlo, el login muestra la tarjeta **"¿Vienes a evaluar el proyecto?"** con dos botones
+que entran con las **cuentas demo** (sus credenciales son públicas a propósito y también se ven en
+la tarjeta, con botón de copiar). Los botones usan el mismo flujo de login que el formulario. Si
+las variables `NEXT_PUBLIC_DEMO_*` no están definidas, la tarjeta no aparece. Las cuentas reales
+nunca se muestran.
+
+| Cuenta             | Rol        | Puede                                                                                                                                  | No puede                                                             |
+| ------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Administrador demo | `ADMIN`    | Todo: inventario y lotes, clientes, crear pedidos, distribución (simular, generar, confirmar, con IA), reportes, métricas, laboratorio | —                                                                    |
+| Operador demo      | `OPERATOR` | Misiones de hoy, mover pedidos por sus estados, distribución, alertas, inventario en lectura                                           | Crear productos o pedidos, clientes, movimientos, reportes, métricas |
+
+Los datos se **rejuvenecen solos cada día** (backend, `DEMO_DAILY_REFRESH`): siempre hay lotes por
+vencer y pedidos urgentes, sin importar el día en que se evalúe. Nada se borra.
+
+## Servidores dormidos en Render
+
+El backend y la IA están en el plan gratis de Render, que **duerme cada servicio tras ~15 minutos
+sin tráfico**; despertarlo tarda hasta ~1 minuto. **No hay ping 24/7** a propósito: el plan da 750
+horas de instancia al mes compartidas entre los servicios gratis; mantener el backend despierto todo
+el día usa ~720 h y dejaría sin horas a la IA (Render suspende los servicios hasta el mes siguiente).
+
+En su lugar, **la app los despierta al visitarla**:
+
+1. Al abrir cualquier página, `<WakeServices/>` llama a `GET /api/wake` **una vez por pestaña** (una
+   marca en `sessionStorage`; recargar no la repite, una pestaña nueva sí), sin esperar ni mostrar
+   nada.
+2. `/api/wake` (route handler de Next en Vercel) responde **202 de inmediato** y, con `after()`,
+   hace `GET` en segundo plano a cada URL de `WAKE_URLS` (variable de servidor) con un timeout de
+   55 s: el `/health` del backend, su `/api/v1/health/ready` (que despierta también Neon) y el
+   `/health` de la IA. La respuesta nunca dice nada de los servicios.
+3. Mientras el visitante lee la landing, los servicios arrancan. Si aun así una petición llega con
+   el backend dormido (error de red, timeout o 502/503/504), el login y las pantallas muestran
+   **"El servidor está despertando, intenta de nuevo en unos segundos"** en vez de un error
+   genérico.
+
+`/api/wake` no pasa por el proxy de idiomas (`src/proxy.ts` excluye `/api`), el Service Worker no
+la cachea (nunca cachea `/api`) y la página sigue con `crossOriginIsolated = true`.
+
+`/impact` (ISR) se protege igual: si al regenerarla el backend no responde, la regeneración falla
+a propósito y Next **sigue sirviendo la última versión buena**; "Datos no disponibles" solo aparece
+si nunca hubo una (por ejemplo, un build con el backend dormido).
+
 ## Arquitectura
 
 ```mermaid
@@ -488,10 +536,13 @@ La página `/es/system-check` muestra `crossOriginIsolated`, `typeof SharedArray
 
 Plantilla en [.env.example](.env.example). Nunca se commitean valores reales.
 
-| Variable              | Obligatoria | Uso                                                                                 |
-| --------------------- | ----------- | ----------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_API_URL` | Sí          | Origen del backend, sin barra final y sin `/api/v1`                                 |
-| `API_URL_INTERNAL`    | No          | Solo servidor: origen del backend para el ISR de `/impact` (si hay una red interna) |
+| Variable                                        | Obligatoria | Uso                                                                                 |
+| ----------------------------------------------- | ----------- | ----------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_API_URL`                           | Sí          | Origen del backend, sin barra final y sin `/api/v1`                                 |
+| `API_URL_INTERNAL`                              | No          | Solo servidor: origen del backend para el ISR de `/impact` (si hay una red interna) |
+| `WAKE_URLS`                                     | No          | Solo servidor: URLs completas (coma) que `/api/wake` despierta en Render            |
+| `NEXT_PUBLIC_DEMO_ADMIN_EMAIL` / `_PASSWORD`    | No          | Cuenta demo de administrador para la tarjeta del login (pública)                    |
+| `NEXT_PUBLIC_DEMO_OPERATOR_EMAIL` / `_PASSWORD` | No          | Cuenta demo de operador (pública)                                                   |
 
 El cliente agrega `/api/v1` y envía `credentials: "include"`. El backend debe incluir el origen
 del frontend en su `CORS_ORIGINS`.
