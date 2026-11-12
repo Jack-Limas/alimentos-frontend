@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { Footer, Header } from '@/components/layout';
+import { WakeServices } from '@/components/pwa/wake-services';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/providers';
 import { bodyFont, headingFont } from '../fonts';
@@ -53,6 +54,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
               </main>
               <Footer />
             </div>
+            {/* Wakes the Render services once per tab, in the background. */}
+            <WakeServices />
           </Providers>
         </NextIntlClientProvider>
       </body>
