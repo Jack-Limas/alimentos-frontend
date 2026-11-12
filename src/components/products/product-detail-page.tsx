@@ -15,7 +15,7 @@ import { hasRole } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { useProduct } from '@/features/products/api';
 import { Link } from '@/i18n/navigation';
-import { ApiError } from '@/lib/api';
+import { ApiError, loadErrorKey } from '@/lib/api';
 import { LotList } from './lot-list';
 import { ProductFormModal } from './product-form-modal';
 import { ProductMetrics } from './product-metrics';
@@ -66,7 +66,7 @@ export function ProductDetailPage({ id }: { id: string }) {
         {back}
         <EmptyState
           illustration="search"
-          title={notFound ? t('notFound.title') : common('loadError')}
+          title={notFound ? t('notFound.title') : common(loadErrorKey(product.error))}
           description={notFound ? t('notFound.description') : undefined}
           action={
             notFound ? undefined : (

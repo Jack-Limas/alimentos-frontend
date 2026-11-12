@@ -10,7 +10,7 @@ import { useAuth } from '@/features/auth/use-auth';
 import { useOrder } from '@/features/orders/api';
 import type { OrderDetail } from '@/features/orders/types';
 import { Link } from '@/i18n/navigation';
-import { ApiError } from '@/lib/api';
+import { ApiError, loadErrorKey } from '@/lib/api';
 import { calendarDateToUtc } from '@/lib/dates';
 import { DueCountdown, OrderStatusChip, PriorityBadge } from './order-badges';
 import { OrderActions } from './order-actions';
@@ -149,7 +149,7 @@ export function OrderDetailPage({ id }: { id: string }) {
         {back}
         <EmptyState
           illustration="search"
-          title={notFound ? t('notFound.title') : common('loadError')}
+          title={notFound ? t('notFound.title') : common(loadErrorKey(order.error))}
           description={notFound ? t('notFound.description') : undefined}
           action={
             notFound ? undefined : (

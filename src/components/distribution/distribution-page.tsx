@@ -13,6 +13,7 @@ import { CompareStrategies } from './compare-strategies';
 import { GenerateProposal } from './generate-proposal';
 import { ProposalHistory } from './proposal-history';
 import { Simulator } from './simulator';
+import { loadErrorKey } from '@/lib/api';
 
 export function DistributionPage() {
   const t = useTranslations('Distribution');
@@ -55,7 +56,7 @@ export function DistributionPage() {
       ) : snapshot.isError ? (
         <EmptyState
           illustration="search"
-          title={common('loadError')}
+          title={common(loadErrorKey(snapshot.error))}
           action={
             <Button variant="secondary" onClick={() => void snapshot.refetch()}>
               {common('retry')}

@@ -10,6 +10,7 @@ import { PROPOSALS_PAGE_SIZE, useProposals } from '@/features/distribution/api';
 import type { ProposalStatus } from '@/features/distribution/types';
 import { Link } from '@/i18n/navigation';
 import { BUSINESS_TIME_ZONE } from '@/lib/dates';
+import { loadErrorKey } from '@/lib/api';
 
 export const proposalStatusTone: Record<ProposalStatus, 'expiry' | 'brand' | 'sand'> = {
   DRAFT: 'expiry',
@@ -35,7 +36,7 @@ export function ProposalHistory() {
       {proposals.isPending ? (
         <Skeleton className="mt-4 h-40 rounded-2xl" />
       ) : proposals.isError ? (
-        <p className="mt-4 text-sm text-muted">{common('loadError')}</p>
+        <p className="mt-4 text-sm text-muted">{common(loadErrorKey(proposals.error))}</p>
       ) : proposals.data.data.length === 0 ? (
         <p className="mt-4 text-sm text-muted">{t('history.empty')}</p>
       ) : (

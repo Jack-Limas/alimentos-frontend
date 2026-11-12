@@ -18,6 +18,7 @@ import { MOVEMENT_TYPES, type Movement, type MovementType } from '@/features/inv
 import { useMovementFilters } from '@/features/inventory/use-movement-filters';
 import { useProductIndex, type ProductIndexEntry } from '@/features/products/api';
 import { Link } from '@/i18n/navigation';
+import { loadErrorKey } from '@/lib/api';
 
 /** Exits are shown with a minus sign; the API always sends a positive quantity. */
 const OUTGOING: ReadonlySet<MovementType> = new Set(['EXIT_DISPATCH', 'EXIT_WASTE', 'ADJUSTMENT']);
@@ -145,7 +146,7 @@ export function MovementsPage() {
       ) : movements.isError ? (
         <EmptyState
           illustration="ledger"
-          title={common('loadError')}
+          title={common(loadErrorKey(movements.error))}
           action={
             <Button variant="secondary" onClick={() => void movements.refetch()}>
               {common('retry')}

@@ -11,6 +11,7 @@ import {
   type VitalName,
 } from '@/features/metrics/vitals';
 import { MetricsSection, RatingChip } from './metrics-section';
+import { loadErrorKey } from '@/lib/api';
 
 /** GET /metrics/web-vitals: p75 per metric and per page, rated with Google's thresholds. */
 export function WebVitalsPanel() {
@@ -29,7 +30,7 @@ export function WebVitalsPanel() {
       {report.isPending ? (
         <Skeleton className="h-40 rounded-2xl" />
       ) : report.isError ? (
-        <p className="text-sm text-muted">{common('loadError')}</p>
+        <p className="text-sm text-muted">{common(loadErrorKey(report.error))}</p>
       ) : (
         <div className="space-y-5">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">

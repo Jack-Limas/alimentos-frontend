@@ -20,6 +20,7 @@ import { mapStatusError } from '@/features/orders/status-errors';
 import type { Order, OrderStatus } from '@/features/orders/types';
 import { businessToday } from '@/lib/dates';
 import { MissionCard } from './mission-card';
+import { loadErrorKey } from '@/lib/api';
 
 const QUERY = `status=${MISSION_STATUSES.join(',')}&pageSize=100`;
 const COUNTER_EVENT = 'aiq:missions';
@@ -133,7 +134,7 @@ export function MissionsPage() {
       ) : missions.isError ? (
         <EmptyState
           illustration="search"
-          title={common('loadError')}
+          title={common(loadErrorKey(missions.error))}
           action={
             <Button variant="secondary" onClick={() => void missions.refetch()}>
               {common('retry')}

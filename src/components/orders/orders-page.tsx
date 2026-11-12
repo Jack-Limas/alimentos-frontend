@@ -25,6 +25,7 @@ import { ORDER_PRIORITIES, ORDER_STATUSES, type OrderPriority } from '@/features
 import { useOrderFilters } from '@/features/orders/use-order-filters';
 import { Link } from '@/i18n/navigation';
 import { OrderCard } from './order-card';
+import { loadErrorKey } from '@/lib/api';
 
 function Filters({
   filters,
@@ -196,7 +197,7 @@ export function OrdersPage() {
       ) : orders.isError ? (
         <EmptyState
           illustration="search"
-          title={common('loadError')}
+          title={common(loadErrorKey(orders.error))}
           action={
             <Button variant="secondary" onClick={() => void orders.refetch()}>
               {common('retry')}

@@ -22,6 +22,7 @@ import { BUSINESS_TIME_ZONE } from '@/lib/dates';
 import { AiExplanationCard } from './ai-explanation-card';
 import { proposalStatusTone } from './proposal-history';
 import { ProposalOrderCard } from './proposal-order-card';
+import { loadErrorKey } from '@/lib/api';
 
 const KPI_KEYS = [
   'ordersFull',
@@ -258,7 +259,7 @@ export function ProposalDetailPage({ id }: { id: string }) {
     return (
       <EmptyState
         illustration="search"
-        title={notFound ? t('errors.notFound') : common('loadError')}
+        title={notFound ? t('errors.notFound') : common(loadErrorKey(proposal.error))}
         action={
           <Link
             href="/app/distribution"

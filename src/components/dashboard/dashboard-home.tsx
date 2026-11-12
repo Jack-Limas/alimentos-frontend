@@ -17,6 +17,7 @@ import { serializeProductFilters, type ProductFilters } from '@/features/product
 import { Link, useRouter } from '@/i18n/navigation';
 import { CriticalAlertsCard, DueOrdersCard } from './attention-cards';
 import { KpiCard, type KpiTone } from './kpi-card';
+import { loadErrorKey } from '@/lib/api';
 
 interface KpiSpec {
   key: keyof InventorySummary;
@@ -95,7 +96,7 @@ export function DashboardHome() {
           </div>
         ) : summary.isError ? (
           <div className="flex flex-wrap items-center gap-3 rounded-card border border-critical-200 bg-critical-50 p-5 text-critical-800 dark:border-critical-800 dark:bg-critical-900/30 dark:text-critical-200">
-            <p className="flex-1 text-sm font-semibold">{common('loadError')}</p>
+            <p className="flex-1 text-sm font-semibold">{common(loadErrorKey(summary.error))}</p>
             <Button variant="secondary" size="sm" onClick={() => void summary.refetch()}>
               {common('retry')}
             </Button>

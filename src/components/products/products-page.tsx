@@ -16,6 +16,7 @@ import { ProductCards } from './product-cards';
 import { ProductFiltersBar } from './product-filters-bar';
 import { ProductFormModal } from './product-form-modal';
 import { ProductTable } from './product-table';
+import { loadErrorKey } from '@/lib/api';
 
 export function ProductsPage() {
   const t = useTranslations('Products');
@@ -57,7 +58,7 @@ export function ProductsPage() {
       ) : products.isError ? (
         <EmptyState
           illustration="search"
-          title={common('loadError')}
+          title={common(loadErrorKey(products.error))}
           action={
             <Button variant="secondary" onClick={() => void products.refetch()}>
               {common('retry')}

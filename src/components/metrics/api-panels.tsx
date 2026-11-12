@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { sortByP95, useApiMetrics } from '@/features/metrics/api';
 import { MetricsSection, Stat } from './metrics-section';
+import { loadErrorKey } from '@/lib/api';
 
 const MB = 1024 * 1024;
 
@@ -32,7 +33,7 @@ export function ApiPanels() {
   if (metrics.isError) {
     return (
       <div className="rounded-card bg-surface p-6 text-center shadow-card ring-1 ring-border">
-        <p className="text-sm text-muted">{common('loadError')}</p>
+        <p className="text-sm text-muted">{common(loadErrorKey(metrics.error))}</p>
         <Button variant="secondary" className="mt-3" onClick={() => void metrics.refetch()}>
           {common('retry')}
         </Button>

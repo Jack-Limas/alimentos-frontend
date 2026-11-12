@@ -13,6 +13,7 @@ import { initialsOf } from '@/components/layout/initials';
 import { useCustomers, useUpdateCustomer } from '@/features/customers/api';
 import { CUSTOMER_TYPES, type Customer, type CustomerType } from '@/features/customers/types';
 import { CustomerFormModal } from './customer-form-modal';
+import { loadErrorKey } from '@/lib/api';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -208,7 +209,7 @@ export function CustomersPage() {
       ) : customers.isError ? (
         <EmptyState
           illustration="search"
-          title={common('loadError')}
+          title={common(loadErrorKey(customers.error))}
           action={
             <Button variant="secondary" onClick={() => void customers.refetch()}>
               {common('retry')}
