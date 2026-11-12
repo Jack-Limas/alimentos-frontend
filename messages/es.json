@@ -113,7 +113,7 @@
       "invalidCredentials": "Correo o contraseña incorrectos.",
       "tooManyAttempts": "Demasiados intentos fallidos. Podrás intentarlo de nuevo en <countdown>{time}</countdown>.",
       "invalidInput": "Revisa los datos ingresados e inténtalo de nuevo.",
-      "network": "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+      "waking": "El servidor está despertando, intenta de nuevo en unos segundos.",
       "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo en unos minutos."
     },
     "panel": {
@@ -124,6 +124,22 @@
         "fefo": "Lotes ordenados por vencimiento, sin hojas de cálculo.",
         "plan": "Un plan de distribución que puedes simular y explicar.",
         "alerts": "Alertas antes de que el problema llegue a la mesa."
+      }
+    },
+    "demo": {
+      "title": "¿Vienes a evaluar el proyecto?",
+      "note": "Este sistema no tiene registro público: es una herramienta interna. Usa estas cuentas para explorarlo.",
+      "asAdmin": "Entrar como administrador demo",
+      "asOperator": "Entrar como operador demo",
+      "email": "Correo",
+      "password": "Contraseña",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "copyEmail": "Copiar el correo del {role}",
+      "copyPassword": "Copiar la contraseña del {role}",
+      "roles": {
+        "admin": "administrador demo",
+        "operator": "operador demo"
       }
     }
   },
@@ -388,7 +404,8 @@
     "retry": "Reintentar",
     "loadError": "No pudimos cargar estos datos.",
     "clearFilters": "Limpiar filtros",
-    "back": "Volver"
+    "back": "Volver",
+    "waking": "El servidor está despertando, intenta de nuevo en unos segundos."
   },
   "Freshness": {
     "daysLeft": "{days, plural, =0 {Vence hoy} one {Queda # día} other {Quedan # días}}",

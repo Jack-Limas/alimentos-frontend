@@ -48,13 +48,16 @@ describe('mapLoginError', () => {
     expect(mapLoginError(apiError(400, 'VALIDATION_ERROR'))).toEqual({ key: 'invalidInput' });
   });
 
-  it('maps a network failure to network', () => {
-    expect(mapLoginError(apiError(0, NETWORK_ERROR_CODE))).toEqual({ key: 'network' });
+  it('says the server is waking up on a network failure or a 502/503/504 (Render asleep)', () => {
+    expect(mapLoginError(apiError(0, NETWORK_ERROR_CODE))).toEqual({ key: 'waking' });
+    for (const status of [502, 503, 504]) {
+      expect(mapLoginError(apiError(status, 'INTERNAL_ERROR'))).toEqual({ key: 'waking' });
+    }
+    expect(mapLoginError(apiError(500, 'INTERNAL_ERROR'))).toEqual({ key: 'unexpected' });
   });
 
   it.each([
     ['a 500', apiError(500, 'INTERNAL_ERROR')],
-    ['a 503', apiError(503, 'UNKNOWN_ERROR')],
     ['a non-API error', new Error('boom')],
     ['a thrown string', 'boom'],
   ])('maps %s to unexpected', (_label, error) => {
@@ -115,7 +118,7 @@ describe('login messages', () => {
     'invalidCredentials',
     'tooManyAttempts',
     'invalidInput',
-    'network',
+    'waking',
     'unexpected',
   ];
   const fieldKeys: LoginFieldErrorKey[] = [

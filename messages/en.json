@@ -113,7 +113,7 @@
       "invalidCredentials": "Incorrect email or password.",
       "tooManyAttempts": "Too many failed attempts. You can try again in <countdown>{time}</countdown>.",
       "invalidInput": "Check the information you entered and try again.",
-      "network": "We could not reach the server. Check your connection and try again.",
+      "waking": "The server is waking up, try again in a few seconds.",
       "unexpected": "Something went wrong. Try again in a few minutes."
     },
     "panel": {
@@ -124,6 +124,22 @@
         "fefo": "Lots ordered by expiry, no spreadsheets.",
         "plan": "A distribution plan you can simulate and explain.",
         "alerts": "Alerts before the problem reaches the table."
+      }
+    },
+    "demo": {
+      "title": "Here to evaluate the project?",
+      "note": "This system has no public sign-up: it is an internal tool. Use these accounts to explore it.",
+      "asAdmin": "Sign in as demo administrator",
+      "asOperator": "Sign in as demo operator",
+      "email": "Email",
+      "password": "Password",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyEmail": "Copy the {role} email",
+      "copyPassword": "Copy the {role} password",
+      "roles": {
+        "admin": "demo administrator",
+        "operator": "demo operator"
       }
     }
   },
@@ -388,7 +404,8 @@
     "retry": "Retry",
     "loadError": "We could not load this data.",
     "clearFilters": "Clear filters",
-    "back": "Back"
+    "back": "Back",
+    "waking": "The server is waking up, try again in a few seconds."
   },
   "Freshness": {
     "daysLeft": "{days, plural, =0 {Expires today} one {# day left} other {# days left}}",

@@ -1,8 +1,8 @@
-import { ApiError, NETWORK_ERROR_CODE } from '@/lib/api';
+import { ApiError, isWakingError } from '@/lib/api';
 
 /** i18n keys of the Login.errors namespace. */
 export type LoginErrorKey =
-  'invalidCredentials' | 'tooManyAttempts' | 'invalidInput' | 'network' | 'unexpected';
+  'invalidCredentials' | 'tooManyAttempts' | 'invalidInput' | 'waking' | 'unexpected';
 
 export interface LoginErrorView {
   key: LoginErrorKey;
@@ -16,7 +16,8 @@ export const DEFAULT_RETRY_AFTER_SECONDS = 60;
 /** Maps a login failure to what the form shows. The server message is never displayed. */
 export function mapLoginError(error: unknown): LoginErrorView {
   if (!(error instanceof ApiError)) return { key: 'unexpected' };
-  if (error.code === NETWORK_ERROR_CODE) return { key: 'network' };
+  // No answer or 502/503/504: on Render's free plan the backend is waking up.
+  if (isWakingError(error)) return { key: 'waking' };
 
   switch (error.status) {
     case 400:
