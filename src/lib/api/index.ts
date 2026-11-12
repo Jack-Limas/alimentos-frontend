@@ -7,3 +7,4 @@ export {
 } from './api-error';
 export { API_PREFIX, apiFetch, apiRequest, buildApiUrl, type ApiRequestOptions } from './client';
 export type { DataResponse, Paginated } from './types';
+export { isWakingError, loadErrorKey, WAKING_STATUSES } from './waking';
