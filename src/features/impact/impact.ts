@@ -87,3 +87,40 @@ export async function fetchImpact({
     return null;
   }
 }
+
+/** Thrown during an ISR regeneration when the backend did not answer. */
+export class ImpactUnavailableError extends Error {
+  constructor() {
+    super('The impact figures are not available right now');
+    this.name = 'ImpactUnavailableError';
+  }
+}
+
+/**
+ * True while Next regenerates the page on the production server (ISR), as
+ * opposed to `next build` or `next dev`. Next only sets NEXT_PHASE during
+ * the build, so "production and not the build phase" means a regeneration.
+ */
+export function isRegeneration(
+  env: { NODE_ENV?: string; NEXT_PHASE?: string } = {
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PHASE: process.env.NEXT_PHASE,
+  },
+): boolean {
+  return env.NODE_ENV === 'production' && env.NEXT_PHASE !== 'phase-production-build';
+}
+
+/**
+ * The figures for the page. A failure during the build (or in dev) gives
+ * null, and the page shows "data not available" so the build never breaks.
+ * A failure during an ISR regeneration throws instead: Next then keeps
+ * serving the last good version rather than replacing it with the fallback.
+ */
+export async function loadImpactForPage(
+  deps: FetchImpactDeps & { regenerating?: boolean } = {},
+): Promise<Impact | null> {
+  const { regenerating = isRegeneration(), ...fetchDeps } = deps;
+  const impact = await fetchImpact(fetchDeps);
+  if (impact === null && regenerating) throw new ImpactUnavailableError();
+  return impact;
+}

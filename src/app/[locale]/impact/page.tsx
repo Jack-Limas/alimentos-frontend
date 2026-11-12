@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ImpactView } from '@/components/impact/impact-view';
-import { fetchImpact } from '@/features/impact/impact';
+import { loadImpactForPage } from '@/features/impact/impact';
 import { routing, type Locale } from '@/i18n/routing';
 
 // ISR: built at `next build` for es and en, then regenerated in the background
@@ -25,7 +25,8 @@ export async function generateMetadata({ params }: ImpactRouteProps): Promise<Me
 export default async function ImpactRoute({ params }: ImpactRouteProps) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  // Public data only (no session). null when the backend is down: the page still builds.
-  const impact = await fetchImpact();
+  // Public data only (no session). Backend down: the build shows "data not available";
+  // a regeneration throws, so Next keeps serving the last good version.
+  const impact = await loadImpactForPage();
   return <ImpactView impact={impact} />;
 }
