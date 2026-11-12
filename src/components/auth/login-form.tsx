@@ -10,10 +10,12 @@ import {
   validateLoginForm,
   type LoginFieldErrors,
 } from '@/features/auth/login-validation';
+import { readDemoAccounts, type DemoAccount } from '@/features/auth/demo-accounts';
 import { getSafeNextPath, privateHome } from '@/features/auth/safe-next';
 import { useAuth } from '@/features/auth/use-auth';
 import { useCountdown } from '@/hooks/use-countdown';
 import { buttonClass } from '@/components/ui/button';
+import { DemoAccountsCard } from './demo-accounts-card';
 import { PasswordField } from './password-field';
 
 const inputClass =
@@ -25,6 +27,9 @@ const fieldErrorClass = 'text-sm text-critical-700 dark:text-critical-300';
  * from window.location at that moment instead of useSearchParams, so the
  * login page stays statically rendered without a Suspense boundary.
  */
+/** Public demo accounts from NEXT_PUBLIC_DEMO_* (read once: they are inlined at build time). */
+const DEMO_ACCOUNTS = readDemoAccounts();
+
 function destinationAfterLogin(locale: string): string {
   const next = new URLSearchParams(window.location.search).get('next');
   return getSafeNextPath(next) ?? privateHome(locale);
@@ -66,6 +71,11 @@ export function LoginForm() {
       return;
     }
 
+    await signIn(credentials);
+  }
+
+  /** The one sign-in path, for the form and the demo buttons alike. */
+  async function signIn(credentials: { email: string; password: string }) {
     setFormError(null);
     setSubmitting(true);
     try {
@@ -79,100 +89,113 @@ export function LoginForm() {
     }
   }
 
+  function signInAsDemo(account: DemoAccount) {
+    if (submitting || locked) return;
+    setFieldErrors({});
+    void signIn({ email: account.email, password: account.password });
+  }
+
   return (
-    <form noValidate onSubmit={(event) => void handleSubmit(event)} className="mt-8 space-y-5">
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-semibold">
-          {t('email')}
-        </label>
-        <input
-          ref={emailRef}
-          id="email"
-          name="email"
-          type="email"
-          inputMode="email"
-          autoComplete="username"
-          autoCapitalize="none"
-          spellCheck={false}
-          maxLength={EMAIL_MAX_LENGTH}
-          placeholder={t('emailPlaceholder')}
-          value={email}
-          onChange={(event) => {
-            setEmail(event.target.value);
-            if (fieldErrors.email) setFieldErrors(({ password: p }) => ({ password: p }));
-          }}
-          aria-invalid={fieldErrors.email ? true : undefined}
-          aria-describedby={fieldErrors.email ? 'email-error' : undefined}
-          className={inputClass}
-        />
-        {fieldErrors.email && (
-          <p id="email-error" className={fieldErrorClass}>
-            {t(`validation.${fieldErrors.email}`)}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="password" className="text-sm font-semibold">
-          {t('password')}
-        </label>
-        <PasswordField
-          ref={passwordRef}
-          id="password"
-          name="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(event) => {
-            setPassword(event.target.value);
-            if (fieldErrors.password) setFieldErrors(({ email: e }) => ({ email: e }));
-          }}
-          aria-invalid={fieldErrors.password ? true : undefined}
-          aria-describedby={fieldErrors.password ? 'password-error' : undefined}
-          inputClassName={inputClass}
-        />
-        {fieldErrors.password && (
-          <p id="password-error" className={fieldErrorClass}>
-            {t(`validation.${fieldErrors.password}`)}
-          </p>
-        )}
-      </div>
-
-      {visibleError && (
-        <div
-          role="alert"
-          className="rounded-xl border border-critical-200 bg-critical-50 px-4 py-3 text-sm text-critical-800 dark:border-critical-800 dark:bg-critical-900/30 dark:text-critical-200"
-        >
-          {visibleError === 'tooManyAttempts'
-            ? t.rich('errors.tooManyAttempts', {
-                time: formatCountdown(secondsLeft),
-                // Not re-announced every second by screen readers.
-                countdown: (chunks) => (
-                  <span aria-live="off" className="font-semibold tabular-nums">
-                    {chunks}
-                  </span>
-                ),
-              })
-            : t(`errors.${visibleError}`)}
-        </div>
-      )}
-
-      <button
-        type="submit"
-        disabled={submitting || locked}
-        className={`w-full ${buttonClass('primary', 'lg')}`}
-      >
-        {submitting && (
-          <span
-            aria-hidden="true"
-            className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+    <>
+      <form noValidate onSubmit={(event) => void handleSubmit(event)} className="mt-8 space-y-5">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-semibold">
+            {t('email')}
+          </label>
+          <input
+            ref={emailRef}
+            id="email"
+            name="email"
+            type="email"
+            inputMode="email"
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            maxLength={EMAIL_MAX_LENGTH}
+            placeholder={t('emailPlaceholder')}
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              if (fieldErrors.email) setFieldErrors(({ password: p }) => ({ password: p }));
+            }}
+            aria-invalid={fieldErrors.email ? true : undefined}
+            aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+            className={inputClass}
           />
-        )}
-        {submitting ? t('submitting') : t('submit')}
-      </button>
+          {fieldErrors.email && (
+            <p id="email-error" className={fieldErrorClass}>
+              {t(`validation.${fieldErrors.email}`)}
+            </p>
+          )}
+        </div>
 
-      <p role="status" className="sr-only">
-        {authenticated ? t('redirecting') : ''}
-      </p>
-    </form>
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-sm font-semibold">
+            {t('password')}
+          </label>
+          <PasswordField
+            ref={passwordRef}
+            id="password"
+            name="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              if (fieldErrors.password) setFieldErrors(({ email: e }) => ({ email: e }));
+            }}
+            aria-invalid={fieldErrors.password ? true : undefined}
+            aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+            inputClassName={inputClass}
+          />
+          {fieldErrors.password && (
+            <p id="password-error" className={fieldErrorClass}>
+              {t(`validation.${fieldErrors.password}`)}
+            </p>
+          )}
+        </div>
+
+        {visibleError && (
+          <div
+            role="alert"
+            className="rounded-xl border border-critical-200 bg-critical-50 px-4 py-3 text-sm text-critical-800 dark:border-critical-800 dark:bg-critical-900/30 dark:text-critical-200"
+          >
+            {visibleError === 'tooManyAttempts'
+              ? t.rich('errors.tooManyAttempts', {
+                  time: formatCountdown(secondsLeft),
+                  // Not re-announced every second by screen readers.
+                  countdown: (chunks) => (
+                    <span aria-live="off" className="font-semibold tabular-nums">
+                      {chunks}
+                    </span>
+                  ),
+                })
+              : t(`errors.${visibleError}`)}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting || locked}
+          className={`w-full ${buttonClass('primary', 'lg')}`}
+        >
+          {submitting && (
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
+          {submitting ? t('submitting') : t('submit')}
+        </button>
+
+        <p role="status" className="sr-only">
+          {authenticated ? t('redirecting') : ''}
+        </p>
+      </form>
+      <DemoAccountsCard
+        accounts={DEMO_ACCOUNTS}
+        onSignIn={signInAsDemo}
+        disabled={submitting || locked}
+      />
+    </>
   );
 }
