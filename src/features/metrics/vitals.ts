@@ -54,6 +54,7 @@ export const ROUTE_PATTERNS = [
   '/app/products',
   '/app/products/[id]',
   '/app/reports',
+  '/app/users',
 ] as const;
 
 /** What unknown paths (the 404 page) are reported as: never the typed URL. */
