@@ -355,6 +355,30 @@ en todo el código, los tokens no viven en `localStorage` y la CSP limita el fra
 - **Botones 3D**: cada botón tiene un "borde" inferior sólido en el que se hunde al presionar y se
   eleva un píxel al pasar el mouse. Con `prefers-reduced-motion` solo cambia el color.
 
+## Usuarios y cambio de contraseña
+
+- **`/app/users`** (solo `ADMIN`, en el sidebar y en la barra del teléfono): búsqueda por nombre o
+  correo, filtros de rol y estado, tabla en escritorio y tarjetas en el teléfono. Las cuentas del
+  seed (reales y demo) muestran la insignia **Protegida** con candado y ninguna acción.
+- **Nuevo usuario**: nombre, correo, rol y una contraseña temporal que se **genera** sola
+  (aleatoria con Web Crypto, legible: `Kmrt-4796-Pxqa`, sin caracteres que se confunden) y se
+  puede copiar. El usuario deberá cambiarla al entrar.
+- **Por fila**: editar nombre y rol, activar/desactivar (desactivar pide confirmación porque
+  cierra sus sesiones) y restablecer la contraseña. En tu propia fila solo se edita el nombre: la
+  pantalla no muestra lo que el servidor rechazaría (`features/users/permissions.ts`).
+- **Errores traducidos por código**: `PROTECTED_ACCOUNT`, `USER_LIMIT_REACHED` (con el límite),
+  `DUPLICATE`, `SELF_LOCKOUT`, `LAST_ADMIN`, contraseña actual incorrecta y 429 con la espera.
+- **`/app/profile`** (ambos roles, enlace "Mi perfil" en el menú de usuario): tus datos y el
+  formulario de cambio de contraseña (actual, nueva y confirmación; misma política que el
+  servidor: 10+ caracteres con letras y números). Al cambiarla se cierran tus otras sesiones. En
+  las cuentas protegidas el formulario se reemplaza por "Esta es una cuenta de demostración; su
+  contraseña no se puede cambiar."
+- **Contraseña temporal**: si el login o `/auth/me` traen `mustChangePassword`, la app lleva a
+  `/app/profile` con el aviso y oculta la navegación hasta que se cambie (guard en el cliente). La
+  regla real es del servidor: responde `403 PASSWORD_CHANGE_REQUIRED` a todo lo demás.
+- Si un admin desactiva a alguien o le cambia el rol, su sesión cae en la siguiente petición (el
+  refresh devuelve 401 y la app vuelve al login).
+
 ## Distribución y motor en Web Worker
 
 - **Motor copiado, no compartido**: `src/features/distribution/engine/` es una copia del motor puro
