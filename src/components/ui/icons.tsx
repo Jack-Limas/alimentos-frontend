@@ -17,7 +17,12 @@ type ExtraIcon =
   | 'flame'
   | 'trash'
   | 'trophy'
-  | 'chevron';
+  | 'chevron'
+  | 'lock'
+  | 'key'
+  | 'copy'
+  | 'sparkle'
+  | 'user';
 
 const paths: Record<NavIcon | ExtraIcon, string> = {
   flag: 'M5 21V4m0 0h11l-2 4 2 4H5',
@@ -40,6 +45,13 @@ const paths: Record<NavIcon | ExtraIcon, string> = {
   trophy:
     'M8 4h8v5a4 4 0 0 1-8 0zm0 1.5H4.5a3.5 3.5 0 0 0 3.6 4M16 5.5h3.5a3.5 3.5 0 0 1-3.6 4M12 13v4m-4 3h8l-1-3H9z',
   chevron: 'm9 6 6 6-6 6',
+  shield: 'M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6zm-3 9 2.2 2.2L15.5 10',
+  lock: 'M6 11h12v9.5H6zm2.5 0V8a3.5 3.5 0 0 1 7 0v3M12 15v2',
+  key: 'M14.5 13a4.5 4.5 0 1 0-4.3-3.2L3.5 16.5V20h3.5v-2h2v-2h2l1.7-1.7a4.5 4.5 0 0 0 1.8-.3zM16 8h.01',
+  copy: 'M9 9h10.5v11.5H9zM6 15H4.5V3.5H16V5',
+  sparkle:
+    'M12 3.5 13.8 9l5.7 1.5-5.7 1.6L12 17.5l-1.8-5.4-5.7-1.6L10.2 9zM18.5 16l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7.5 8.5c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5',
   home: 'M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z',
   boxes: 'M3 8.5 12 4l9 4.5-9 4.5zM3 8.5V16l9 4.5 9-4.5V8.5M12 13v7.5',
   arrows: 'M7 7h13m0 0-3.5-3.5M20 7l-3.5 3.5M17 17H4m0 0 3.5 3.5M4 17l3.5-3.5',

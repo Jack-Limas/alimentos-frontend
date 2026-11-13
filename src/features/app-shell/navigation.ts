@@ -11,7 +11,8 @@ export type NavKey =
   | 'distribution'
   | 'lab'
   | 'metrics'
-  | 'reports';
+  | 'reports'
+  | 'users';
 export type NavIcon =
   | 'home'
   | 'flag'
@@ -23,7 +24,8 @@ export type NavIcon =
   | 'truck'
   | 'gauge'
   | 'chart'
-  | 'file';
+  | 'file'
+  | 'shield';
 
 export interface NavItem {
   key: NavKey;
@@ -45,6 +47,10 @@ export const LAB_ROLES: readonly Role[] = ['ADMIN'];
 export const METRICS_ROLES: readonly Role[] = ['ADMIN'];
 /** GET /reports/* is ADMIN only (contract 4.10). */
 export const REPORTS_ROLES: readonly Role[] = ['ADMIN'];
+/** GET/POST/PATCH /users are ADMIN only (contract 4.12). */
+export const USERS_ROLES: readonly Role[] = ['ADMIN'];
+/** Own profile and password: every signed-in user. */
+export const PROFILE_PATH = '/app/profile';
 /** Creating orders is ADMIN only; both roles read and move them. */
 export const ORDER_CREATE_ROLES: readonly Role[] = ['ADMIN'];
 
@@ -60,15 +66,17 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'reports', icon: 'file', href: '/app/reports', roles: REPORTS_ROLES },
   { key: 'metrics', icon: 'chart', href: '/app/metrics', roles: METRICS_ROLES },
   { key: 'lab', icon: 'gauge', href: '/app/lab/performance', roles: LAB_ROLES },
+  { key: 'users', icon: 'shield', href: '/app/users', roles: USERS_ROLES },
 ];
 
 /**
- * Phone bottom bar per role (at most 5, within thumb reach). The operator works
- * from Missions in the warehouse, so it comes first and replaces the dashboard.
+ * Phone bottom bar per role, within thumb reach. The operator works from
+ * Missions in the warehouse, so it comes first and replaces the dashboard. The
+ * ADMIN gets six (short labels, checked at 360 px) to reach Users too.
  */
 export const MOBILE_NAV: Readonly<Record<Role, readonly NavKey[]>> = Object.freeze({
   OPERATOR: ['missions', 'orders', 'inventory', 'alerts'],
-  ADMIN: ['dashboard', 'orders', 'inventory', 'alerts', 'customers'],
+  ADMIN: ['dashboard', 'orders', 'inventory', 'alerts', 'customers', 'users'],
 });
 
 /** Below the `lg` breakpoint the app uses the phone layout. */
@@ -99,4 +107,17 @@ export function isActive(item: NavItem, pathname: string): boolean {
 export function canAccessPath(pathname: string, role: Role): boolean {
   const item = NAV_ITEMS.find((candidate) => candidate.href && isActive(candidate, pathname));
   return item ? item.roles.includes(role) : true;
+}
+
+/**
+ * Where a user with a temporary password must go: the profile, until it is
+ * changed. Null when the current path is fine. UX only: the server answers
+ * 403 PASSWORD_CHANGE_REQUIRED to everything else anyway.
+ */
+export function passwordChangeRedirect(
+  user: { mustChangePassword: boolean },
+  pathname: string,
+): string | null {
+  if (!user.mustChangePassword) return null;
+  return pathname === PROFILE_PATH ? null : PROFILE_PATH;
 }

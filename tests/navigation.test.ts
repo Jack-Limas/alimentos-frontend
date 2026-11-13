@@ -96,6 +96,7 @@ describe('navigation by role', () => {
       'inventory',
       'alerts',
       'customers',
+      'users',
     ]);
     for (const role of ['ADMIN', 'OPERATOR'] as const) {
       for (const item of mobileNavFor(role)) expect(item.roles).toContain(role);
