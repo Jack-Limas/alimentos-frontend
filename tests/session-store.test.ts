@@ -7,7 +7,14 @@ import {
 import type { AuthUser } from '@/features/auth/types';
 import { createMemoryStorage, throwingStorage } from './helpers/memory-storage';
 
-const user: AuthUser = { id: 'u1', email: 'ana@example.com', name: 'Ana', role: 'OPERATOR' };
+const user: AuthUser = {
+  id: 'u1',
+  email: 'ana@example.com',
+  name: 'Ana',
+  role: 'OPERATOR',
+  isProtected: false,
+  mustChangePassword: false,
+};
 
 describe('session store', () => {
   it('starts loading with the stable server snapshot', () => {

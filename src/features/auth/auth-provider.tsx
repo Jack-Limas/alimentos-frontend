@@ -41,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout: client.logout,
       authFetch: client.authFetch,
       authRequest: client.authRequest,
+      updateUser: client.updateUser,
     }),
     [session.status, session.user, client],
   );

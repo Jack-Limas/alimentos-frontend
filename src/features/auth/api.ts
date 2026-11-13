@@ -6,6 +6,7 @@ export const AUTH_PATHS = {
   refresh: '/auth/refresh',
   logout: '/auth/logout',
   me: '/auth/me',
+  changePassword: '/auth/change-password',
 } as const;
 
 /** Copies the request options adding `Authorization: Bearer` when there is a token. */

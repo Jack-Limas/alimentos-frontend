@@ -8,6 +8,8 @@ export const DEMO_USER: AuthUser = {
   email: 'operador@example.com',
   name: 'Operador Demo',
   role: 'OPERATOR',
+  isProtected: false,
+  mustChangePassword: false,
 };
 export const DEMO_PASSWORD = 'correct-password';
 

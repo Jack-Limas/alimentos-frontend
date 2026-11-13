@@ -12,6 +12,8 @@ export interface AuthContextValue {
   authFetch: AuthClient['authFetch'];
   /** The same, returning the raw Response (file downloads). */
   authRequest: AuthClient['authRequest'];
+  /** Applies a user returned by the server (e.g. after changing the password). */
+  updateUser: AuthClient['updateUser'];
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

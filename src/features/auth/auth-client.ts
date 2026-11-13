@@ -178,12 +178,32 @@ export function createAuthClient({ store, channel, runExclusive }: AuthClientDep
     }
   }
 
+  /**
+   * The user changed on the server (e.g. the temporary password was replaced):
+   * updates this tab and the others, keeping the same access token.
+   */
+  function updateUser(user: AuthUser): void {
+    const { accessToken } = store.getState();
+    store.updateUser(user);
+    if (accessToken !== null) channel.post({ type: 'session', accessToken, user });
+  }
+
   /** Starts listening to the other tabs; returns the unsubscribe function. */
   function connect(): () => void {
     return channel.subscribe(handleMessage);
   }
 
-  return { store, authFetch, authRequest, refreshAccessToken, bootstrap, login, logout, connect };
+  return {
+    store,
+    authFetch,
+    authRequest,
+    refreshAccessToken,
+    bootstrap,
+    login,
+    logout,
+    updateUser,
+    connect,
+  };
 }
 
 export type AuthClient = ReturnType<typeof createAuthClient>;

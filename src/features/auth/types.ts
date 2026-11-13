@@ -7,6 +7,10 @@ export interface AuthUser {
   email: string;
   name: string;
   role: Role;
+  /** Seed account (real or demo): its password cannot be changed from the app. */
+  isProtected: boolean;
+  /** Signed in with a temporary password: the app only allows changing it. */
+  mustChangePassword: boolean;
 }
 
 export interface LoginCredentials {

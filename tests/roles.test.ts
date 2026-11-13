@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { hasRole, ROLES, type AuthUser } from '@/features/auth/types';
 
-const operator: AuthUser = { id: 'u1', email: 'o@example.com', name: 'Op', role: 'OPERATOR' };
+const operator: AuthUser = {
+  id: 'u1',
+  email: 'o@example.com',
+  name: 'Op',
+  role: 'OPERATOR',
+  isProtected: false,
+  mustChangePassword: false,
+};
 
 describe('hasRole', () => {
   it('matches the user role against the allowed roles', () => {

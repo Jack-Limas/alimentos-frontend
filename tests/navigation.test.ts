@@ -17,7 +17,14 @@ import { hasRole } from '@/features/auth/types';
 import en from '../messages/en.json';
 import es from '../messages/es.json';
 
-const operator = { id: 'o', email: 'o@example.com', name: 'Op', role: 'OPERATOR' as const };
+const operator = {
+  id: 'o',
+  email: 'o@example.com',
+  name: 'Op',
+  role: 'OPERATOR' as const,
+  isProtected: false,
+  mustChangePassword: false,
+};
 const admin = { ...operator, role: 'ADMIN' as const };
 
 describe('navigation by role', () => {

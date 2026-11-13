@@ -147,6 +147,12 @@ export function createSessionStore(
       emit({ ...state, accessToken });
     },
 
+    /** Replaces the user of an authenticated session (e.g. after a password change). */
+    updateUser(user: AuthUser): void {
+      if (state.status !== 'authenticated') return;
+      emit({ ...state, user });
+    },
+
     /** Ends the session in this tab and removes the stored copy. */
     clear(): void {
       persist(null);
