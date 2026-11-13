@@ -157,7 +157,8 @@
       "open": "Abrir el menú de {name}",
       "signedInAs": "Sesión iniciada como",
       "goToPanel": "Ir al panel",
-      "logout": "Cerrar sesión"
+      "logout": "Cerrar sesión",
+      "profile": "Mi perfil"
     }
   },
   "Dashboard": {
@@ -373,7 +374,8 @@
       "customers": "Clientes",
       "lab": "Laboratorio",
       "metrics": "Métricas",
-      "reports": "Reportes"
+      "reports": "Reportes",
+      "users": "Usuarios"
     },
     "navShort": {
       "dashboard": "Panel",
@@ -386,7 +388,8 @@
       "customers": "Clientes",
       "lab": "Lab",
       "metrics": "Métricas",
-      "reports": "Reportes"
+      "reports": "Reportes",
+      "users": "Usuarios"
     },
     "today": "Hoy en Bogotá: {date}",
     "comingSoonShort": "Pronto",
@@ -795,6 +798,38 @@
       "size": "La imagen pesa más de 5 MB.",
       "unreadable": "No pudimos leer esa imagen.",
       "storage": "El navegador no permitió guardar la foto."
+    },
+    "metaTitle": "Mi perfil · AlimentaIQ",
+    "eyebrow": "Tu cuenta",
+    "title": "Mi perfil",
+    "details": {
+      "title": "Tus datos",
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol"
+    },
+    "protectedBadge": "Cuenta protegida",
+    "mustChange": {
+      "title": "Debes cambiar tu contraseña temporal",
+      "description": "Un administrador creó o restableció tu contraseña. Cámbiala para seguir usando AlimentaIQ."
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "description": "Al cambiarla se cerrarán tus otras sesiones; esta sigue abierta.",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "newHint": "Mínimo 10 caracteres, con letras y números.",
+      "confirm": "Confirmar la nueva contraseña",
+      "submit": "Cambiar contraseña",
+      "saving": "Cambiando…",
+      "done": "Contraseña cambiada. Tus otras sesiones se cerraron.",
+      "mismatch": "Las contraseñas no coinciden.",
+      "sameAsCurrent": "Debe ser distinta de la actual.",
+      "continue": "Ir al panel"
+    },
+    "demoNotice": {
+      "title": "Cuenta de demostración",
+      "description": "Esta es una cuenta de demostración; su contraseña no se puede cambiar."
     }
   },
   "Missions": {
@@ -1308,5 +1343,108 @@
       "description": "No pudimos obtener las cifras en la última regeneración. La página lo vuelve a intentar sola en menos de una hora."
     },
     "cta": "Conoce AlimentaIQ"
+  },
+  "Users": {
+    "metaTitle": "Usuarios · AlimentaIQ",
+    "eyebrow": "Administración",
+    "title": "Usuarios",
+    "intro": "Crea las cuentas del equipo. No hay registro público: cada persona entra con la contraseña temporal que le des y la cambia al entrar.",
+    "newUser": "Nuevo usuario",
+    "search": "Buscar por nombre o correo",
+    "searchPlaceholder": "Nombre o correo…",
+    "roleFilter": "Rol",
+    "allRoles": "Todos los roles",
+    "statusFilter": "Estado",
+    "status": {
+      "all": "Todos",
+      "active": "Activos",
+      "inactive": "Inactivos"
+    },
+    "loading": "Cargando usuarios…",
+    "empty": {
+      "title": "No hay usuarios con esos filtros",
+      "description": "Prueba otra búsqueda o crea un usuario nuevo."
+    },
+    "total": "{total, plural, one {# usuario} other {# usuarios}}",
+    "columns": {
+      "user": "Usuario",
+      "role": "Rol",
+      "status": "Estado",
+      "created": "Creado",
+      "actions": "Acciones"
+    },
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "protected": "Protegida",
+    "protectedHint": "Cuenta del sistema o de demostración: no se puede modificar desde la app.",
+    "you": "Tú",
+    "pendingPassword": "Contraseña temporal",
+    "pendingPasswordHint": "Aún no ha cambiado la contraseña temporal.",
+    "actionsFor": "Acciones para {name}",
+    "edit": "Editar",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "resetPassword": "Restablecer contraseña",
+    "activated": "{name} quedó activo y puede volver a entrar.",
+    "deactivated": "{name} quedó inactivo: su sesión se cerró.",
+    "confirmDeactivate": {
+      "title": "¿Desactivar a {name}?",
+      "body": "Se cerrarán todas sus sesiones al instante y no podrá entrar hasta que lo actives de nuevo. Sus pedidos y movimientos se conservan.",
+      "confirm": "Desactivar"
+    },
+    "form": {
+      "createTitle": "Nuevo usuario",
+      "editTitle": "Editar {name}",
+      "createDescription": "La persona entrará con la contraseña temporal y deberá cambiarla al iniciar sesión.",
+      "editDescription": "Cambiar el rol cierra sus sesiones: deberá volver a entrar.",
+      "selfRoleHint": "No puedes cambiar tu propio rol.",
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "temporaryPassword": "Contraseña temporal",
+      "temporaryHint": "Mínimo 10 caracteres, con letras y números. Cópiala y entrégala de forma segura.",
+      "generate": "Generar",
+      "generateLabel": "Generar una contraseña temporal",
+      "copy": "Copiar",
+      "copyLabel": "Copiar la contraseña temporal",
+      "copied": "Copiada",
+      "create": "Crear usuario",
+      "save": "Guardar cambios",
+      "created": "Usuario {name} creado. Recuerda entregarle la contraseña temporal.",
+      "updated": "Cambios de {name} guardados.",
+      "nothingToChange": "No hay cambios que guardar."
+    },
+    "reset": {
+      "title": "Restablecer la contraseña de {name}",
+      "description": "Se cerrarán sus sesiones y deberá entrar con esta contraseña temporal y cambiarla.",
+      "confirm": "Restablecer",
+      "done": "Contraseña de {name} restablecida. Entrégale la temporal."
+    },
+    "fieldErrors": {
+      "required": "Este campo es obligatorio.",
+      "tooShort": "Debe tener al menos 10 caracteres.",
+      "tooLong": "Es demasiado larga.",
+      "needsLetter": "Debe tener al menos una letra.",
+      "needsNumber": "Debe tener al menos un número.",
+      "invalidEmail": "Escribe un correo válido.",
+      "invalidOption": "Elige una opción de la lista."
+    },
+    "errors": {
+      "protectedAccount": "Esta cuenta está protegida (es del sistema o de demostración) y no se puede modificar.",
+      "userLimitReached": "Llegaste al límite de {limit, number} usuarios creados desde la app. Desactiva alguno que ya no se use.",
+      "userLimitReachedUnknown": "Llegaste al límite de usuarios creados desde la app.",
+      "duplicateEmail": "Ya existe un usuario con ese correo.",
+      "selfLockout": "No puedes desactivar tu propia cuenta, quitarte el rol de administrador ni restablecer tu contraseña aquí.",
+      "lastAdmin": "Debe quedar al menos un administrador activo.",
+      "wrongCurrentPassword": "La contraseña actual no es correcta.",
+      "tooManyAttempts": "Demasiados intentos. Espera {seconds, number} segundos e inténtalo de nuevo.",
+      "tooManyAttemptsUnknown": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+      "invalid": "Algunos datos no son válidos. Revísalos e inténtalo de nuevo.",
+      "forbidden": "Tu rol no permite esta acción.",
+      "notFound": "Ese usuario ya no existe. Recarga la página.",
+      "sessionExpired": "Tu sesión terminó. Vuelve a iniciar sesión.",
+      "network": "No pudimos conectar con el servidor. Revisa tu conexión.",
+      "unexpected": "Algo salió mal. Inténtalo de nuevo en un momento."
+    }
   }
 }

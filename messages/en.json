@@ -157,7 +157,8 @@
       "open": "Open {name}'s menu",
       "signedInAs": "Signed in as",
       "goToPanel": "Go to dashboard",
-      "logout": "Log out"
+      "logout": "Log out",
+      "profile": "My profile"
     }
   },
   "Dashboard": {
@@ -373,7 +374,8 @@
       "customers": "Customers",
       "lab": "Lab",
       "metrics": "Metrics",
-      "reports": "Reports"
+      "reports": "Reports",
+      "users": "Users"
     },
     "navShort": {
       "dashboard": "Home",
@@ -386,7 +388,8 @@
       "customers": "Customers",
       "lab": "Lab",
       "metrics": "Metrics",
-      "reports": "Reports"
+      "reports": "Reports",
+      "users": "Users"
     },
     "today": "Today in Bogota: {date}",
     "comingSoonShort": "Soon",
@@ -795,6 +798,38 @@
       "size": "The image is larger than 5 MB.",
       "unreadable": "We could not read that image.",
       "storage": "The browser did not allow saving the photo."
+    },
+    "metaTitle": "My profile · AlimentaIQ",
+    "eyebrow": "Your account",
+    "title": "My profile",
+    "details": {
+      "title": "Your details",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role"
+    },
+    "protectedBadge": "Protected account",
+    "mustChange": {
+      "title": "You must change your temporary password",
+      "description": "An administrator created or reset your password. Change it to keep using AlimentaIQ."
+    },
+    "password": {
+      "title": "Change password",
+      "description": "Changing it closes your other sessions; this one stays open.",
+      "current": "Current password",
+      "new": "New password",
+      "newHint": "At least 10 characters, with letters and numbers.",
+      "confirm": "Confirm the new password",
+      "submit": "Change password",
+      "saving": "Changing…",
+      "done": "Password changed. Your other sessions were closed.",
+      "mismatch": "The passwords do not match.",
+      "sameAsCurrent": "It must differ from the current one.",
+      "continue": "Go to the dashboard"
+    },
+    "demoNotice": {
+      "title": "Demo account",
+      "description": "This is a demo account; its password cannot be changed."
     }
   },
   "Missions": {
@@ -1308,5 +1343,108 @@
       "description": "We could not get the figures in the last regeneration. The page tries again by itself within an hour."
     },
     "cta": "Discover AlimentaIQ"
+  },
+  "Users": {
+    "metaTitle": "Users · AlimentaIQ",
+    "eyebrow": "Administration",
+    "title": "Users",
+    "intro": "Create your team’s accounts. There is no public sign-up: each person signs in with the temporary password you give them and changes it on first sign-in.",
+    "newUser": "New user",
+    "search": "Search by name or email",
+    "searchPlaceholder": "Name or email…",
+    "roleFilter": "Role",
+    "allRoles": "All roles",
+    "statusFilter": "Status",
+    "status": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "loading": "Loading users…",
+    "empty": {
+      "title": "No users match these filters",
+      "description": "Try another search or create a new user."
+    },
+    "total": "{total, plural, one {# user} other {# users}}",
+    "columns": {
+      "user": "User",
+      "role": "Role",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "active": "Active",
+    "inactive": "Inactive",
+    "protected": "Protected",
+    "protectedHint": "System or demo account: it cannot be changed from the app.",
+    "you": "You",
+    "pendingPassword": "Temporary password",
+    "pendingPasswordHint": "Has not changed the temporary password yet.",
+    "actionsFor": "Actions for {name}",
+    "edit": "Edit",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "resetPassword": "Reset password",
+    "activated": "{name} is active and can sign in again.",
+    "deactivated": "{name} is inactive: their session was closed.",
+    "confirmDeactivate": {
+      "title": "Deactivate {name}?",
+      "body": "All their sessions end at once and they cannot sign in until you activate them again. Their orders and movements are kept.",
+      "confirm": "Deactivate"
+    },
+    "form": {
+      "createTitle": "New user",
+      "editTitle": "Edit {name}",
+      "createDescription": "They will sign in with the temporary password and must change it on first sign-in.",
+      "editDescription": "Changing the role closes their sessions: they will have to sign in again.",
+      "selfRoleHint": "You cannot change your own role.",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "temporaryPassword": "Temporary password",
+      "temporaryHint": "At least 10 characters, with letters and numbers. Copy it and hand it over safely.",
+      "generate": "Generate",
+      "generateLabel": "Generate a temporary password",
+      "copy": "Copy",
+      "copyLabel": "Copy the temporary password",
+      "copied": "Copied",
+      "create": "Create user",
+      "save": "Save changes",
+      "created": "User {name} created. Remember to hand over the temporary password.",
+      "updated": "Changes to {name} saved.",
+      "nothingToChange": "There is nothing to save."
+    },
+    "reset": {
+      "title": "Reset the password of {name}",
+      "description": "Their sessions will close and they must sign in with this temporary password and change it.",
+      "confirm": "Reset",
+      "done": "Password of {name} reset. Hand over the temporary one."
+    },
+    "fieldErrors": {
+      "required": "This field is required.",
+      "tooShort": "It must be at least 10 characters long.",
+      "tooLong": "It is too long.",
+      "needsLetter": "It must contain at least one letter.",
+      "needsNumber": "It must contain at least one number.",
+      "invalidEmail": "Enter a valid email.",
+      "invalidOption": "Choose an option from the list."
+    },
+    "errors": {
+      "protectedAccount": "This account is protected (a system or demo account) and cannot be changed.",
+      "userLimitReached": "You reached the limit of {limit, number} users created in the app. Deactivate one that is no longer used.",
+      "userLimitReachedUnknown": "You reached the limit of users created in the app.",
+      "duplicateEmail": "A user with this email already exists.",
+      "selfLockout": "You cannot deactivate your own account, remove your own admin role or reset your own password here.",
+      "lastAdmin": "At least one active administrator must remain.",
+      "wrongCurrentPassword": "The current password is incorrect.",
+      "tooManyAttempts": "Too many attempts. Wait {seconds, number} seconds and try again.",
+      "tooManyAttemptsUnknown": "Too many attempts. Wait a few minutes and try again.",
+      "invalid": "Some data is not valid. Check it and try again.",
+      "forbidden": "Your role does not allow this action.",
+      "notFound": "That user no longer exists. Reload the page.",
+      "sessionExpired": "Your session ended. Sign in again.",
+      "network": "We could not reach the server. Check your connection.",
+      "unexpected": "Something went wrong. Try again in a moment."
+    }
   }
 }
