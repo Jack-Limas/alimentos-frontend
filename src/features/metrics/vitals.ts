@@ -53,6 +53,7 @@ export const ROUTE_PATTERNS = [
   '/app/orders/[id]',
   '/app/products',
   '/app/products/[id]',
+  '/app/profile',
   '/app/reports',
   '/app/users',
 ] as const;

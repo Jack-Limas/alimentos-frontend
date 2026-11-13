@@ -143,6 +143,16 @@ export function UserMenu({ user }: { user: AuthUser }) {
           >
             {t('goToPanel')}
           </Link>
+          <Link
+            href="/app/profile"
+            onClick={() => {
+              setOpen(false);
+            }}
+            className={`${itemClass} gap-2`}
+          >
+            <Icon name="user" className="size-4" />
+            {t('profile')}
+          </Link>
           <button
             type="button"
             onClick={handleLogout}
