@@ -112,6 +112,16 @@ export class EngineClient {
   }
 
   private receive(message: EngineResponse): void {
+    // A message without a request id is not from this protocol (for example a worker
+    // that loaded the wrong bundle): fail every run instead of waiting forever.
+    if (typeof (message as { requestId?: unknown }).requestId !== 'number') {
+      for (const [id, pending] of this.pending) {
+        this.pending.delete(id);
+        pending.reject(new EngineRunError('WORKER_ERROR', 'Unexpected worker response'));
+      }
+      this.latest.clear();
+      return;
+    }
     // Unknown id: superseded or cancelled; the stale message is dropped.
     const pending = this.pending.get(message.requestId);
     if (!pending) return;

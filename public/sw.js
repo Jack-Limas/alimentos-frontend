@@ -6,6 +6,10 @@
  * - Navigations: network-first, then the cached copy, then the offline page.
  * - Never touches /api, other origins (the backend lives on its own origin),
  *   non-GET requests or anything carrying an Authorization header.
+ * - Never touches worker scripts: Turbopack starts every Web Worker from the
+ *   SAME bootstrap file and tells them apart only by the URL fragment
+ *   (#params=...). The Cache API ignores fragments, so a cached bootstrap
+ *   handed the engine worker the pool's chunks (or the reverse) and runs hung.
  * - Cached responses keep their own headers, COOP/COEP included, so a page
  *   served from the cache is still cross-origin isolated.
  * - A new version waits until the page asks for it (SKIP_WAITING) and then
@@ -18,10 +22,12 @@ const OFFLINE_PAGES = { es: '/es/offline', en: '/en/offline' };
 const PRECACHE = [OFFLINE_PAGES.es, OFFLINE_PAGES.en, '/icon.svg'];
 
 /** What to do with a request: 'bypass' | 'cache-first' | 'network-first'. */
-function strategyFor({ url, method, mode, hasAuthorization, origin }) {
+function strategyFor({ url, method, mode, hasAuthorization, origin, destination = '' }) {
   if (method !== 'GET' || hasAuthorization) return 'bypass';
+  if (destination === 'worker' || destination === 'sharedworker') return 'bypass';
   const target = new URL(url);
   if (target.origin !== origin) return 'bypass';
+  if (target.pathname.includes('/turbopack-worker-')) return 'bypass';
   if (target.pathname === '/api' || target.pathname.startsWith('/api/')) return 'bypass';
   if (target.pathname.startsWith('/_next/static/')) return 'cache-first';
   // The login page is never kept: nothing about authentication is cached.
@@ -101,6 +107,7 @@ self.addEventListener('fetch', (event) => {
     mode: request.mode,
     hasAuthorization: request.headers.has('authorization'),
     origin: self.location.origin,
+    destination: request.destination,
   });
   if (strategy === 'bypass') return;
 

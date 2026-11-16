@@ -16,6 +16,7 @@ interface StrategyInput {
   mode: string;
   hasAuthorization: boolean;
   origin: string;
+  destination?: string;
 }
 
 interface SwApi {
@@ -88,6 +89,22 @@ describe('service worker caching strategies (public/sw.js)', () => {
     );
     // Other same-origin files are left to the browser's HTTP cache.
     expect(sw.strategyFor(request('/icon.svg'))).toBe('bypass');
+  });
+
+  it('never caches worker scripts (Turbopack tells workers apart by the URL fragment)', () => {
+    const bootstrap = '/_next/static/chunks/turbopack-worker-17xj571juv_5b.js';
+    expect(sw.strategyFor(request(`${bootstrap}#params=%5B%5D`))).toBe('bypass');
+    expect(sw.strategyFor(request(`${bootstrap}?params=%5B%5D`))).toBe('bypass');
+    expect(sw.strategyFor(request('/_next/static/chunks/abc.js', { destination: 'worker' }))).toBe(
+      'bypass',
+    );
+    expect(
+      sw.strategyFor(request('/_next/static/chunks/abc.js', { destination: 'sharedworker' })),
+    ).toBe('bypass');
+    // Chunks the worker loads with importScripts are plain scripts: still cache-first.
+    expect(sw.strategyFor(request('/_next/static/chunks/abc.js', { destination: 'script' }))).toBe(
+      'cache-first',
+    );
   });
 
   it('never caches /api/wake (same origin, not under the API backend)', () => {

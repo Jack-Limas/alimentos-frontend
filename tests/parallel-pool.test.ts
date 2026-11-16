@@ -266,3 +266,61 @@ describe('ParallelEngine', () => {
     expect(Atomics.load(run.control, CONTROL.DONE)).toBe(4);
   });
 });
+
+describe('ParallelEngine never hangs on a broken worker', () => {
+  class BrokenWorker {
+    onmessage: ((event: MessageEvent<PoolResponse>) => void) | null = null;
+    onerror: ((event: ErrorEvent) => void) | null = null;
+    constructor(private readonly reply: (worker: BrokenWorker, message: PoolRequest) => void) {}
+    postMessage(message: PoolRequest) {
+      queueMicrotask(() => {
+        this.reply(this, message);
+      });
+    }
+    terminate() {}
+  }
+  const tinySnapshot = generateSnapshot({ orders: 20, seed: 7 });
+
+  it('rejects when a worker reports an error while scoring', async () => {
+    const engine = new ParallelEngine(
+      () =>
+        new BrokenWorker((worker, message) => {
+          worker.onmessage?.({
+            data: { type: 'error', runId: message.runId, message: 'boom' },
+          } as MessageEvent<PoolResponse>);
+        }) as unknown as PoolWorkerLike,
+      2,
+    );
+    await expect(engine.run({ snapshot: tinySnapshot, strategy: 'BALANCED' }).done).rejects.toThrow(
+      'boom',
+    );
+  });
+
+  it('rejects when a worker answers another protocol (no runId)', async () => {
+    const engine = new ParallelEngine(
+      () =>
+        new BrokenWorker((worker) => {
+          worker.onmessage?.({
+            data: { type: 'error', message: "Cannot read properties of null (reading 'snapshot')" },
+          } as unknown as MessageEvent<PoolResponse>);
+        }) as unknown as PoolWorkerLike,
+      2,
+    );
+    await expect(
+      engine.run({ snapshot: tinySnapshot, strategy: 'BALANCED' }).done,
+    ).rejects.toThrow();
+  });
+
+  it('rejects when a worker fails to load', async () => {
+    const engine = new ParallelEngine(
+      () =>
+        new BrokenWorker((worker) => {
+          worker.onerror?.({ message: 'load failed' } as ErrorEvent);
+        }) as unknown as PoolWorkerLike,
+      2,
+    );
+    await expect(engine.run({ snapshot: tinySnapshot, strategy: 'BALANCED' }).done).rejects.toThrow(
+      'load failed',
+    );
+  });
+});

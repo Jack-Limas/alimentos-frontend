@@ -189,3 +189,17 @@ describe('EngineClient', () => {
     await expect(run).rejects.toMatchObject({ code: 'WORKER_ERROR' });
   });
 });
+
+describe('EngineClient with a worker that answers another protocol', () => {
+  it('fails the run instead of waiting forever when the reply has no request id', async () => {
+    const fake = fakeWorker();
+    const client = new EngineClient(fake.create);
+    const run = client.run(job, { channel: 'lab' });
+    // What the pool handler answers to an engine request (it has no requestId).
+    fake.reply({
+      type: 'error',
+      message: "Cannot read properties of null (reading 'snapshot')",
+    } as unknown as EngineResponse);
+    await expect(run).rejects.toBeInstanceOf(EngineRunError);
+  });
+});

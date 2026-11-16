@@ -36,6 +36,8 @@ export class ParallelEngine {
   private workers: PoolWorkerLike[] = [];
   private nextRunId = 1;
   private readonly waiting = new Map<number, Waiter>();
+  /** Fails the run in progress (a worker crashed or answered something unexpected). */
+  private failCurrentRun: ((error: Error) => void) | null = null;
 
   constructor(
     private readonly createWorker: () => PoolWorkerLike,
@@ -59,6 +61,15 @@ export class ParallelEngine {
     const ranges = partition(snapshot.orders.length, this.size);
     const workers = this.ensureWorkers(ranges.length);
 
+    // A worker that crashes or answers the wrong protocol must end the run, never hang it.
+    const failed = new Promise<never>((_, reject) => {
+      this.failCurrentRun = (error) => {
+        Atomics.store(control, CONTROL.CANCEL, 1);
+        reject(error);
+      };
+    });
+    failed.catch(() => undefined);
+
     const done = (async (): Promise<ParallelOutcome> => {
       const started = this.now();
       ranges.forEach(([start, end], index) => {
@@ -74,7 +85,7 @@ export class ParallelEngine {
           control,
         });
       });
-      await waitForWorkers(control, ranges.length);
+      await Promise.race([waitForWorkers(control, ranges.length), failed]);
       if (Atomics.load(control, CONTROL.CANCEL) === 1) {
         return { status: 'cancelled', workers: ranges.length };
       }
@@ -82,7 +93,7 @@ export class ParallelEngine {
 
       const answer = this.expect(runId);
       workers[0]?.postMessage({ type: 'allocate', runId, scores, control, top });
-      const response = await answer;
+      const response = await Promise.race([answer, failed]);
       if (response.type === 'cancelled') return { status: 'cancelled', workers: ranges.length };
       if (response.type !== 'allocated') throw new Error('Unexpected pool response');
       return {
@@ -92,7 +103,9 @@ export class ParallelEngine {
         allocateMs: response.durationMs,
         workers: ranges.length,
       };
-    })();
+    })().finally(() => {
+      this.failCurrentRun = null;
+    });
 
     return { control, done };
   }
@@ -130,12 +143,20 @@ export class ParallelEngine {
         // Only "allocated" and "error" are awaited; scoring is tracked through Atomics.
         if (message.type === 'scored') return;
         const waiter = this.waiting.get(message.runId);
-        if (!waiter) return;
+        if (!waiter) {
+          // An error while scoring, or a message from another protocol: end the run.
+          if (message.type === 'error') this.failCurrentRun?.(new Error(message.message));
+          else if (typeof message.runId !== 'number') {
+            this.failCurrentRun?.(new Error('Unexpected pool response'));
+          }
+          return;
+        }
         this.waiting.delete(message.runId);
         if (message.type === 'error') waiter.reject(new Error(message.message));
         else waiter.resolve(message);
       };
       worker.onerror = (event) => {
+        this.failCurrentRun?.(new Error(event.message || 'Pool worker error'));
         for (const [id, waiter] of this.waiting) {
           this.waiting.delete(id);
           waiter.reject(new Error(event.message || 'Pool worker error'));
