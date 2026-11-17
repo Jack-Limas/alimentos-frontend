@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState, type ChangeEvent } from 'react';
 import { RoleBadge } from '@/components/auth';
 import { Avatar } from '@/components/ui/avatar';
 import { Icon } from '@/components/ui/icons';
+import { markExplicitLogout } from '@/features/auth/safe-next';
 import type { AuthUser } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { Link } from '@/i18n/navigation';
@@ -54,8 +55,9 @@ export function UserMenu({ user }: { user: AuthUser }) {
 
   function handleLogout() {
     setOpen(false);
-    // The session ends at once in every tab (this menu unmounts); inside the
-    // private area, RequireAuth then sends the user to the login with ?next=.
+    // The session ends at once in every tab (this menu unmounts). In this tab the
+    // login starts clean (no ?next=), so the next account does not inherit this page.
+    markExplicitLogout();
     void logout();
   }
 

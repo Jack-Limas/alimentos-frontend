@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { getSafeNextPath, loginPathWithNext, privateHome } from '@/features/auth/safe-next';
 
 describe('getSafeNextPath', () => {
@@ -58,5 +58,50 @@ describe('loginPathWithNext', () => {
 describe('privateHome', () => {
   it('points to the private area of the locale', () => {
     expect(privateHome('en')).toBe('/en/app');
+  });
+});
+
+describe('destinationForRole (switching accounts)', () => {
+  it('keeps ?next= when the new role may open it', async () => {
+    const { destinationForRole } = await import('@/features/auth/safe-next');
+    expect(destinationForRole('/es/app/distribution', 'es', 'OPERATOR')).toBe(
+      '/es/app/distribution',
+    );
+    expect(destinationForRole('/es/app/lab/performance', 'es', 'ADMIN')).toBe(
+      '/es/app/lab/performance',
+    );
+  });
+
+  it('sends an operator home instead of to an ADMIN-only page', async () => {
+    const { destinationForRole } = await import('@/features/auth/safe-next');
+    for (const page of [
+      '/es/app/lab/performance',
+      '/es/app/metrics',
+      '/es/app/users',
+      '/es/app/reports',
+    ]) {
+      expect(destinationForRole(page, 'es', 'OPERATOR')).toBe('/es/app');
+    }
+  });
+
+  it('falls back to the home for a missing or unsafe ?next=', async () => {
+    const { destinationForRole } = await import('@/features/auth/safe-next');
+    expect(destinationForRole(null, 'en', 'ADMIN')).toBe('/en/app');
+    expect(destinationForRole('//evil.com', 'es', 'ADMIN')).toBe('/es/app');
+  });
+
+  it('remembers an explicit logout once per tab', async () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => store.set(key, value),
+      removeItem: (key: string) => store.delete(key),
+    });
+    const { consumeExplicitLogout, markExplicitLogout } = await import('@/features/auth/safe-next');
+    expect(consumeExplicitLogout()).toBe(false);
+    markExplicitLogout();
+    expect(consumeExplicitLogout()).toBe(true);
+    expect(consumeExplicitLogout()).toBe(false);
+    vi.unstubAllGlobals();
   });
 });

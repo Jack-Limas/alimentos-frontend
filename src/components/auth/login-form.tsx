@@ -11,7 +11,8 @@ import {
   type LoginFieldErrors,
 } from '@/features/auth/login-validation';
 import { readDemoAccounts, type DemoAccount } from '@/features/auth/demo-accounts';
-import { getSafeNextPath, privateHome } from '@/features/auth/safe-next';
+import { destinationForRole } from '@/features/auth/safe-next';
+import type { Role } from '@/features/auth/types';
 import { useAuth } from '@/features/auth/use-auth';
 import { useCountdown } from '@/hooks/use-countdown';
 import { buttonClass } from '@/components/ui/button';
@@ -30,16 +31,16 @@ const fieldErrorClass = 'text-sm text-critical-700 dark:text-critical-300';
 /** Public demo accounts from NEXT_PUBLIC_DEMO_* (read once: they are inlined at build time). */
 const DEMO_ACCOUNTS = readDemoAccounts();
 
-function destinationAfterLogin(locale: string): string {
+function destinationAfterLogin(locale: string, role: Role): string {
   const next = new URLSearchParams(window.location.search).get('next');
-  return getSafeNextPath(next) ?? privateHome(locale);
+  return destinationForRole(next, locale, role);
 }
 
 export function LoginForm() {
   const t = useTranslations('Login');
   const locale = useLocale();
   const router = useRouter();
-  const { status, login } = useAuth();
+  const { status, user, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
@@ -56,8 +57,8 @@ export function LoginForm() {
 
   useEffect(() => {
     // Covers a successful submit, an existing session and a login in another tab.
-    if (authenticated) router.replace(destinationAfterLogin(locale));
-  }, [authenticated, router, locale]);
+    if (authenticated && user) router.replace(destinationAfterLogin(locale, user.role));
+  }, [authenticated, user, router, locale]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

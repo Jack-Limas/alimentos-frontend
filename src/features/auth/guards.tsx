@@ -4,7 +4,7 @@ import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
 import { ForbiddenNotice, PrivateAreaSkeleton } from '@/components/auth';
-import { loginPathWithNext } from './safe-next';
+import { consumeExplicitLogout, loginPathWithNext } from './safe-next';
 import { hasRole, type Role } from './types';
 import { useAuth } from './use-auth';
 
@@ -21,7 +21,11 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (status === 'anonymous') router.replace(loginPathWithNext(locale, pathname));
+    if (status !== 'anonymous') return;
+    // After "Cerrar sesión" the login starts clean; after an expired session it keeps ?next=.
+    router.replace(
+      consumeExplicitLogout() ? `/${locale}/login` : loginPathWithNext(locale, pathname),
+    );
   }, [status, router, locale, pathname]);
 
   if (status !== 'authenticated') return <PrivateAreaSkeleton />;

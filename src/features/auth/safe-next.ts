@@ -1,4 +1,6 @@
+import { canAccessPath } from '@/features/app-shell/navigation';
 import { routing } from '@/i18n/routing';
+import type { Role } from './types';
 
 const PRIVATE_SEGMENT = 'app';
 // Any origin works: it only serves to resolve the path; the result must keep it.
@@ -50,4 +52,44 @@ export function loginPathWithNext(locale: string, currentPath: string): string {
   const next = getSafeNextPath(currentPath);
   const login = `/${locale}/login`;
   return next === null ? login : `${login}?next=${encodeURIComponent(next)}`;
+}
+
+/**
+ * Where to land after logging in. The ?next= page is kept only when the role
+ * that just signed in may open it: after switching from an ADMIN to an
+ * OPERATOR on the lab, the operator starts at the private home instead of on
+ * a "no permission" screen.
+ */
+export function destinationForRole(rawNext: string | null, locale: string, role: Role): string {
+  const next = getSafeNextPath(rawNext);
+  if (next === null) return privateHome(locale);
+  const pathname = new URL(next, PROBE_ORIGIN).pathname.slice(`/${locale}`.length) || '/';
+  const samePrefix = next.startsWith(`/${locale}/`);
+  return samePrefix && canAccessPath(pathname, role) ? next : privateHome(locale);
+}
+
+const EXPLICIT_LOGOUT_KEY = 'aiq.explicitLogout';
+
+/**
+ * A logout the user asked for: the next login starts at the home, not on the
+ * page left behind (?next= is for a session that expired, not for switching
+ * accounts). Kept in sessionStorage, so it only affects this tab.
+ */
+export function markExplicitLogout(): void {
+  try {
+    sessionStorage.setItem(EXPLICIT_LOGOUT_KEY, '1');
+  } catch {
+    // Storage unavailable: the login keeps ?next=, still safe.
+  }
+}
+
+/** True once after markExplicitLogout(), then cleared. */
+export function consumeExplicitLogout(): boolean {
+  try {
+    const marked = sessionStorage.getItem(EXPLICIT_LOGOUT_KEY) === '1';
+    sessionStorage.removeItem(EXPLICIT_LOGOUT_KEY);
+    return marked;
+  } catch {
+    return false;
+  }
 }
